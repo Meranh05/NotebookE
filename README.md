@@ -48,6 +48,7 @@
   <a href="https://zdoc.app/ko/lfnovo/open-notebook">한국어</a> |
   <a href="https://zdoc.app/pt/lfnovo/open-notebook">Português</a> |
   <a href="https://zdoc.app/ru/lfnovo/open-notebook">Русский</a> |
+  <a href="https://zdoc.app/ru/lfnovo/open-notebook">Tiếng Việt</a> |
   <a href="https://zdoc.app/zh/lfnovo/open-notebook">中文</a>
 </div>
 
