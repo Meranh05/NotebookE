@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import {
-  Bricolage_Grotesque,
-  Instrument_Sans,
-  Spline_Sans_Mono,
+  Inter,
+  JetBrains_Mono,
 } from "next/font/google";
 import "./globals.css";
 import "katex/dist/katex.min.css";
@@ -14,25 +13,31 @@ import { ConnectionGuard } from "@/components/common/ConnectionGuard";
 import { themeScript } from "@/lib/theme-script";
 import { I18nProvider } from "@/components/providers/I18nProvider";
 
-const instrumentSans = Instrument_Sans({
-  subsets: ["latin"],
-  variable: "--font-instrument-sans",
+const inter = Inter({
+  subsets: ["latin", "vietnamese"],
+  variable: "--font-inter",
 });
 
-const bricolageGrotesque = Bricolage_Grotesque({
-  subsets: ["latin"],
-  weight: ["600", "700"],
-  variable: "--font-bricolage",
-});
-
-const splineSansMono = Spline_Sans_Mono({
-  subsets: ["latin"],
-  variable: "--font-spline-mono",
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin", "vietnamese"],
+  variable: "--font-spline-mono", // keeping the variable name so we don't have to change tailwind/css
 });
 
 export const metadata: Metadata = {
-  title: "Open Notebook",
+  title: "NotebookE",
   description: "Privacy-focused research and knowledge management",
+  icons: [
+    {
+      media: "(prefers-color-scheme: light)",
+      url: "/favicon.ico",
+      href: "/favicon.ico",
+    },
+    {
+      media: "(prefers-color-scheme: dark)",
+      url: "/favicon-dark.ico",
+      href: "/favicon-dark.ico",
+    },
+  ],
 };
 
 export default function RootLayout({
@@ -46,7 +51,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body
-        className={`${instrumentSans.variable} ${bricolageGrotesque.variable} ${splineSansMono.variable} font-sans`}
+        className={`${inter.variable} ${jetbrainsMono.variable} font-sans`}
       >
         <ErrorBoundary>
           <ThemeProvider>

@@ -1,4 +1,4 @@
-import { MessageSquare, Code, Mic, Volume2, Box } from 'lucide-react'
+import { IconBox, IconCode, IconMessage, IconMicrophone, IconVolume } from '@tabler/icons-react'
 
 // Provider metadata (names, display names, modalities, docs links) comes
 // from the backend registry via GET /api/providers — see useProviders()
@@ -20,14 +20,14 @@ export const MODEL_TYPES: ModelType[] = [
 ]
 
 const TYPE_ICONS: Record<ModelType, React.ReactNode> = {
-  language: <MessageSquare className="h-3 w-3" />,
-  embedding: <Code className="h-3 w-3" />,
-  text_to_speech: <Volume2 className="h-3 w-3" />,
-  speech_to_text: <Mic className="h-3 w-3" />,
+  language: <IconMessage className="h-3 w-3" />,
+  embedding: <IconCode className="h-3 w-3" />,
+  text_to_speech: <IconVolume className="h-3 w-3" />,
+  speech_to_text: <IconMicrophone className="h-3 w-3" />,
 }
 
 // Mandatory fallback for modality strings the frontend doesn't know yet.
-const FALLBACK_TYPE_ICON: React.ReactNode = <Box className="h-3 w-3" />
+const FALLBACK_TYPE_ICON: React.ReactNode = <IconBox className="h-3 w-3" />
 
 const TYPE_COLORS: Record<ModelType, string> = {
   language: 'bg-teal-tint text-teal',

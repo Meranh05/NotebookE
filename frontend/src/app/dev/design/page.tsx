@@ -6,7 +6,7 @@
 
 import { notFound } from "next/navigation"
 import { useState } from "react"
-import { Moon, Plus, Sun, Trash2, Search, Sparkles } from "lucide-react"
+import { IconMoon, IconPlus, IconSearch, IconSparkles, IconSun, IconTrash } from '@tabler/icons-react'
 
 import { useTheme } from "@/lib/stores/theme-store"
 
@@ -163,7 +163,7 @@ function Sheet() {
           aria-label="Toggle theme"
           onClick={() => setTheme(isDark ? "light" : "dark")}
         >
-          {isDark ? <Sun /> : <Moon />}
+          {isDark ? <IconSun /> : <IconMoon />}
         </Button>
       </header>
 
@@ -299,19 +299,19 @@ function Sheet() {
       <SectionTitle>Buttons</SectionTitle>
       <div className="flex flex-wrap items-center gap-3">
         <Button>
-          <Plus /> New source
+          <IconPlus /> New source
         </Button>
         <Button variant="secondary">Secondary</Button>
         <Button variant="outline">Outline</Button>
         <Button variant="ghost">Ghost</Button>
         <Button variant="link">Link</Button>
         <Button variant="destructive">
-          <Trash2 /> Delete
+          <IconTrash /> Delete
         </Button>
         <Button disabled>Disabled</Button>
         <Button size="sm">Small</Button>
-        <Button size="icon" aria-label="Search">
-          <Search />
+        <Button size="icon" aria-label="IconSearch">
+          <IconSearch />
         </Button>
       </div>
 
@@ -326,7 +326,7 @@ function Sheet() {
           PDF
         </Badge>
         <Badge variant="secondary">
-          <Sparkles className="text-teal" /> AI
+          <IconSparkles className="text-teal" /> AI
         </Badge>
       </div>
 
@@ -464,14 +464,14 @@ function Sheet() {
       <SectionTitle>Feedback</SectionTitle>
       <div className="max-w-xl space-y-3">
         <Alert>
-          <Sparkles className="size-4" />
+          <IconSparkles className="size-4" />
           <AlertTitle>Embedding complete</AlertTitle>
           <AlertDescription>
             All 128 chunks are searchable now.
           </AlertDescription>
         </Alert>
         <Alert variant="destructive">
-          <Trash2 className="size-4" />
+          <IconTrash className="size-4" />
           <AlertTitle>Processing failed</AlertTitle>
           <AlertDescription>
             Red only ever means destructive or broken.

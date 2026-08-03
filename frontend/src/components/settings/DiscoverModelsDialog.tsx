@@ -14,7 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Plus, Loader2, AlertCircle } from 'lucide-react'
+import { IconAlertCircle, IconLoader2, IconPlus } from '@tabler/icons-react'
 import { useTranslation } from '@/lib/hooks/use-translation'
 import { useDiscoverModels, useRegisterModels } from '@/lib/hooks/use-credentials'
 import { Credential, DiscoveredModel } from '@/lib/api/credentials'
@@ -173,7 +173,7 @@ export function DiscoverModelsDialog({
           </div>
         ) : discoveryError ? (
           <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
+            <IconAlertCircle className="h-4 w-4" />
             <AlertDescription>{discoveryError}</AlertDescription>
           </Alert>
         ) : (
@@ -247,7 +247,7 @@ export function DiscoverModelsDialog({
                     onChange={() => setCustomModelSelected(prev => !prev)}
                     className="rounded"
                   />
-                  <Plus className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                  <IconPlus className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                   <span className="truncate">
                     {t('models.addCustomModel', { name: searchQuery.trim() })}
                   </span>
@@ -270,7 +270,7 @@ export function DiscoverModelsDialog({
             onClick={handleRegister}
             disabled={totalSelected === 0 || registerModels.isPending}
           >
-            {registerModels.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+            {registerModels.isPending && <IconLoader2 className="h-4 w-4 animate-spin mr-2" />}
             {t('common.add')} ({totalSelected})
           </Button>
         </DialogFooter>

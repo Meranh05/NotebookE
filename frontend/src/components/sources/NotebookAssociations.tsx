@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useMemo } from 'react'
-import { LoaderIcon, BookOpen, Check } from 'lucide-react'
+import { IconBook2, IconCheck, IconLoader } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
 import { ScrollArea } from '@/components/ui/scroll-area'
@@ -107,14 +107,14 @@ export function NotebookAssociations({
     return (
       <section className="mt-6 border-t border-border pt-5">
         <h3 className="flex items-center gap-2 text-[15.5px] font-medium">
-          <BookOpen className="h-4 w-4" />
+          <IconBook2 className="h-4 w-4" />
           {t('sources.manageNotebooks')}
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
           {t('sources.manageNotebooksDesc')}
         </p>
         <div className="flex items-center justify-center py-8">
-          <LoaderIcon className="h-6 w-6 animate-spin text-muted-foreground" />
+          <IconLoader className="h-6 w-6 animate-spin text-muted-foreground" />
         </div>
       </section>
     )
@@ -124,7 +124,7 @@ export function NotebookAssociations({
     return (
       <section className="mt-6 border-t border-border pt-5">
         <h3 className="flex items-center gap-2 text-[15.5px] font-medium">
-          <BookOpen className="h-4 w-4" />
+          <IconBook2 className="h-4 w-4" />
           {t('sources.manageNotebooks')}
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
@@ -138,7 +138,7 @@ export function NotebookAssociations({
   return (
     <section className="mt-6 border-t border-border pt-5">
       <h3 className="flex items-center gap-2 text-[15.5px] font-medium">
-        <BookOpen className="h-4 w-4" />
+        <IconBook2 className="h-4 w-4" />
         {t('sources.manageNotebooks')}
       </h3>
       <p className="mt-1 text-sm text-muted-foreground">
@@ -171,7 +171,7 @@ export function NotebookAssociations({
                           {notebook.name}
                         </h4>
                         {isCurrentlyLinked && !hasChanges && (
-                          <Check className="h-4 w-4 text-fern" />
+                          <IconCheck className="h-4 w-4 text-fern" />
                         )}
                       </div>
                       {notebook.description && (
@@ -203,7 +203,7 @@ export function NotebookAssociations({
             >
               {isSaving ? (
                 <>
-                  <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
+                  <IconLoader className="mr-2 h-4 w-4 animate-spin" />
                   {t('common.saving')}...
                 </>
               ) : (

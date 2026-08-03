@@ -6,7 +6,7 @@
 
 ## Context
 
-Open Notebook's value is the knowledge layer: organizing, understanding and generating from research content. But delivering it requires two areas of heavy, ever-changing integration code: AI provider APIs (17 providers across LLM/embedding/TTS/STT) and content extraction (50+ file types, URLs, video/audio platforms). Building that in-repo would bloat the codebase and pull maintenance attention away from the product core.
+NotebookE's value is the knowledge layer: organizing, understanding and generating from research content. But delivering it requires two areas of heavy, ever-changing integration code: AI provider APIs (17 providers across LLM/embedding/TTS/STT) and content extraction (50+ file types, URLs, video/audio platforms). Building that in-repo would bloat the codebase and pull maintenance attention away from the product core.
 
 ## Decision
 

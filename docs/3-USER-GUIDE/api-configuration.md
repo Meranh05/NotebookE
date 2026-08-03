@@ -2,13 +2,13 @@
 
 Configure AI provider credentials through the Settings UI. No file editing required.
 
-> **Credential System**: Open Notebook uses encrypted credentials stored in the database. Each credential connects to a provider and allows you to discover, register, and test models.
+> **Credential System**: NotebookE uses encrypted credentials stored in the database. Each credential connects to a provider and allows you to discover, register, and test models.
 
 ---
 
 ## Overview
 
-Open Notebook manages AI provider access through a **credential-based system**:
+NotebookE manages AI provider access through a **credential-based system**:
 
 1. You create a **credential** for each provider (API key + settings)
 2. Credentials are **encrypted** and stored in the database
@@ -85,7 +85,7 @@ Navigation: Settings → API Keys
 ### Cloud Providers
 
 | Provider | Required Fields | Optional Fields |
-|----------|-----------------|-----------------|
+| ---------- | ----------------- | ----------------- |
 | OpenAI | API Key | — |
 | Anthropic | API Key | — |
 | Google Gemini | API Key | — |
@@ -107,7 +107,7 @@ Navigation: Settings → API Keys
 ### Enterprise
 
 | Provider | Required Fields | Optional Fields |
-|----------|-----------------|-----------------|
+| ---------- | ----------------- | ----------------- |
 | Azure OpenAI | API Key, URL Base (Azure endpoint) | Service-specific endpoints (LLM, Embedding, STT, TTS) |
 | OpenAI-Compatible | Base URL | API Key, Service-specific configs |
 | Vertex AI | Project ID, Location, Credentials Path | — |
@@ -131,7 +131,7 @@ Navigation: Settings → API Keys
 2. Wait for the result:
 
 | Result | Meaning |
-|--------|---------|
+| -------- | --------- |
 | Success | Key is valid, provider accessible |
 | Invalid API key | Check key format and value |
 | Connection failed | Check URL, network, firewall |
@@ -146,13 +146,14 @@ Navigation: Settings → API Keys
 
 1. Select the models you want to use
 2. Click **Register Models**
-3. The models are now available throughout Open Notebook
+3. The models are now available throughout NotebookE
 
 ---
 
 ## Multi-Credential Support
 
 Each provider can have **multiple credentials**. This is useful when:
+
 - You have different API keys for different projects
 - You want to test with different endpoints
 - Multiple team members need separate credentials
@@ -167,6 +168,7 @@ Each provider can have **multiple credentials**. This is useful when:
 ### How Models Link to Credentials
 
 When you register models from a credential, those models are linked to that specific credential. This means:
+
 - Each model knows which API key to use
 - You can have models from different credentials for the same provider
 - Deleting a credential removes its linked models
@@ -178,7 +180,7 @@ When you register models from a credential, those models are linked to that spec
 Click **Test Connection** to verify your credential:
 
 | Result | Meaning |
-|--------|---------|
+| -------- | --------- |
 | Success | Key is valid, provider accessible |
 | Invalid API key | Check key format and value |
 | Connection failed | Check URL, network, firewall |
@@ -236,6 +238,7 @@ For custom OpenAI-compatible servers (LM Studio, vLLM, etc.):
 4. Optionally configure per-service URLs
 
 Supports separate configurations for:
+
 - LLM (language models)
 - Embedding
 - STT (speech-to-text)
@@ -246,7 +249,7 @@ Supports separate configurations for:
 Google Cloud's enterprise AI platform:
 
 | Field | Example |
-|-------|---------|
+| ------- | --------- |
 | Project ID | `my-gcp-project` |
 | Location | `us-central1` |
 | Credentials Path | `/path/to/service-account.json` |
@@ -266,7 +269,7 @@ If you have existing API keys in environment variables (from a previous version)
 ### Migration Behavior
 
 | Scenario | Action |
-|----------|--------|
+| ---------- | -------- |
 | Key in env only | Migrated to database |
 | Key in database only | No change |
 | Key in both | Database version kept (skipped) |
@@ -280,6 +283,7 @@ If you have existing API keys in environment variables (from a previous version)
 ### Migration Banner Visibility
 
 The migration banner only appears when:
+
 - You have environment variables configured
 - Those providers are **not** already in the database
 - If all env providers are already migrated, the banner won't show
@@ -332,7 +336,7 @@ API keys stored in the database are encrypted using Fernet (AES-128-CBC + HMAC-S
 ### Credential Not Saving
 
 | Symptom | Cause | Solution |
-|---------|-------|----------|
+| --------- | ------- | ---------- |
 | Save button disabled | Empty or invalid input | Enter a valid key |
 | Error on save | Encryption key not set | Set `OPEN_NOTEBOOK_ENCRYPTION_KEY` in docker-compose.yml |
 | Error on save | Database connection issue | Check database status |
@@ -340,7 +344,7 @@ API keys stored in the database are encrypted using Fernet (AES-128-CBC + HMAC-S
 ### Test Connection Fails
 
 | Error | Cause | Solution |
-|-------|-------|----------|
+| ------- | ------- | ---------- |
 | Invalid API key | Wrong key or format | Verify key from provider dashboard |
 | Connection refused | Wrong URL | Check base URL format |
 | Timeout | Network issue | Check firewall, proxy settings |
@@ -349,7 +353,7 @@ API keys stored in the database are encrypted using Fernet (AES-128-CBC + HMAC-S
 ### Migration Issues
 
 | Problem | Solution |
-|---------|----------|
+| --------- | ---------- |
 | No migration banner | No env vars detected, or already migrated |
 | Partial migration | Check error list, fix and retry |
 | Keys not working after migration | Clear browser cache, restart services |
@@ -366,23 +370,28 @@ API keys stored in the database are encrypted using Fernet (AES-128-CBC + HMAC-S
 ## Provider-Specific Notes
 
 ### OpenAI
+
 - Keys start with `sk-proj-` (project keys) or `sk-` (legacy)
 - Requires billing enabled on account
 
 ### Anthropic
+
 - Keys start with `sk-ant-`
 - Check account has API access enabled
 
 ### Google Gemini
+
 - Keys start with `AIzaSy`
 - Free tier has rate limits
 
 ### Ollama
+
 - No API key required
 - Default URL: `http://localhost:11434` (local) or `http://ollama:11434` (Docker)
 - Ensure Ollama server is running
 
 ### Azure OpenAI
+
 - Enter your Azure endpoint in the **URL Base** field (format: `https://{resource-name}.openai.azure.com`)
 - API version defaults to `2024-10-21`; override via `AZURE_OPENAI_API_VERSION` environment variable if needed
 - Deployment names configured separately when registering models via the credential's Discover Models dialog

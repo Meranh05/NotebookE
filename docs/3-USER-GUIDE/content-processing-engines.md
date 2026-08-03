@@ -1,6 +1,6 @@
 # Content Processing Engines - Choosing How Content Is Extracted
 
-When you add a source, Open Notebook extracts its text before chunking, embedding, and indexing it. How that extraction happens depends on the **processing engine**. You usually don't need to touch this — the defaults handle most content — but knowing your options helps when a document extracts poorly or a URL comes back empty.
+When you add a source, NotebookE extracts its text before chunking, embedding, and indexing it. How that extraction happens depends on the **processing engine**. You usually don't need to touch this — the defaults handle most content — but knowing your options helps when a document extracts poorly or a URL comes back empty.
 
 Configure everything here in **Settings → Content Processing**.
 
@@ -30,7 +30,7 @@ Changes apply to sources you add **after** saving. Re-add a source if you want i
 Controls how uploaded files (PDF, Word, PowerPoint, EPUB, etc.) are turned into text.
 
 | Engine | What it does | Trade-off |
-|--------|--------------|-----------|
+| -------- | -------------- | ----------- |
 | **auto** (default) | Picks the best engine for the file type. Uses Docling for complex documents when it's enabled, simple extraction for the rest. | Balanced. Good default for almost everyone. |
 | **docling** | Layout-aware extraction: understands columns, tables, headings, and reading order. Runs OCR on scanned pages when OCR is enabled. **Optional — must be enabled** (see below). | Most accurate, but slower and heavier. |
 | **simple** | Fast, lightweight text extraction. Skips Docling entirely. | Fastest, but loses table structure and layout; no OCR. |
@@ -45,10 +45,10 @@ Controls how uploaded files (PDF, Word, PowerPoint, EPUB, etc.) are turned into 
 
 ## URL Processing Engines
 
-Controls how web links are fetched and converted to text. Sites differ wildly — some are static HTML, others render everything with JavaScript, others sit behind anti-bot protection — so Open Notebook offers several engines with different capabilities.
+Controls how web links are fetched and converted to text. Sites differ wildly — some are static HTML, others render everything with JavaScript, others sit behind anti-bot protection — so NotebookE offers several engines with different capabilities.
 
 | Engine | What it does | Needs |
-|--------|--------------|-------|
+| -------- | -------------- | ------- |
 | **auto** (default) | Tries each engine in order until one succeeds (see chain below). | Nothing; uses whatever is configured. |
 | **firecrawl** | Managed scraping service. Handles JavaScript, anti-bot, and proxies well. | `FIRECRAWL_API_KEY` (or a self-hosted instance). |
 | **jina** | Jina AI Reader. Good at turning articles into clean text. | `JINA_API_KEY`. |
@@ -57,7 +57,7 @@ Controls how web links are fetched and converted to text. Sites differ wildly �
 
 ### How the `auto` fallback chain works
 
-In `auto` mode, Open Notebook tries engines in order and stops at the first that returns usable content:
+In `auto` mode, NotebookE tries engines in order and stops at the first that returns usable content:
 
 ```
 Firecrawl  →  Jina  →  Crawl4AI  →  simple (bs4)
@@ -98,7 +98,7 @@ OCR only runs through Docling, so it does nothing until **Docling is enabled** (
 Docling and local Crawl4AI are heavy: Docling pulls a multi-hundred-MB to multi-GB machine-learning stack, and Crawl4AI bundles a Chromium browser. To keep the default image small, they are **not installed by default**. You opt in with an environment variable; the runtime is then installed automatically the **first time the container starts**, and the downloads are cached on your data volume so later restarts are fast.
 
 | Enable this | To unlock |
-|-------------|-----------|
+| ------------- | ----------- |
 | `OPEN_NOTEBOOK_ENABLE_DOCLING=true` | The `docling` document engine, the OCR toggle, and image sources (PNG/JPEG/TIFF/BMP). |
 | `OPEN_NOTEBOOK_ENABLE_CRAWL4AI=true` | The local `crawl4ai` URL engine (JavaScript rendering via Chromium). |
 | `CRAWL4AI_API_URL=…` | The `crawl4ai` engine against a **remote** Crawl4AI server — no local install needed. |
@@ -110,7 +110,7 @@ Notes:
 - **The UI reflects reality.** Settings shows Docling/Crawl4AI/OCR as disabled until the runtime is actually installed and importable, so while a first-boot install is still running they correctly read "unavailable".
 - **Offline / air-gapped deployments:** the startup install needs network access on first boot. If you can't reach PyPI, leave these disabled.
 
-Set the variables the same way as any other Open Notebook environment variable (see the [Environment Reference](../5-CONFIGURATION/environment-reference.md) and your `docker-compose.yml`).
+Set the variables the same way as any other NotebookE environment variable (see the [Environment Reference](../5-CONFIGURATION/environment-reference.md) and your `docker-compose.yml`).
 
 ---
 

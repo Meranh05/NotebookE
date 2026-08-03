@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback, useMemo } from 'react'
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { MarkdownRenderer } from '@/components/ui/markdown-renderer'
 import { sourcesApi } from '@/lib/api/sources'
@@ -44,29 +44,159 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import {
-  Link as LinkIcon,
-  Upload,
-  AlignLeft,
-  ExternalLink,
-  Download,
-  Copy,
-  CheckCircle,
-  MoreVertical,
-  Trash2,
-  Sparkles,
-  Plus,
-  Lightbulb,
-  Database,
-  AlertCircle,
-  MessageSquare,
-} from 'lucide-react'
+import { IconAlertCircle, IconAlignLeft, IconBulb, IconCircleCheck, IconCopy, IconDatabase, IconDotsVertical, IconDownload, IconExternalLink, IconLink, IconMaximize, IconMessage, IconPlus, IconRotateClockwise, IconSparkles, IconTrash, IconUpload, IconZoomIn, IconZoomOut } from '@tabler/icons-react'
 import { formatDistanceToNow } from 'date-fns'
 import { getDateLocale } from '@/lib/utils/date-locale'
 import { toast } from 'sonner'
 import { useTranslation } from '@/lib/hooks/use-translation'
 import { SourceInsightDialog } from '@/components/sources/SourceInsightDialog'
 import { NotebookAssociations } from '@/components/sources/NotebookAssociations'
+
+// ─── Image file detection ────────────────────────────────────────────────────
+const IMAGE_EXTENSIONS = new Set(['jpg','jpeg','png','gif','webp','bmp','tiff','tif','svg','avif'])
+
+function getFilenameFromPath(path: string | undefined): string {
+  if (!path) return ''
+  return path.split(/[\/\\]/).pop() ?? ''
+}
+
+function isImageSource(filePath: string | undefined): boolean {
+  const ext = getFilenameFromPath(filePath).split('.').pop()?.toLowerCase() ?? ''
+  return IMAGE_EXTENSIONS.has(ext)
+}
+
+// ─── Image viewer component ──────────────────────────────────────────────────
+function ImageSourceViewer({ sourceId, filename }: { sourceId: string; filename: string }) {
+  const [imgUrl, setImgUrl] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
+  const [zoom, setZoom] = useState(1)
+  const [rotation, setRotation] = useState(0)
+  const urlRef = useRef<string | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    setLoading(true)
+    setError(false)
+
+    sourcesApi.downloadFile(sourceId)
+      .then(response => {
+        if (cancelled) return
+        const url = URL.createObjectURL(response.data)
+        urlRef.current = url
+        setImgUrl(url)
+      })
+      .catch(() => { if (!cancelled) setError(true) })
+      .finally(() => { if (!cancelled) setLoading(false) })
+
+    return () => {
+      cancelled = true
+      if (urlRef.current) {
+        URL.revokeObjectURL(urlRef.current)
+        urlRef.current = null
+      }
+    }
+  }, [sourceId])
+
+  const handleDownload = () => {
+    if (!imgUrl) return
+    const a = document.createElement('a')
+    a.href = imgUrl
+    a.download = filename
+    a.click()
+  }
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64 rounded-2xl border-2 border-border bg-muted/30">
+        <div className="flex flex-col items-center gap-3 text-muted-foreground">
+          <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+          <span className="text-sm">Đang tải ảnh...</span>
+        </div>
+      </div>
+    )
+  }
+
+  if (error || !imgUrl) {
+    return (
+      <div className="flex items-center justify-center h-48 rounded-2xl border-2 border-dashed border-border bg-muted/20 text-muted-foreground">
+        <span className="text-sm">Không thể tải ảnh</span>
+      </div>
+    )
+  }
+
+  return (
+    <div className="space-y-3">
+      {/* Toolbar */}
+      <div className="flex items-center gap-2 px-1">
+        <div className="flex items-center gap-1 bg-muted/60 rounded-xl p-1">
+          <button
+            type="button"
+            onClick={() => setZoom(z => Math.max(0.25, z - 0.25))}
+            className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-background text-muted-foreground hover:text-foreground transition-colors"
+            title="Thu nhỏ"
+          >
+            <IconZoomOut className="h-4 w-4" />
+          </button>
+          <span className="text-xs font-semibold text-foreground min-w-[3rem] text-center tabular-nums">
+            {Math.round(zoom * 100)}%
+          </span>
+          <button
+            type="button"
+            onClick={() => setZoom(z => Math.min(4, z + 0.25))}
+            className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-background text-muted-foreground hover:text-foreground transition-colors"
+            title="Phóng to"
+          >
+            <IconZoomIn className="h-4 w-4" />
+          </button>
+          <div className="w-px h-5 bg-border mx-1" />
+          <button
+            type="button"
+            onClick={() => setRotation(r => (r + 90) % 360)}
+            className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-background text-muted-foreground hover:text-foreground transition-colors"
+            title="Xoay 90°"
+          >
+            <IconRotateClockwise className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => { setZoom(1); setRotation(0) }}
+            className="flex items-center justify-center w-8 h-8 rounded-lg hover:bg-background text-muted-foreground hover:text-foreground transition-colors"
+            title="Đặt lại"
+          >
+            <IconMaximize className="h-4 w-4" />
+          </button>
+        </div>
+        <div className="flex-1" />
+        <button
+          type="button"
+          onClick={handleDownload}
+          className="flex items-center gap-1.5 text-xs font-semibold text-primary bg-primary/10 hover:bg-primary/20 px-3 py-2 rounded-xl transition-colors"
+        >
+          <IconDownload className="h-3.5 w-3.5" />
+          Tải xuống
+        </button>
+      </div>
+
+      {/* Image container */}
+      <div className="overflow-auto rounded-2xl border-2 border-border bg-[repeating-conic-gradient(#80808015_0%_25%,transparent_0%_50%)] bg-[length:20px_20px] min-h-[300px] max-h-[70vh] flex items-center justify-center p-4">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={imgUrl}
+          alt={filename}
+          style={{
+            transform: `scale(${zoom}) rotate(${rotation}deg)`,
+            transformOrigin: 'center',
+            transition: 'transform 0.2s ease',
+            maxWidth: '100%',
+            objectFit: 'contain',
+          }}
+        />
+      </div>
+      <p className="text-center text-xs text-muted-foreground">{filename}</p>
+    </div>
+  )
+}
 
 interface SourceDetailContentProps {
   sourceId: string
@@ -318,9 +448,9 @@ function SourceDetailContentInner({
 
   const getSourceIcon = () => {
     if (!source) return null
-    if (source.asset?.url) return <LinkIcon className="h-5 w-5" />
-    if (source.asset?.file_path) return <Upload className="h-5 w-5" />
-    return <AlignLeft className="h-5 w-5" />
+    if (source.asset?.url) return <IconLink className="h-5 w-5" />
+    if (source.asset?.file_path) return <IconUpload className="h-5 w-5" />
+    return <IconAlignLeft className="h-5 w-5" />
   }
 
   const getSourceType = () => {
@@ -434,7 +564,7 @@ function SourceDetailContentInner({
             {/* Chat with source button - only in modal */}
             {showChatButton && onChatClick && (
               <Button variant="outline" size="sm" onClick={onChatClick}>
-                <MessageSquare className="h-4 w-4 mr-2" />
+                <IconMessage className="h-4 w-4 mr-2" />
                 {t('chat.chatWith', { name: t('navigation.sources') })}
               </Button>
             )}
@@ -442,7 +572,7 @@ function SourceDetailContentInner({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon">
-                  <MoreVertical className="h-4 w-4" />
+                  <IconDotsVertical className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
@@ -452,7 +582,7 @@ function SourceDetailContentInner({
                       onClick={handleDownloadFile}
                       disabled={isDownloadingFile || fileAvailable === false}
                     >
-                      <Download className="mr-2 h-4 w-4" />
+                      <IconDownload className="mr-2 h-4 w-4" />
                       {fileAvailable === false
                         ? t('sources.fileUnavailable')
                         : isDownloadingFile
@@ -466,7 +596,7 @@ function SourceDetailContentInner({
                   onClick={handleEmbedContent}
                   disabled={isEmbedding || source.embedded}
                 >
-                  <Database className="mr-2 h-4 w-4" />
+                  <IconDatabase className="mr-2 h-4 w-4" />
                   {isEmbedding ? t('sources.embedding') : source.embedded ? t('sources.alreadyEmbedded') : t('sources.embedContent')}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -474,7 +604,7 @@ function SourceDetailContentInner({
                   className="text-destructive"
                   onClick={handleDelete}
                 >
-                  <Trash2 className="mr-2 h-4 w-4" />
+                  <IconTrash className="mr-2 h-4 w-4" />
                   {t('sources.deleteSource')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -498,7 +628,7 @@ function SourceDetailContentInner({
             <section>
               {externalHref && !isYouTubeUrl && (
                 <p className="mb-4 flex items-center gap-2 text-xs text-muted-foreground">
-                  <LinkIcon className="h-3.5 w-3.5 shrink-0" />
+                  <IconLink className="h-3.5 w-3.5 shrink-0" />
                   <a
                     href={externalHref}
                     target="_blank"
@@ -528,16 +658,25 @@ function SourceDetailContentInner({
                         rel="noopener noreferrer"
                         className="text-sm text-muted-foreground hover:underline inline-flex items-center gap-1"
                       >
-                        <ExternalLink className="h-3 w-3" />
+                        <IconExternalLink className="h-3 w-3" />
                         {t('sources.openOnYoutube')}
                       </a>
                     </div>
                   )}
                 </div>
               )}
-              <MarkdownRenderer>
-                {source.full_text || t('sources.noContent')}
-              </MarkdownRenderer>
+
+              {/* Image file: show visual viewer instead of extracted text */}
+              {isImageSource(source.asset?.file_path) ? (
+                <ImageSourceViewer
+                  sourceId={source.id}
+                  filename={getFilenameFromPath(source.asset?.file_path)}
+                />
+              ) : (
+                <MarkdownRenderer>
+                  {source.full_text || t('sources.noContent')}
+                </MarkdownRenderer>
+              )}
             </section>
           </TabsContent>
 
@@ -545,7 +684,7 @@ function SourceDetailContentInner({
             <section>
               <div className="flex items-center justify-between">
                 <h3 className="flex items-center gap-2 text-[15.5px] font-medium">
-                  <Lightbulb className="h-4 w-4 text-teal" />
+                  <IconBulb className="h-4 w-4 text-teal" />
                   {t('common.insights')}
                   <span className="font-mono text-xs text-muted-foreground">{insights.length}</span>
                 </h3>
@@ -560,7 +699,7 @@ function SourceDetailContentInner({
                   htmlFor="transformation-select"
                   className="mb-3 text-sm font-medium flex items-center gap-2"
                 >
-                  <Sparkles className="h-4 w-4 text-teal" />
+                  <IconSparkles className="h-4 w-4 text-teal" />
                   {t('sources.generateNewInsight')}
                 </Label>
                 <div className="flex gap-2">
@@ -593,7 +732,7 @@ function SourceDetailContentInner({
                       </>
                     ) : (
                       <>
-                        <Plus className="mr-2 h-4 w-4" />
+                        <IconPlus className="mr-2 h-4 w-4" />
                         {t('common.create')}
                       </>
                     )}
@@ -608,7 +747,7 @@ function SourceDetailContentInner({
                 </div>
               ) : insights.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
-                  <Lightbulb className="h-12 w-12 mx-auto mb-3 opacity-40" />
+                  <IconBulb className="h-12 w-12 mx-auto mb-3 opacity-40" />
                   <p className="text-sm">{t('sources.noInsightsYet')}</p>
                   <p className="text-xs mt-1">{t('sources.createFirstInsight')}</p>
                 </div>
@@ -635,7 +774,7 @@ function SourceDetailContentInner({
                           onClick={() => setInsightToDelete(insight.id)}
                           className="text-destructive hover:text-destructive"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <IconTrash className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>
@@ -652,7 +791,7 @@ function SourceDetailContentInner({
                 {/* Embedding Alert */}
                 {!source.embedded && (
                   <Alert>
-                    <AlertCircle className="h-4 w-4" />
+                    <IconAlertCircle className="h-4 w-4" />
                     <AlertTitle>
                       {t('sources.notEmbeddedAlert')}
                     </AlertTitle>
@@ -664,7 +803,7 @@ function SourceDetailContentInner({
                           disabled={isEmbedding}
                           size="sm"
                         >
-                          <Database className="mr-2 h-4 w-4" />
+                          <IconDatabase className="mr-2 h-4 w-4" />
                           {isEmbedding ? t('sources.embedding') : t('sources.embedContent')}
                         </Button>
                       </div>
@@ -687,9 +826,9 @@ function SourceDetailContentInner({
                           onClick={handleCopyUrl}
                         >
                           {copied ? (
-                            <CheckCircle className="h-4 w-4" />
+                            <IconCircleCheck className="h-4 w-4" />
                           ) : (
-                            <Copy className="h-4 w-4" />
+                            <IconCopy className="h-4 w-4" />
                           )}
                         </Button>
                         <Button
@@ -698,7 +837,7 @@ function SourceDetailContentInner({
                           onClick={handleOpenExternal}
                           disabled={!externalHref}
                         >
-                          <ExternalLink className="h-4 w-4" />
+                          <IconExternalLink className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>
@@ -717,7 +856,7 @@ function SourceDetailContentInner({
                           onClick={handleDownloadFile}
                           disabled={isDownloadingFile || fileAvailable === false}
                         >
-                          <Download className="mr-2 h-4 w-4" />
+                          <IconDownload className="mr-2 h-4 w-4" />
                           {fileAvailable === false
                             ? t('sources.fileUnavailable')
                             : isDownloadingFile
@@ -752,7 +891,7 @@ function SourceDetailContentInner({
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-sm font-medium">{t('sources.metadata')}</h3>
                     <div className="flex items-center gap-2">
-                      <Database className="h-3.5 w-3.5 text-muted-foreground" />
+                      <IconDatabase className="h-3.5 w-3.5 text-muted-foreground" />
                       <Badge variant={source.embedded ? "default" : "secondary"} className="text-xs">
                         {source.embedded ? t('sources.embedded') : t('sources.notEmbedded')}
                       </Badge>

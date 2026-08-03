@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { NotebookResponse } from '@/lib/types/api'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Archive, ArchiveRestore, Trash2 } from 'lucide-react'
+import { IconArchive, IconArchiveOff, IconTrash } from '@tabler/icons-react'
 import { useUpdateNotebook } from '@/lib/hooks/use-notebooks'
 import { NotebookDeleteDialog } from './NotebookDeleteDialog'
 import { formatDistanceToNow } from 'date-fns'
@@ -20,12 +20,12 @@ export function NotebookHeader({ notebook }: NotebookHeaderProps) {
   const { t, language } = useTranslation()
   const dfLocale = getDateLocale(language)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-  
+
   const updateNotebook = useUpdateNotebook()
 
   const handleUpdateName = async (name: string) => {
     if (!name || name === notebook.name) return
-    
+
     await updateNotebook.mutateAsync({
       id: notebook.id,
       data: { name }
@@ -34,7 +34,7 @@ export function NotebookHeader({ notebook }: NotebookHeaderProps) {
 
   const handleUpdateDescription = async (description: string) => {
     if (description === notebook.description) return
-    
+
     await updateNotebook.mutateAsync({
       id: notebook.id,
       data: { description: description || undefined }
@@ -50,24 +50,47 @@ export function NotebookHeader({ notebook }: NotebookHeaderProps) {
 
   return (
     <>
-      <div className="border-b pb-6">
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3 flex-1">
+      <div className="border-b pb-4">
+        <div className="flex flex-col gap-2 w-full">
+          <div className="flex items-start lg:items-center justify-between flex-col lg:flex-row gap-4 lg:gap-6 w-full">
+            {/* Title Section (Fixed proportion) */}
+            <div className="flex items-center gap-3 w-full lg:w-[35%] min-w-0 flex-shrink-0">
               <InlineEdit
                 id="notebook-name"
                 name="notebook-name"
                 value={notebook.name}
                 onSave={handleUpdateName}
-                className="font-display text-2xl font-bold tracking-tight"
-                inputClassName="font-display text-2xl font-bold tracking-tight"
+                className="font-display text-xl font-bold tracking-tight truncate text-left w-full block"
+                inputClassName="font-display text-xl font-bold tracking-tight w-full min-w-[200px]"
                 placeholder={t('notebooks.namePlaceholder')}
               />
               {notebook.archived && (
-                <Badge variant="secondary">{t('notebooks.archived')}</Badge>
+                <Badge variant="secondary" className="flex-shrink-0">{t('notebooks.archived')}</Badge>
               )}
             </div>
-            <div className="flex gap-2">
+
+            <div className="h-[30px] w-[1px] bg-border hidden lg:block flex-shrink-0" />
+
+            {/* Description Section (Remaining space) */}
+            <div className="flex flex-col gap-1 min-w-0 flex-1 w-full">
+                <InlineEdit
+                  id="notebook-description"
+                  name="notebook-description"
+                  value={notebook.description || ''}
+                  onSave={handleUpdateDescription}
+                  className="text-sm text-muted-foreground truncate w-full cursor-pointer hover:text-foreground transition-colors"
+                  inputClassName="text-sm text-muted-foreground w-full"
+                  placeholder={t('notebooks.addDescription')}
+                  emptyText={t('notebooks.addDescription')}
+                />
+                <div className="text-xs text-muted-foreground/70 whitespace-nowrap truncate">
+                  {t('common.created', { time: formatDistanceToNow(new Date(notebook.created), { addSuffix: true, locale: dfLocale }) })} • 
+                  {' '}{t('common.updated', { time: formatDistanceToNow(new Date(notebook.updated), { addSuffix: true, locale: dfLocale }) })}
+                </div>
+              </div>
+
+            {/* Actions Section */}
+            <div className="flex gap-2 flex-shrink-0 w-full lg:w-auto justify-start lg:justify-end">
               <Button
                 variant="outline"
                 size="sm"
@@ -75,12 +98,12 @@ export function NotebookHeader({ notebook }: NotebookHeaderProps) {
               >
                 {notebook.archived ? (
                   <>
-                    <ArchiveRestore className="h-4 w-4 mr-2" />
+                    <IconArchiveOff className="h-4 w-4 mr-2" />
                     {t('notebooks.unarchive')}
                   </>
                 ) : (
                   <>
-                    <Archive className="h-4 w-4 mr-2" />
+                    <IconArchive className="h-4 w-4 mr-2" />
                     {t('notebooks.archive')}
                   </>
                 )}
@@ -91,7 +114,7 @@ export function NotebookHeader({ notebook }: NotebookHeaderProps) {
                 onClick={() => setShowDeleteDialog(true)}
                 className="text-destructive hover:text-destructive"
               >
-                <Trash2 className="h-4 w-4 mr-2" />
+                <IconTrash className="h-4 w-4 mr-2" />
                 {t('common.delete')}
               </Button>
             </div>
@@ -99,23 +122,6 @@ export function NotebookHeader({ notebook }: NotebookHeaderProps) {
 
           {/* Signature: one short flat fern underline — one hue, no show */}
           <div aria-hidden className="h-[3px] w-14 rounded-[1px] bg-fern" />
-
-          <InlineEdit
-            id="notebook-description"
-            name="notebook-description"
-            value={notebook.description || ''}
-            onSave={handleUpdateDescription}
-            className="text-muted-foreground"
-            inputClassName="text-muted-foreground"
-            placeholder={t('notebooks.addDescription')}
-            multiline
-            emptyText={t('notebooks.addDescription')}
-          />
-          
-          <div className="text-xs text-muted-foreground">
-            {t('common.created', { time: formatDistanceToNow(new Date(notebook.created), { addSuffix: true, locale: dfLocale }) })} • 
-            {t('common.updated', { time: formatDistanceToNow(new Date(notebook.updated), { addSuffix: true, locale: dfLocale }) })}
-          </div>
         </div>
       </div>
 

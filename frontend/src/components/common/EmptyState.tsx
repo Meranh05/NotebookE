@@ -1,7 +1,7 @@
-import { LucideIcon } from 'lucide-react'
+import { Icon } from '@tabler/icons-react'
 
 interface EmptyStateProps {
-  icon: LucideIcon
+  icon: Icon
   title: string
   description: string
   action?: React.ReactNode

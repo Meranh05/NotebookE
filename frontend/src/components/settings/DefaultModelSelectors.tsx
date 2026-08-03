@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
-import { Loader2, X, AlertCircle, Wand2 } from 'lucide-react'
+import { IconAlertCircle, IconLoader2, IconWand, IconX } from '@tabler/icons-react'
 import { useTranslation } from '@/lib/hooks/use-translation'
 import { useUpdateModelDefaults, useAutoAssignDefaults } from '@/lib/hooks/use-models'
 import { Model, ModelDefaults } from '@/lib/types/models'
@@ -104,7 +104,7 @@ function DefaultModelSelect({
         </Select>
         {!config.required && currentValue && (
           <Button variant="ghost" size="icon" onClick={() => onChange(config.key, "")} className="h-8 w-8 shrink-0">
-            <X className="h-3 w-3" />
+            <IconX className="h-3 w-3" />
           </Button>
         )}
       </div>
@@ -202,7 +202,7 @@ export function DefaultModelSelectors({
       <CardContent className="space-y-6">
         {missingRequired.length > 0 && (
           <Alert>
-            <AlertCircle className="h-4 w-4" />
+            <IconAlertCircle className="h-4 w-4" />
             <AlertDescription className="flex items-center justify-between gap-4">
               <span>{t('models.missingRequiredModels', { models: missingRequired.join(', ') })}</span>
               <Button
@@ -211,7 +211,7 @@ export function DefaultModelSelectors({
                 disabled={autoAssign.isPending}
                 className="shrink-0 gap-1.5"
               >
-                {autoAssign.isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Wand2 className="h-3.5 w-3.5" />}
+                {autoAssign.isPending ? <IconLoader2 className="h-3.5 w-3.5 animate-spin" /> : <IconWand className="h-3.5 w-3.5" />}
                 {autoAssign.isPending ? t('models.autoAssigning') : t('models.autoAssign')}
               </Button>
             </AlertDescription>

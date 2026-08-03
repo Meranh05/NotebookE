@@ -6,7 +6,7 @@
 
 ## Context
 
-Open Notebook needs document storage (sources with metadata), graph relationships (notebooks ↔ sources ↔ notes), vector embeddings for semantic search, and background jobs — while staying easy to self-host for privacy-focused users. A traditional stack would be Postgres + Redis + Celery + a vector DB: four services to operate.
+NotebookE needs document storage (sources with metadata), graph relationships (notebooks ↔ sources ↔ notes), vector embeddings for semantic search, and background jobs — while staying easy to self-host for privacy-focused users. A traditional stack would be Postgres + Redis + Celery + a vector DB: four services to operate.
 
 ## Decision
 

@@ -597,9 +597,10 @@ async def discover_with_config(provider: str, config: dict) -> List[dict]:
         # Vertex AI requires service-account OAuth2 for model listing.
         # Return a curated static list of well-known Vertex models instead.
         VERTEX_MODELS = [
-            "gemini-3.5-flash",
-            "gemini-2.5-flash",
-            "gemini-2.5-flash-lite",
+            "gemini-2.0-flash",
+            "gemini-1.5-flash",
+            "gemini-1.5-pro",
+            "gemini-1.5-flash-8b",
             "text-embedding-005",
         ]
         return [{"name": m, "provider": "vertex"} for m in VERTEX_MODELS]

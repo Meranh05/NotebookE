@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { useDebounce } from 'use-debounce'
-import { Search, Link2, LoaderIcon, FileText, Link as LinkIcon, Upload } from 'lucide-react'
+import { IconFileText, IconLink, IconLoader, IconSearch, IconUpload } from '@tabler/icons-react'
 import {
   Dialog,
   DialogContent,
@@ -164,12 +164,12 @@ export function AddExistingSourceDialog({
   const getSourceIcon = (source: SourceListResponse) => {
     // Derive type from asset
     if (source.asset?.url) {
-      return <LinkIcon className="h-4 w-4" />
+      return <IconLink className="h-4 w-4" />
     }
     if (source.asset?.file_path) {
-      return <Upload className="h-4 w-4" />
+      return <IconUpload className="h-4 w-4" />
     }
-    return <FileText className="h-4 w-4" />
+    return <IconFileText className="h-4 w-4" />
   }
 
   const formatDate = (dateString: string) => {
@@ -185,7 +185,7 @@ export function AddExistingSourceDialog({
       <DialogContent className="max-w-2xl sm:max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Link2 className="h-5 w-5" />
+            <IconLink className="h-5 w-5" />
             {t('sources.addExistingTitle')}
           </DialogTitle>
           <DialogDescription>
@@ -194,9 +194,9 @@ export function AddExistingSourceDialog({
         </DialogHeader>
 
         <div className="space-y-4 flex-1 overflow-hidden flex flex-col">
-          {/* Search Input */}
+          {/* IconSearch Input */}
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <IconSearch className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder={t('sources.searchPlaceholder')}
               value={searchQuery}
@@ -204,7 +204,7 @@ export function AddExistingSourceDialog({
               className="pl-10"
             />
             {isSearching && (
-              <LoaderIcon className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-muted-foreground" />
+              <IconLoader className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 animate-spin text-muted-foreground" />
             )}
           </div>
 
@@ -212,12 +212,12 @@ export function AddExistingSourceDialog({
           <ScrollArea className="h-[400px] border rounded-md">
             {isSearching && filteredSources.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-[200px] text-muted-foreground">
-                <LoaderIcon className="h-12 w-12 mb-2 animate-spin" />
+                <IconLoader className="h-12 w-12 mb-2 animate-spin" />
                 <p>{t('common.loading')}</p>
               </div>
             ) : filteredSources.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-[200px] text-muted-foreground">
-                <FileText className="h-12 w-12 mb-2 opacity-50" />
+                <IconFileText className="h-12 w-12 mb-2 opacity-50" />
                 <p>{t('sources.noNotebooksFound')}</p>
               </div>
             ) : (
@@ -293,7 +293,7 @@ export function AddExistingSourceDialog({
           >
             {addSources.isPending ? (
               <>
-                <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
+                <IconLoader className="mr-2 h-4 w-4 animate-spin" />
                 {t('common.adding')}
               </>
             ) : (

@@ -13,6 +13,7 @@ Multi-container setup with separate services. **Best for most users.**
 ## Step 1: Get docker-compose.yml (1 min)
 
 **Option A: Download from repository**
+
 ```bash
 curl -o docker-compose.yml https://raw.githubusercontent.com/lfnovo/open-notebook/main/docker-compose.yml
 ```
@@ -80,6 +81,7 @@ services:
 ```
 
 **Edit the file:**
+
 - Replace `change-me-to-a-secret-string` with your own secret (any string works, e.g., `my-super-secret-key-123`)
 - (Optional) To use database credentials other than the default `root:root`, create a `.env` file next to `docker-compose.yml` with `SURREAL_USER=...` and `SURREAL_PASSWORD=...` — both services pick them up automatically ([.env.example](https://github.com/lfnovo/open-notebook/blob/main/.env.example) shows the full format)
 
@@ -94,12 +96,14 @@ docker compose up -d
 ```
 
 Wait 15-20 seconds for all services to start:
+
 ```
 ✅ surrealdb running on :8000
 ✅ open_notebook running on :8502 (UI) and :5055 (API)
 ```
 
 Check status:
+
 ```bash
 docker compose ps
 ```
@@ -109,6 +113,7 @@ docker compose ps
 ## Step 3: Verify Installation (1 min)
 
 **API Health:**
+
 ```bash
 curl http://localhost:5055/health
 # Should return: {"status": "healthy"}
@@ -116,11 +121,12 @@ curl http://localhost:5055/health
 
 **Frontend Access:**
 Open browser to:
+
 ```
 http://localhost:8502
 ```
 
-You should see the Open Notebook interface!
+You should see the NotebookE interface!
 
 ---
 
@@ -137,10 +143,11 @@ You should see the Open Notebook interface!
 Your models are now available!
 
 > **Need an API key?** Get one from your chosen provider:
-> - **OpenAI**: https://platform.openai.com/api-keys
-> - **Anthropic**: https://console.anthropic.com/
-> - **Google**: https://aistudio.google.com/
-> - **Groq**: https://console.groq.com/
+>
+> - **OpenAI**: <https://platform.openai.com/api-keys>
+> - **Anthropic**: <https://console.anthropic.com/>
+> - **Google**: <https://aistudio.google.com/>
+> - **Groq**: <https://console.groq.com/>
 
 ---
 
@@ -151,7 +158,7 @@ Your models are now available!
 3. Description: "Getting started"
 4. Click **Create**
 
-Done! You now have a fully working Open Notebook instance.
+Done! You now have a fully working NotebookE instance.
 
 ---
 
@@ -187,12 +194,14 @@ volumes:
 ```
 
 Then restart and pull a model:
+
 ```bash
 docker compose restart
 docker exec open-notebook-local-ollama-1 ollama pull mistral
 ```
 
 Configure Ollama in the Settings UI:
+
 1. Go to **Settings** → **API Keys**
 2. Click **Add Credential** → Select **Ollama**
 3. Enter base URL: `http://ollama:11434`
@@ -204,7 +213,7 @@ Configure Ollama in the Settings UI:
 ## Environment Variables Reference
 
 | Variable | Purpose | Example |
-|----------|---------|---------|
+| ---------- | --------- | --------- |
 | `OPEN_NOTEBOOK_ENCRYPTION_KEY` | Encryption key for credentials | `my-secret-key` |
 | `SURREAL_URL` | Database connection | `ws://surrealdb:8000/rpc` |
 | `SURREAL_USER` | Database user | `root` |
@@ -221,11 +230,13 @@ See [Environment Reference](../5-CONFIGURATION/environment-reference.md) for com
 ## Common Tasks
 
 ### Stop Services
+
 ```bash
 docker compose down
 ```
 
 ### View Logs
+
 ```bash
 # All services
 docker compose logs -f
@@ -235,11 +246,13 @@ docker compose logs -f api
 ```
 
 ### Restart Services
+
 ```bash
 docker compose restart
 ```
 
 ### Update to Latest Version
+
 ```bash
 docker compose down
 docker compose pull
@@ -247,6 +260,7 @@ docker compose up -d
 ```
 
 ### Remove All Data
+
 ```bash
 docker compose down -v
 ```
@@ -258,21 +272,24 @@ docker compose down -v
 ### "Cannot connect to API" Error
 
 1. Check if Docker is running:
+
 ```bash
 docker ps
 ```
 
-2. Check if services are running:
+1. Check if services are running:
+
 ```bash
 docker compose ps
 ```
 
-3. Check API logs:
+1. Check API logs:
+
 ```bash
 docker compose logs api
 ```
 
-4. Wait longer - services can take 20-30 seconds to start on first run
+1. Wait longer - services can take 20-30 seconds to start on first run
 
 ---
 
@@ -303,11 +320,13 @@ Then access at `http://localhost:8503`
 ### Database Connection Issues
 
 Check SurrealDB is running:
+
 ```bash
 docker compose logs surrealdb
 ```
 
 Reset database:
+
 ```bash
 docker compose down -v
 docker compose up -d
@@ -331,6 +350,7 @@ surrealdb:
 ```
 
 Then restart:
+
 ```bash
 docker compose down -v
 docker compose up -d
@@ -362,6 +382,7 @@ Each example includes detailed comments and usage instructions.
 ## Production Deployment
 
 For production use, see:
+
 - [Security Hardening](../5-CONFIGURATION/security.md)
 - [Reverse Proxy](../5-CONFIGURATION/reverse-proxy.md)
 

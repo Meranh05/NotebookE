@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Plus, FileText, Link2, ChevronDown, Loader2, ListChecks } from 'lucide-react'
+import { IconChevronDown, IconFileText, IconLink, IconListCheck, IconLoader2, IconPlus } from '@tabler/icons-react'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { EmptyState } from '@/components/common/EmptyState'
 import { AddSourceDialog } from '@/components/sources/AddSourceDialog'
@@ -153,10 +153,10 @@ export function SourcesColumn({
       <CollapsibleColumn
         isCollapsed={sourcesCollapsed}
         onToggle={toggleSources}
-        collapsedIcon={FileText}
+        collapsedIcon={IconFileText}
         collapsedLabel={t('navigation.sources')}
       >
-        <Card className="h-full flex flex-col flex-1 overflow-hidden">
+        <Card className="h-full flex flex-col flex-1 overflow-hidden border-border/60 bg-card/60 backdrop-blur-sm shadow-sm">
           <CardHeader className="pb-3 flex-shrink-0">
             <div className="flex items-center justify-between gap-2">
               <CardTitle className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.13em] text-muted-foreground">
@@ -168,8 +168,8 @@ export function SourcesColumn({
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="sm" className="text-muted-foreground" title={t('sources.bulkContext')}>
-                        <ListChecks className="h-4 w-4" />
-                        <ChevronDown className="h-4 w-4 ml-1" />
+                        <IconListCheck className="h-4 w-4" />
+                        <IconChevronDown className="h-4 w-4 ml-1" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -188,18 +188,18 @@ export function SourcesColumn({
                 <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
                   <DropdownMenuTrigger asChild>
                     <Button size="sm">
-                      <Plus className="h-4 w-4 mr-2" />
+                      <IconPlus className="h-4 w-4 mr-2" />
                       {t('sources.addSource')}
-                      <ChevronDown className="h-4 w-4 ml-2" />
+                      <IconChevronDown className="h-4 w-4 ml-2" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem onClick={() => { setDropdownOpen(false); setAddDialogOpen(true); }}>
-                      <Plus className="h-4 w-4 mr-2" />
+                      <IconPlus className="h-4 w-4 mr-2" />
                       {t('sources.addSource')}
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => { setDropdownOpen(false); setAddExistingDialogOpen(true); }}>
-                      <Link2 className="h-4 w-4 mr-2" />
+                      <IconLink className="h-4 w-4 mr-2" />
                       {t('sources.addExistingTitle')}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -216,7 +216,7 @@ export function SourcesColumn({
               </div>
             ) : !sources || sources.length === 0 ? (
               <EmptyState
-                icon={FileText}
+                icon={IconFileText}
                 title={t('sources.noSourcesYet')}
                 description={t('sources.createFirstSource')}
               />
@@ -243,7 +243,7 @@ export function SourcesColumn({
                 {/* Loading indicator for infinite scroll */}
                 {isFetchingNextPage && (
                   <div className="flex items-center justify-center py-4">
-                    <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                    <IconLoader2 className="h-5 w-5 animate-spin text-muted-foreground" />
                   </div>
                 )}
               </div>

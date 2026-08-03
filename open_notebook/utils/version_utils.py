@@ -1,5 +1,5 @@
 """
-Version utilities for Open Notebook.
+Version utilities for NotebookE.
 Handles version comparison, GitHub version fetching, and package version management.
 """
 

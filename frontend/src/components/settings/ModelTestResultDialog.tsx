@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { Check, X } from 'lucide-react'
+import { IconCheck, IconX } from '@tabler/icons-react'
 import { useTranslation } from '@/lib/hooks/use-translation'
 import { ModelTestResult } from '@/lib/types/models'
 
@@ -33,9 +33,9 @@ export function ModelTestResultDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {result.success ? (
-              <Check className="h-5 w-5 text-fern" />
+              <IconCheck className="h-5 w-5 text-fern" />
             ) : (
-              <X className="h-5 w-5 text-destructive" />
+              <IconX className="h-5 w-5 text-destructive" />
             )}
             {result.success ? t('models.testModelSuccess') : t('models.testModelFailed')}
           </DialogTitle>

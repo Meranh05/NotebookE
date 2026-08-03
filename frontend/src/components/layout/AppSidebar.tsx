@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 
 import { cn } from '@/lib/utils'
@@ -26,61 +27,51 @@ import { LanguageToggle } from '@/components/common/LanguageToggle'
 import type { TFunction } from 'i18next'
 import { useTranslation } from '@/lib/hooks/use-translation'
 import { Separator } from '@/components/ui/separator'
-import {
-  Book,
-  Search,
-  Mic,
-  Bot,
-  Shuffle,
-  Settings,
-  LogOut,
-  ChevronLeft,
-  Menu,
-  FileText,
-  Plus,
-  Wrench,
-  Command,
-} from 'lucide-react'
+import { IconAdjustmentsHorizontal, IconArrowsRightLeft, IconBook, IconBook2, IconBooks, IconBoxModel, IconChevronLeft, IconCommand, IconCpu, IconFileText, IconHeadphones, IconLogout, IconMenu2, IconMicrophone, IconPlus, IconSparkles } from '@tabler/icons-react'
 
 const getNavigation = (t: TFunction) => [
   {
     title: t('navigation.collect'),
     items: [
-      { name: t('navigation.sources'), href: '/sources', icon: FileText, iconClass: 'text-sage' },
+      { name: t('navigation.sources'), href: '/sources', icon: IconBooks, iconClass: 'text-sage' },
     ],
   },
   {
     title: t('navigation.process'),
     items: [
-      { name: t('navigation.notebooks'), href: '/notebooks', icon: Book, iconClass: 'text-teal' },
-      { name: t('navigation.askAndSearch'), href: '/search', icon: Search, iconClass: undefined },
+      { name: t('navigation.notebooks'), href: '/notebooks', icon: IconBook2, iconClass: 'text-teal' },
+      { name: t('navigation.askAndSearch'), href: '/search', icon: IconSparkles, iconClass: undefined },
     ],
   },
   {
     title: t('navigation.create'),
     items: [
-      { name: t('navigation.podcasts'), href: '/podcasts', icon: Mic, iconClass: 'text-mauve' },
+      { name: t('navigation.podcasts'), href: '/podcasts', icon: IconHeadphones, iconClass: 'text-mauve' },
     ],
   },
   {
     title: t('navigation.manage'),
     items: [
-      { name: t('navigation.models'), href: '/settings/api-keys', icon: Bot, iconClass: undefined },
-      { name: t('navigation.transformations'), href: '/transformations', icon: Shuffle, iconClass: undefined },
-      { name: t('navigation.settings'), href: '/settings', icon: Settings, iconClass: undefined },
-      { name: t('navigation.advanced'), href: '/advanced', icon: Wrench, iconClass: undefined },
+      { name: t('navigation.models'), href: '/settings/api-keys', icon: IconCpu, iconClass: undefined },
+      { name: t('navigation.transformations'), href: '/transformations', icon: IconArrowsRightLeft, iconClass: undefined },
+      { name: t('navigation.settings'), href: '/settings', icon: IconAdjustmentsHorizontal, iconClass: undefined },
+      { name: t('navigation.advanced'), href: '/advanced', icon: IconBoxModel, iconClass: undefined },
     ],
   },
 ] as const
 
-// The tri-hue mark recomposed in the owned palette: fern / gold / teal.
-function LogoPebbles({ className }: { className?: string }) {
+// Unified Logo component for both states
+function AppLogo({ size = 32 }: { size?: number }) {
   return (
-    <span className={cn('flex items-center gap-[3px]', className)} aria-hidden="true">
-      <span className="size-[9px] rounded-[3px] bg-fern" />
-      <span className="size-[9px] rounded-[3px] bg-gold" />
-      <span className="size-[9px] rounded-[3px] bg-teal" />
-    </span>
+    <Image
+      src="/logo.png"
+      alt="NotebookE"
+      width={size}
+      height={size}
+      className="flex-shrink-0 object-contain dark:invert dark:brightness-200"
+      priority
+      unoptimized
+    />
   )
 }
 
@@ -124,38 +115,42 @@ export function AppSidebar() {
       >
         <div
           className={cn(
-            'flex h-16 items-center group',
-            isCollapsed ? 'justify-center px-2' : 'justify-between px-4'
+            'flex items-center group',
+            isCollapsed ? 'h-16 justify-center px-2' : 'h-20 justify-between px-4'
           )}
         >
           {isCollapsed ? (
-            <div className="relative flex items-center justify-center w-full">
-              <LogoPebbles className="flex-col gap-[3px] transition-opacity group-hover:opacity-0" />
+            // Collapsed: square icon logo centered, toggle appears on hover
+            <div className="relative flex items-center justify-center w-full h-full">
+              <div className="transition-opacity duration-200 group-hover:opacity-10">
+                <AppLogo size={28} />
+              </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={toggleCollapse}
-                className="absolute text-sidebar-foreground hover:bg-sidebar-accent opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute text-sidebar-foreground opacity-0 group-hover:opacity-100 transition-opacity"
               >
-                <Menu className="h-4 w-4" />
+                <IconMenu2 className="h-5 w-5" />
               </Button>
             </div>
           ) : (
+            // Expanded: logo.png + "NotebookE" text + collapse button
             <>
-              <div className="flex items-center gap-2.5">
-                <LogoPebbles />
-                <span className="font-display text-[15px] font-bold tracking-tight text-sidebar-foreground">
-                  {t('common.appName')}
+              <div className="flex items-center gap-3 min-w-0">
+                <AppLogo size={32} />
+                <span className="font-display text-[22px] font-extrabold tracking-tight text-sidebar-foreground whitespace-nowrap">
+                  NotebookE
                 </span>
               </div>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={toggleCollapse}
-                className="text-sidebar-foreground hover:bg-sidebar-accent"
+                className="text-sidebar-foreground hover:bg-sidebar-accent flex-shrink-0"
                 data-testid="sidebar-toggle"
               >
-                <ChevronLeft className="h-4 w-4" />
+                <IconChevronLeft className="h-4 w-4" />
               </Button>
             </>
           )}
@@ -170,7 +165,7 @@ export function AppSidebar() {
           <div
             className={cn(
               'mb-4',
-              isCollapsed ? 'px-0' : 'px-3'
+              isCollapsed ? 'px-0' : 'px-0'
             )}
           >
             <DropdownMenu open={createMenuOpen} onOpenChange={setCreateMenuOpen}>
@@ -180,12 +175,10 @@ export function AppSidebar() {
                     <DropdownMenuTrigger asChild>
                       <Button
                         onClick={() => setCreateMenuOpen(true)}
-                        variant="default"
-                        size="sm"
-                        className="w-full justify-center px-2 font-display font-bold"
+                        className="w-full justify-center px-2 font-display font-bold rounded-xl h-10 shadow-sm bg-primary text-primary-foreground hover:bg-primary-hover hover:-translate-y-[1px] transition-all"
                         aria-label={t('common.create')}
                       >
-                        <Plus className="h-4 w-4" />
+                        <IconPlus className="h-5 w-5" />
                       </Button>
                     </DropdownMenuTrigger>
                   </TooltipTrigger>
@@ -195,11 +188,9 @@ export function AppSidebar() {
                 <DropdownMenuTrigger asChild>
                   <Button
                     onClick={() => setCreateMenuOpen(true)}
-                    variant="default"
-                    size="sm"
-                    className="w-full justify-start font-display font-bold"
+                    className="w-full justify-start font-display font-medium rounded-xl h-10 shadow-sm px-3 text-[14px] bg-primary text-primary-foreground hover:bg-primary-hover hover:-translate-y-[1px] transition-all"
                    >
-                    <Plus className="h-4 w-4 mr-2" />
+                    <IconPlus className="h-4 w-4 mr-2" />
                     {t('common.create')}
                   </Button>
                 </DropdownMenuTrigger>
@@ -217,7 +208,7 @@ export function AppSidebar() {
                   }}
                   className="gap-2"
                 >
-                   <FileText className="h-4 w-4" />
+                   <IconFileText className="h-4 w-4" />
                   {t('common.source')}
                 </DropdownMenuItem>
                 <DropdownMenuItem
@@ -227,7 +218,7 @@ export function AppSidebar() {
                   }}
                   className="gap-2"
                 >
-                   <Book className="h-4 w-4" />
+                   <IconBook className="h-4 w-4" />
                   {t('common.notebook')}
                 </DropdownMenuItem>
                 <DropdownMenuItem
@@ -237,7 +228,7 @@ export function AppSidebar() {
                   }}
                   className="gap-2"
                 >
-                   <Mic className="h-4 w-4" />
+                   <IconMicrophone className="h-4 w-4" />
                   {t('common.podcast')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -245,13 +236,10 @@ export function AppSidebar() {
           </div>
 
           {navigation.map((section, index) => (
-            <div key={section.title}>
-              {index > 0 && (
-                <Separator className="my-3" />
-              )}
+            <div key={section.title} className={index > 0 ? "mt-5" : ""}>
               <div className="space-y-1">
                 {!isCollapsed && (
-                  <h3 className="mb-1.5 px-3 text-[10.5px] font-bold uppercase tracking-[0.14em] text-sidebar-foreground/40">
+                  <h3 className="mb-2 px-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                     {section.title}
                   </h3>
                 )}
@@ -262,13 +250,13 @@ export function AppSidebar() {
                     <Button
                       variant="ghost"
                       className={cn(
-                        'w-full gap-2.5 text-[13px] font-medium text-sidebar-foreground/80 sidebar-menu-item relative',
+                        'w-full gap-2.5 text-[14px] font-bold text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-all duration-200 relative rounded-xl h-10',
                         isActive &&
-                          'bg-popover font-semibold text-sidebar-foreground ring-1 ring-inset ring-border before:absolute before:-left-1.5 before:top-[7px] before:bottom-[7px] before:w-[3px] before:rounded-[2px] before:bg-fern',
-                        isCollapsed ? 'justify-center px-2' : 'justify-start'
+                          'bg-primary/10 text-primary hover:bg-primary/15 hover:text-primary shadow-sm',
+                        isCollapsed ? 'justify-center px-2' : 'justify-start px-3'
                       )}
                     >
-                      <item.icon className={cn('h-4 w-4 opacity-85', item.iconClass)} />
+                      <item.icon className={cn('h-5 w-5', isActive ? 'text-primary' : item.iconClass || 'opacity-70')} />
                       {!isCollapsed && <span>{item.name}</span>}
                     </Button>
                   )
@@ -303,21 +291,22 @@ export function AppSidebar() {
             isCollapsed && 'px-2'
           )}
         >
-          {/* Command Palette hint */}
+          {/* IconCommand Palette hint */}
           {!isCollapsed && (
-            <div className="px-3 py-1.5 text-xs text-sidebar-foreground/60">
-              <div className="flex items-center justify-between">
-                 <span className="flex items-center gap-1.5">
-                  <Command className="h-3 w-3" />
-                  {t('common.quickActions')}
-                </span>
-                <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
-                  {isMac ? <span className="text-xs">⌘</span> : <span>Ctrl+</span>}K
-                </kbd>
+            <div 
+              className="mb-2 flex items-center justify-between rounded-xl border border-border/60 bg-surface-recessed p-2.5 text-sm text-sidebar-foreground/70 hover:bg-surface-sunken hover:border-border transition-all cursor-pointer shadow-sm group"
+              onClick={() => {
+                const event = new KeyboardEvent('keydown', { key: 'k', metaKey: true, bubbles: true });
+                document.dispatchEvent(event);
+              }}
+            >
+              <div className="flex items-center gap-2.5">
+                <IconCommand className="h-4 w-4 opacity-70 group-hover:text-primary transition-colors" />
+                <span className="font-medium text-[13px]">{t('common.quickActions')}</span>
               </div>
-               <p className="mt-1 text-[10px] text-sidebar-foreground/40">
-                {t('common.quickActionsDesc')}
-              </p>
+              <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded-[4px] border border-border/80 bg-background px-1.5 font-mono text-[10px] font-medium text-muted-foreground shadow-sm">
+                {isMac ? <span className="text-xs">⌘</span> : <span className="text-[10px]">Ctrl</span>}K
+              </kbd>
             </div>
           )}
 
@@ -358,24 +347,24 @@ export function AppSidebar() {
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
-                  variant="outline"
-                  className="w-full justify-center sidebar-menu-item"
+                  variant="ghost"
+                  className="w-full justify-center h-10 rounded-xl text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent"
                   onClick={logout}
                   aria-label={t('common.signOut')}
                 >
-                  <LogOut className="h-4 w-4" />
+                  <IconLogout className="h-5 w-5" />
                 </Button>
               </TooltipTrigger>
                <TooltipContent side="right">{t('common.signOut')}</TooltipContent>
             </Tooltip>
           ) : (
             <Button
-              variant="outline"
-              className="w-full justify-start gap-3 sidebar-menu-item"
+              variant="ghost"
+              className="w-full justify-start gap-2.5 h-10 rounded-xl px-3 text-[14px] font-medium text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-all duration-200"
               onClick={logout}
               aria-label={t('common.signOut')}
              >
-              <LogOut className="h-4 w-4" />
+              <IconLogout className="h-5 w-5 opacity-70" />
               {t('common.signOut')}
             </Button>
           )}

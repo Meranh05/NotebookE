@@ -6,7 +6,7 @@ Citations connect AI responses to your source materials. This guide covers how t
 
 ## Why Citations Matter
 
-Every AI-generated response in Open Notebook includes citations to your sources. This lets you:
+Every AI-generated response in NotebookE includes citations to your sources. This lets you:
 
 - **Verify claims** - Check that AI actually read what it claims
 - **Find original context** - See the full passage around a quote
@@ -96,7 +96,7 @@ Step 4: Trust or correct
 ### What to Check
 
 | Check | Why |
-|-------|-----|
+| ------- | ----- |
 | **Exact numbers** | AI sometimes rounds or misremembers |
 | **Context** | Quote might mean something different in context |
 | **Attribution** | Is this the source's claim or someone they cited? |
@@ -156,7 +156,7 @@ Saved note includes:
 Citations work in exports:
 
 | Format | Citation Behavior |
-|--------|-------------------|
+| -------- | ------------------- |
 | **Markdown** | Links preserved as `[text](link)` |
 | **Copy/Paste** | Plain text with reference numbers |
 | **PDF** | Clickable references (if supported) |
@@ -168,18 +168,21 @@ Citations work in exports:
 ### Get Better Citations
 
 **Be specific in questions:**
+
 ```
 Poor: "What does it say about X?"
 Good: "What does page 15 say about X? Please quote directly."
 ```
 
 **Request citation format:**
+
 ```
 "Include page numbers for each claim."
 "Cite specific sections, not just document names."
 ```
 
 **Use Full Content context:**
+
 ```
 Summary Only → Less precise citations
 Full Content → Exact quotes possible
@@ -188,7 +191,7 @@ Full Content → Exact quotes possible
 ### When Citations Are Missing
 
 | Situation | Cause | Solution |
-|-----------|-------|----------|
+| ----------- | ------- | ---------- |
 | No citations | AI used general knowledge | Ask: "Base your answer only on my sources" |
 | Vague citations | Source not in Full Content | Change context level |
 | Wrong citations | AI confused sources | Ask to verify with quotes |

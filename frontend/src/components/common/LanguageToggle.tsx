@@ -7,7 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Languages } from 'lucide-react'
+import { IconLanguage } from '@tabler/icons-react'
 import { useTranslation } from '@/lib/hooks/use-translation'
 
 interface LanguageToggleProps {
@@ -24,11 +24,11 @@ export function LanguageToggle({ iconOnly = false }: LanguageToggleProps) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button 
-          variant={iconOnly ? "ghost" : "outline"} 
+          variant="ghost"
           size={iconOnly ? "icon" : "default"} 
-          className={iconOnly ? "h-9 w-full sidebar-menu-item" : "w-full justify-start gap-2 sidebar-menu-item"}
+          className={iconOnly ? "h-10 w-full rounded-xl text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent" : "w-full justify-start gap-2.5 h-10 rounded-xl px-3 text-[14px] font-medium text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent transition-all duration-200"}
         >
-          <Languages className="h-[1.2rem] w-[1.2rem]" />
+          <IconLanguage className="h-[1.2rem] w-[1.2rem] opacity-70" />
           {!iconOnly && <span>{t('common.language')}</span>}
           <span className="sr-only">{t('navigation.language')}</span>
         </Button>
@@ -111,6 +111,12 @@ export function LanguageToggle({ iconOnly = false }: LanguageToggleProps) {
           className={currentLang === 'tr-TR' || currentLang.startsWith('tr') ? 'bg-accent' : ''}
         >
           <span>{t('common.turkish')}</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => setLanguage('vi-VN')}
+          className={currentLang === 'vi-VN' || currentLang.startsWith('vi') ? 'bg-accent' : ''}
+        >
+          <span>Tiếng Việt</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

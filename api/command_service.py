@@ -90,3 +90,19 @@ class CommandService:
         except Exception as e:
             logger.error(f"Failed to cancel command job: {e}")
             raise
+
+    @staticmethod
+    async def update_command_progress(job_id: str, progress: float) -> bool:
+        """Update the progress of a running command job in the database"""
+        try:
+            from open_notebook.database.repository import ensure_record_id, repo_query
+            
+            cmd_id = ensure_record_id(job_id)
+            await repo_query(
+                "UPDATE $id SET result.progress = $progress;",
+                {"id": cmd_id, "progress": progress},
+            )
+            return True
+        except Exception as e:
+            logger.error(f"Failed to update command progress for {job_id}: {e}")
+            return False

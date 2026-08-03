@@ -1,5 +1,5 @@
 """
-Utils package for Open Notebook.
+Utils package for NotebookE.
 
 To avoid circular imports, import functions directly:
 - from open_notebook.utils.context_builder import build_notebook_context, build_source_context

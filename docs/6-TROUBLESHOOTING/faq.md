@@ -1,14 +1,15 @@
 # Frequently Asked Questions
 
-Common questions about Open Notebook usage, configuration, and best practices.
+Common questions about NotebookE usage, configuration, and best practices.
 
 ---
 
 ## General Usage
 
-### What is Open Notebook?
+### What is NotebookE?
 
-Open Notebook is an open-source, privacy-focused alternative to Google's Notebook LM. It allows you to:
+NotebookE is an open-source, privacy-focused alternative to Google's Notebook LM. It allows you to:
+
 - Create and manage research notebooks
 - Chat with your documents using AI
 - Generate podcasts from your content
@@ -22,9 +23,10 @@ Open Notebook is an open-source, privacy-focused alternative to Google's Noteboo
 **Customization**: Open source, so you can modify and extend functionality
 **Control**: You control your data, models, and processing
 
-### Can I use Open Notebook offline?
+### Can I use NotebookE offline?
 
 **Partially**: The application runs locally, but requires internet for:
+
 - AI model API calls (unless using local models like Ollama)
 - Web content scraping
 
@@ -41,6 +43,7 @@ Open Notebook is an open-source, privacy-focused alternative to Google's Noteboo
 
 **Software**: Free (open source)
 **AI API costs**: Pay-per-use to providers:
+
 - OpenAI: ~$0.50-5 per 1M tokens
 - Anthropic: ~$3-75 per 1M tokens
 - Google: Often free tier available
@@ -62,6 +65,7 @@ Open Notebook is an open-source, privacy-focused alternative to Google's Noteboo
 ### Can I use multiple providers?
 
 **Yes**: Configure different providers for different tasks:
+
 - OpenAI for chat
 - Google for embeddings
 - ElevenLabs for text-to-speech
@@ -70,25 +74,30 @@ Open Notebook is an open-source, privacy-focused alternative to Google's Noteboo
 ### What are the best model combinations?
 
 **Budget-friendly**:
+
 - Language: `gpt-4o-mini` (OpenAI) or `deepseek-chat`
 - Embedding: `text-embedding-3-small` (OpenAI)
 
 **High-quality**:
+
 - Language: `claude-3-5-sonnet` (Anthropic) or `gpt-4o` (OpenAI)
 - Embedding: `text-embedding-3-large` (OpenAI)
 
 **Privacy-focused**:
+
 - Language: Local Ollama models (mistral, llama3)
 - Embedding: Local embedding models
 
 ### How do I optimize AI costs?
 
 **Model selection**:
+
 - Use smaller models for simple tasks (gpt-4o-mini, claude-3-5-haiku)
 - Use larger models only for complex reasoning
 - Leverage free tiers when available
 
 **Usage optimization**:
+
 - Use "Summary Only" context for background sources
 - Ask more specific questions
 - Use local models (Ollama) for frequent tasks
@@ -100,6 +109,7 @@ Open Notebook is an open-source, privacy-focused alternative to Google's Noteboo
 ### Where is my data stored?
 
 **Local storage**: By default, all data is stored locally:
+
 - Database: SurrealDB files in `surreal_data/`
 - Uploads: Files in `data/uploads/`
 - Podcasts: Generated audio in `data/podcasts/`
@@ -119,6 +129,7 @@ tar -xzf backup-20240101.tar.gz
 
 **Currently**: No built-in sync functionality.
 **Workarounds**:
+
 - Use shared network storage for data directories
 - Manual backup/restore between devices
 
@@ -165,16 +176,18 @@ tar -xzf backup-20240101.tar.gz
 
 ## Technical Questions
 
-### Can I use Open Notebook programmatically?
+### Can I use NotebookE programmatically?
 
-**Yes**: Open Notebook provides a REST API:
+**Yes**: NotebookE provides a REST API:
+
 - Full API documentation at `http://localhost:5055/docs`
 - Support for all UI functionality
 - Authentication via password header
 
-### Can I run Open Notebook in production?
+### Can I run NotebookE in production?
 
 **Yes**: Designed for production use with:
+
 - Docker deployment
 - Security features (password protection)
 - Monitoring and logging
@@ -183,11 +196,13 @@ tar -xzf backup-20240101.tar.gz
 ### What are the system requirements?
 
 **Minimum**:
+
 - 4GB RAM
 - 2 CPU cores
 - 10GB disk space
 
 **Recommended**:
+
 - 8GB+ RAM
 - 4+ CPU cores
 - SSD storage
@@ -200,22 +215,24 @@ tar -xzf backup-20240101.tar.gz
 ### Why do I get timeout errors?
 
 **Common causes**:
+
 - Large context (too many sources)
 - Slow AI provider
 - Local models on CPU (slow)
 - First request (model loading)
 
 **Solutions**:
+
 ```bash
 # In .env:
 API_CLIENT_TIMEOUT=600  # 10 minutes for slow setups
 ESPERANTO_LLM_TIMEOUT=180  # 3 minutes for model inference
 ```
 
-### Recommended timeouts by setup:
+### Recommended timeouts by setup
 
 | Setup | API_CLIENT_TIMEOUT |
-|-------|-------------------|
+| ------- | ------------------- |
 | Cloud APIs (OpenAI, Anthropic) | 300 (default) |
 | Local Ollama with GPU | 600 |
 | Local Ollama with CPU | 1200 |
@@ -235,6 +252,7 @@ ESPERANTO_LLM_TIMEOUT=180  # 3 minutes for model inference
 ### How do I report a bug?
 
 Include:
+
 - Steps to reproduce
 - Expected vs actual behavior
 - Error messages and logs
@@ -245,7 +263,7 @@ Submit to: [GitHub Issues](https://github.com/lfnovo/open-notebook/issues)
 
 ### Where can I get help?
 
-- **Discord**: https://discord.gg/37XJPXfz2w (fastest)
+- **Discord**: <https://discord.gg/37XJPXfz2w> (fastest)
 - **GitHub Discussions**: Questions, ideas, and feature requests
 - **GitHub Issues**: Reproducible bug reports
 - **Documentation**: This docs site

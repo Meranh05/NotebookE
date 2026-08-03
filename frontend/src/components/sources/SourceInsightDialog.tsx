@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { FileText } from 'lucide-react'
+import { IconFileText } from '@tabler/icons-react'
 import {MarkdownRenderer} from '@/components/ui/markdown-renderer'
 import { useInsight } from '@/lib/hooks/use-insights'
 import { useModalManager } from '@/lib/hooks/use-modal-manager'
@@ -91,7 +91,7 @@ export function SourceInsightDialog({ open, onOpenChange, insight, onDelete }: S
                   onClick={handleViewSource}
                   className="gap-1"
                 >
-                  <FileText className="h-3 w-3" />
+                  <IconFileText className="h-3 w-3" />
                   {t('sources.viewSource')}
                 </Button>
               )}

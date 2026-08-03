@@ -135,7 +135,7 @@ The label set is curated — **don't invent labels**. If something doesn't fit, 
 these while the backlog is migrated; do not newly route feature proposals into Issues:
 
 | Label | Meaning |
-|---|---|
+| --- | --- |
 | `needs-triage` | New signal not yet classified |
 | `needs-vision` | Unsure if/how this fits — strategic call for the maintainers (against [VISION.md](../../VISION.md)) |
 | `needs-design` | Wanted, but the *how* isn't resolved — needs design/spec before it's ready |
@@ -143,20 +143,21 @@ these while the backlog is migrated; do not newly route feature proposals into I
 **Issue delivery states:**
 
 | Label | Meaning |
-|---|---|
+| --- | --- |
 | `needs-triage` | New bug or installation report not yet triaged |
 | `needs-info` | Waiting on the reporter to confirm or provide more information |
 | `ready` | Approved and sufficiently specified — the dev loop can pick it up |
 | **Close** | Use GitHub's native close reasons (duplicate / not planned); link the canonical issue when duplicate/superseded |
 
 **Type** — what kind of work it is (apply one when clear):
+
 - `bug` · `enhancement` · `documentation`
 - `installation` is an intake label applied by the issue-creation workflow (not by triage); installation reports get routed to `area: deploy`.
 
 **Area** — which part of the system (apply always, one per issue):
 
 | Label | What goes here |
-|---|---|
+| --- | --- |
 | `area: chat` | Conversation/chat, RAG retrieval, agentic responses, citations |
 | `area: search` | Full-text and semantic search |
 | `area: sources` | Source ingestion & processing (URLs, files, extraction, chunking) |
@@ -171,15 +172,18 @@ these while the backlog is migrated; do not newly route feature proposals into I
 | `area: i18n` | Internationalization / localization |
 
 **Bundling / epics:**
+
 - `umbrella` — a tracking issue grouping related work
 - `tracked-in-umbrella` — covered by an umbrella; follow the umbrella for progress
 - `bundled` — part of a thematic bundle
 - `upstream` — root cause lives in one of our libraries, not this repo
 
 **Ecosystem** — issues whose real home is an upstream library:
+
 - `esperanto` (model abstraction) · `content-core` (content extraction) · `podcast-creator` (podcast generation)
 
 **Community:**
+
 - `good first issue` — small, well-scoped, newcomer-friendly
 - `help wanted` — we'd welcome a contributor to take this
 
@@ -205,6 +209,7 @@ Rule of thumb: if work cannot start until *we* make a call, it belongs in a Disc
 - [ ] Are there tests? Screenshots (for UI changes)?
 
 **Red Flags** (may require closing PR):
+
 - No associated approved Issue on a non-trivial change (small obvious fixes are exempt; sizeable PRs should become drafts while an idea goes through Discussion or a bug goes through Issue triage)
 - Issue was not assigned to contributor
 - PR tries to solve multiple unrelated problems
@@ -223,6 +228,7 @@ Rule of thumb: if work cannot start until *we* make a call, it belongs in a Disc
 **2. Code Quality Review**
 
 Python:
+
 - [ ] Follows PEP 8
 - [ ] Has type hints
 - [ ] Has docstrings
@@ -230,6 +236,7 @@ Python:
 - [ ] No security vulnerabilities
 
 TypeScript/Frontend:
+
 - [ ] Follows TypeScript best practices
 - [ ] Proper component structure
 - [ ] No console.logs left in production code
@@ -253,6 +260,7 @@ TypeScript/Frontend:
 ### Providing Feedback
 
 **Positive Feedback** (important!):
+
 ```markdown
 Thanks for this PR! I really like [specific thing they did well].
 
@@ -260,6 +268,7 @@ Thanks for this PR! I really like [specific thing they did well].
 ```
 
 **Requesting Changes:**
+
 ```markdown
 This is a great start! A few things to address:
 
@@ -271,6 +280,7 @@ Let me know if you have questions about any of this!
 ```
 
 **Suggesting Alternative Approach:**
+
 ```markdown
 I appreciate the effort you put into this! However, I'm concerned about [specific issue].
 
@@ -296,6 +306,7 @@ Mechanics for landing a batch of approved PRs without stepping on each other:
 **Situation**: Contributor wrote quality code, but solved the problem in a way that doesn't fit our architecture.
 
 **Response:**
+
 ```markdown
 Thank you for this PR! The code quality is great, and I can see you put thought into this.
 
@@ -313,6 +324,7 @@ Let me know what you prefer!
 **Situation**: Contributor submitted a non-trivial PR without an approved and assigned Issue.
 
 **Response:**
+
 ```markdown
 Thanks for the PR! I appreciate you taking the time to contribute.
 
@@ -337,6 +349,7 @@ Sorry for the inconvenience - this process helps us manage the project effective
 **Situation**: Well-intentioned feature that doesn't fit project goals.
 
 **Response:**
+
 ```markdown
 Thank you for this suggestion! I can see how this would be useful for [specific use case].
 
@@ -355,6 +368,7 @@ We appreciate your contribution and hope you understand. Feel free to check our 
 **Situation**: You requested changes, but contributor hasn't responded in 2+ weeks.
 
 **After 2 weeks:**
+
 ```markdown
 Hey there! Just checking in on this PR. Do you have time to address the feedback, or would you like someone else to take over?
 
@@ -362,6 +376,7 @@ No pressure either way - just want to make sure this doesn't fall through the cr
 ```
 
 **After 1 month with no response:**
+
 ```markdown
 Thanks again for starting this work! Since we haven't heard back, I'm going to close this PR for now.
 
@@ -371,6 +386,7 @@ We appreciate your contribution!
 ```
 
 Then:
+
 - Close the PR
 - Unassign the issue
 - Add `help wanted` label to the issue
@@ -380,6 +396,7 @@ Then:
 **Situation**: PR introduces breaking changes that weren't discussed.
 
 **Response:**
+
 ```markdown
 Thanks for this PR! However, I notice this introduces breaking changes that weren't discussed in the original issue.
 
@@ -413,7 +430,7 @@ We'd love to have you contribute in other ways! Check out:
 - Help wanted issues
 - Our roadmap
 
-Thanks again for your interest in Open Notebook!
+Thanks again for your interest in NotebookE!
 ```
 
 ### Closing a Stale Issue
@@ -485,6 +502,7 @@ This will be included in the next release.
 ## When in Doubt
 
 Ask yourself:
+
 1. Does this align with our [vision and principles](../../VISION.md)?
 2. Will we be able to maintain this feature long-term?
 3. Does this benefit most users, or just an edge case?
@@ -492,6 +510,7 @@ Ask yourself:
 5. Would I want to support this in 2 years?
 
 If you're unsure, it's perfectly fine to:
+
 - Ask for input from other maintainers
 - Start or link a GitHub Discussion
 - Sleep on it before making a decision

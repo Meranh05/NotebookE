@@ -4,17 +4,7 @@ import { useState } from 'react'
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import {
-  Key,
-  AlertTriangle,
-  Edit,
-  Trash2,
-  Plug,
-  Loader2,
-  Check,
-  X,
-  Bot,
-} from 'lucide-react'
+import { IconAlertTriangle, IconCheck, IconEdit, IconKey, IconLoader2, IconPlug, IconRobot, IconTrash, IconX } from '@tabler/icons-react'
 import { useTranslation } from '@/lib/hooks/use-translation'
 import { useDeleteModel, useTestModel } from '@/lib/hooks/use-models'
 import { useCredential, useTestCredential } from '@/lib/hooks/use-credentials'
@@ -59,7 +49,7 @@ export function CredentialItem({
   const activeTypes = new Set<string>(linkedModels.map(m => m.type))
   const testResult = testResults[credential.id]
 
-  // Check which models are defaults
+  // IconCheck which models are defaults
   const defaultSlots: Record<string, string> = {}
   if (defaults) {
     const slotMap: Record<string, string | null | undefined> = {
@@ -96,16 +86,16 @@ export function CredentialItem({
             </div>
             {credential.has_api_key && (
               <Badge variant="outline" className="text-[10px]">
-                <Key className="h-2.5 w-2.5 mr-0.5" />
-                Key
+                <IconKey className="h-2.5 w-2.5 mr-0.5" />
+                IconKey
               </Badge>
             )}
           </div>
           <div className="flex items-center gap-1 shrink-0">
             {testResult && (
               testResult.success
-                ? <Check className="h-4 w-4 text-fern" />
-                : <X className="h-4 w-4 text-destructive" />
+                ? <IconCheck className="h-4 w-4 text-fern" />
+                : <IconX className="h-4 w-4 text-destructive" />
             )}
             <Button
               variant="ghost" size="sm"
@@ -113,7 +103,7 @@ export function CredentialItem({
               disabled={isTestPending || !!credential.decryption_error}
               title={t('apiKeys.testConnection')}
             >
-              {isTestPending ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plug className="h-4 w-4" />}
+              {isTestPending ? <IconLoader2 className="h-4 w-4 animate-spin" /> : <IconPlug className="h-4 w-4" />}
               <span className="hidden sm:inline text-xs">Test</span>
             </Button>
             <Button
@@ -122,11 +112,11 @@ export function CredentialItem({
               disabled={!!credential.decryption_error}
               title={t('apiKeys.syncModels')}
             >
-              <Bot className="h-4 w-4" />
+              <IconRobot className="h-4 w-4" />
               <span className="hidden sm:inline text-xs">Models</span>
             </Button>
             <Button variant="ghost" size="sm" onClick={() => setEditOpen(true)} disabled={!!credential.decryption_error} title={t('common.edit')}>
-              <Edit className="h-4 w-4" />
+              <IconEdit className="h-4 w-4" />
             </Button>
             <Button
               variant="ghost" size="sm"
@@ -134,7 +124,7 @@ export function CredentialItem({
               className="text-destructive hover:text-destructive hover:bg-destructive/10"
               title={t('common.delete')}
             >
-              <Trash2 className="h-4 w-4" />
+              <IconTrash className="h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -142,7 +132,7 @@ export function CredentialItem({
         {/* Decryption error warning */}
         {credential.decryption_error && (
           <Alert className="border-warn/30 bg-warn-tint">
-            <AlertTriangle className="h-4 w-4 text-warn" />
+            <IconAlertTriangle className="h-4 w-4 text-warn" />
             <AlertTitle className="text-warn">{t('apiKeys.decryptionError')}</AlertTitle>
             <AlertDescription className="text-warn text-sm">
               {t('apiKeys.decryptionErrorDescription')}
@@ -182,8 +172,8 @@ export function CredentialItem({
                             title={t('models.testModel')}
                           >
                             {isModelTestPending && testingModelId === model.id
-                              ? <Loader2 className="h-3 w-3 animate-spin" />
-                              : <Plug className="h-3 w-3" />
+                              ? <IconLoader2 className="h-3 w-3 animate-spin" />
+                              : <IconPlug className="h-3 w-3" />
                             }
                           </button>
                           <button
@@ -191,7 +181,7 @@ export function CredentialItem({
                             onClick={() => deleteModel.mutate(model.id)}
                             title={t('models.deleteModel')}
                           >
-                            <X className="h-3 w-3" />
+                            <IconX className="h-3 w-3" />
                           </button>
                         </Badge>
                       )
@@ -205,7 +195,7 @@ export function CredentialItem({
 
       </div>
 
-      {/* Edit dialog */}
+      {/* IconEdit dialog */}
       {editOpen && (
         <CredentialFormDialog
           open={editOpen}

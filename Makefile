@@ -162,7 +162,7 @@ worker: worker-start
 
 worker-start:
 	@echo "Starting surreal-commands worker..."
-	uv run --env-file .env surreal-commands-worker --import-modules commands --max-tasks "$${OPEN_NOTEBOOK_WORKER_MAX_TASKS:-5}"
+	uv run --env-file .env surreal-commands-worker start --import-modules commands --max-tasks "$${OPEN_NOTEBOOK_WORKER_MAX_TASKS:-5}"
 
 worker-stop:
 	@echo "Stopping surreal-commands worker..."
@@ -174,7 +174,7 @@ worker-restart: worker-stop
 
 # === Service Management ===
 start-all:
-	@echo "🚀 Starting Open Notebook (Database + API + Worker + Frontend)..."
+	@echo "🚀 Starting NotebookE (Database + API + Worker + Frontend)..."
 	@echo "📊 Starting SurrealDB..."
 	@docker compose -f docker-compose.dev.yml up -d surrealdb
 	@sleep 3
@@ -192,7 +192,7 @@ start-all:
 	cd frontend && npm run dev
 
 stop-all:
-	@echo "🛑 Stopping all Open Notebook services..."
+	@echo "🛑 Stopping all NotebookE services..."
 	@pkill -f "next dev" || true
 	@pkill -f "surreal-commands-worker" || true
 	@pkill -f "run_api.py" || true
@@ -201,7 +201,7 @@ stop-all:
 	@echo "✅ All services stopped!"
 
 status:
-	@echo "📊 Open Notebook Service Status:"
+	@echo "📊 NotebookE Service Status:"
 	@echo "Database (SurrealDB):"
 	@docker compose ps surrealdb 2>/dev/null || echo "  ❌ Not running"
 	@echo "API Backend:"

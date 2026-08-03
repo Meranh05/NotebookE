@@ -467,6 +467,7 @@ class Source(ObjectModel):
                 "started_at": execution_metadata.get("started_at"),
                 "completed_at": execution_metadata.get("completed_at"),
                 "error": getattr(status_result, "error_message", None),
+                "progress": result.get("progress") if isinstance(result, dict) else None,
                 "result": result,
             }
         except Exception as e:

@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Plus, StickyNote, Bot, User, MoreVertical, Trash2, ListChecks, ChevronDown } from 'lucide-react'
+import { IconChevronDown, IconDotsVertical, IconListCheck, IconNote, IconPlus, IconRobot, IconTrash, IconUser } from '@tabler/icons-react'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { EmptyState } from '@/components/common/EmptyState'
 import { Badge } from '@/components/ui/badge'
@@ -81,10 +81,10 @@ export function NotesColumn({
       <CollapsibleColumn
         isCollapsed={notesCollapsed}
         onToggle={toggleNotes}
-        collapsedIcon={StickyNote}
+        collapsedIcon={IconNote}
         collapsedLabel={notesLabel}
       >
-        <Card className="h-full flex flex-col flex-1 overflow-hidden">
+        <Card className="h-full flex flex-col flex-1 overflow-hidden border-border/60 bg-card/60 backdrop-blur-sm shadow-sm">
           <CardHeader className="pb-3 flex-shrink-0">
             <div className="flex items-center justify-between gap-2">
               <CardTitle className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.13em] text-muted-foreground">
@@ -96,8 +96,8 @@ export function NotesColumn({
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="sm" className="text-muted-foreground" title={t('sources.bulkContext')}>
-                        <ListChecks className="h-4 w-4" />
-                        <ChevronDown className="h-4 w-4 ml-1" />
+                        <IconListCheck className="h-4 w-4" />
+                        <IconChevronDown className="h-4 w-4 ml-1" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -117,7 +117,7 @@ export function NotesColumn({
                     setShowAddDialog(true)
                   }}
                 >
-                  <Plus className="h-4 w-4 mr-2" />
+                  <IconPlus className="h-4 w-4 mr-2" />
                   {t('common.writeNote')}
                 </Button>
                 {collapseButton}
@@ -132,7 +132,7 @@ export function NotesColumn({
               </div>
             ) : !notes || notes.length === 0 ? (
               <EmptyState
-                icon={StickyNote}
+                icon={IconNote}
                 title={t('notebooks.noNotesYet')}
                 description={t('sources.createFirstNote')}
               />
@@ -147,9 +147,9 @@ export function NotesColumn({
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-2">
                         {note.note_type === 'ai' ? (
-                          <Bot className="h-4 w-4 text-teal" />
+                          <IconRobot className="h-4 w-4 text-teal" />
                         ) : (
-                          <User className="h-4 w-4 text-muted-foreground" />
+                          <IconUser className="h-4 w-4 text-muted-foreground" />
                         )}
                         <Badge variant="secondary" className="text-xs">
                           {note.note_type === 'ai' ? t('common.aiGenerated') : t('common.human')}
@@ -184,7 +184,7 @@ export function NotesColumn({
                               className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
                               onClick={(e) => e.stopPropagation()}
                             >
-                              <MoreVertical className="h-4 w-4" />
+                              <IconDotsVertical className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="w-48">
@@ -195,7 +195,7 @@ export function NotesColumn({
                               }}
                               className="text-destructive focus:text-destructive"
                             >
-                              <Trash2 className="h-4 w-4 mr-2" />
+                              <IconTrash className="h-4 w-4 mr-2" />
                               {t('notebooks.deleteNote')}
                             </DropdownMenuItem>
                           </DropdownMenuContent>

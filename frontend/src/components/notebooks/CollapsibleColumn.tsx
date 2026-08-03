@@ -3,13 +3,13 @@
 import { ReactNode } from 'react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { ChevronLeft, LucideIcon } from 'lucide-react'
+import { Icon, IconChevronLeft } from '@tabler/icons-react'
 import { cn } from '@/lib/utils'
 
 interface CollapsibleColumnProps {
   isCollapsed: boolean
   onToggle: () => void
-  collapsedIcon: LucideIcon
+  collapsedIcon: Icon
   collapsedLabel: string
   children: ReactNode
 }
@@ -82,7 +82,7 @@ export function createCollapseButton(onToggle: () => void, label: string) {
               className="h-7 w-7 hover:bg-accent"
               aria-label={`Collapse ${label}`}
             >
-              <ChevronLeft className="h-4 w-4" />
+              <IconChevronLeft className="h-4 w-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>

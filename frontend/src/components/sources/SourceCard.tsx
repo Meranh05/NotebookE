@@ -11,19 +11,7 @@ import {
   DropdownMenuTrigger,
   DropdownMenuSeparator
 } from '@/components/ui/dropdown-menu'
-import {
-  FileText,
-  ExternalLink,
-  Upload,
-  MoreVertical,
-  Trash2,
-  RefreshCw,
-  Clock,
-  CheckCircle,
-  AlertTriangle,
-  Loader2,
-  Unlink
-} from 'lucide-react'
+import { IconAlertTriangle, IconCircleCheck, IconClock, IconDotsVertical, IconExternalLink, IconFileText, IconLoader2, IconRefresh, IconTrash, IconUnlink, IconUpload } from '@tabler/icons-react'
 import { useSourceStatus } from '@/lib/hooks/use-sources'
 import { useTranslation } from '@/lib/hooks/use-translation'
 import type { TFunction } from 'i18next'
@@ -46,14 +34,14 @@ interface SourceCardProps {
 }
 
 const SOURCE_TYPE_ICONS = {
-  link: ExternalLink,
-  upload: Upload,
-  text: FileText,
+  link: IconExternalLink,
+  upload: IconUpload,
+  text: IconFileText,
 } as const
 
 const getStatusConfig = (t: TFunction) => ({
   new: {
-    icon: Clock,
+    icon: IconClock,
     color: 'text-teal',
     bgColor: 'bg-teal-tint',
     borderColor: 'border-teal/30',
@@ -61,7 +49,7 @@ const getStatusConfig = (t: TFunction) => ({
     description: t('sources.statusPreparingDesc')
   },
   queued: {
-    icon: Clock,
+    icon: IconClock,
     color: 'text-teal',
     bgColor: 'bg-teal-tint',
     borderColor: 'border-teal/30',
@@ -69,7 +57,7 @@ const getStatusConfig = (t: TFunction) => ({
     description: t('sources.statusQueuedDesc')
   },
   running: {
-    icon: Loader2,
+    icon: IconLoader2,
     color: 'text-teal',
     bgColor: 'bg-teal-tint',
     borderColor: 'border-teal/30',
@@ -77,7 +65,7 @@ const getStatusConfig = (t: TFunction) => ({
     description: t('sources.statusProcessingDesc')
   },
   completed: {
-    icon: CheckCircle,
+    icon: IconCircleCheck,
     color: 'text-fern',
     bgColor: 'bg-fern-tint',
     borderColor: 'border-fern/30',
@@ -85,7 +73,7 @@ const getStatusConfig = (t: TFunction) => ({
     description: t('sources.statusCompletedDesc')
   },
   failed: {
-    icon: AlertTriangle,
+    icon: IconAlertTriangle,
     color: 'text-destructive',
     bgColor: 'bg-destructive-tint',
     borderColor: 'border-destructive/30',
@@ -316,7 +304,7 @@ function SourceCardImpl({
                   className="absolute top-1.5 right-1.5 h-7 w-7 p-0 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  <MoreVertical className="h-4 w-4" />
+                  <IconDotsVertical className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
@@ -329,7 +317,7 @@ function SourceCardImpl({
                     }}
                     disabled={!onRemoveFromNotebook}
                   >
-                    <Unlink className="h-4 w-4 mr-2" />
+                    <IconUnlink className="h-4 w-4 mr-2" />
                     {t('sources.removeFromNotebook')}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -345,7 +333,7 @@ function SourceCardImpl({
                     }}
                     disabled={!onRetry}
                   >
-                    <RefreshCw className="h-4 w-4 mr-2" />
+                    <IconRefresh className="h-4 w-4 mr-2" />
                     {t('sources.retryProcessing')}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -360,7 +348,7 @@ function SourceCardImpl({
                       handleRefreshContent()
                     }}
                   >
-                    <RefreshCw className="h-4 w-4 mr-2" />
+                    <IconRefresh className="h-4 w-4 mr-2" />
                     {t('sources.refreshContent')}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
@@ -375,7 +363,7 @@ function SourceCardImpl({
                 disabled={!onDelete}
                 className="text-destructive focus:text-destructive"
               >
-                <Trash2 className="h-4 w-4 mr-2" />
+                <IconTrash className="h-4 w-4 mr-2" />
                 {t('sources.deleteSource')}
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -396,7 +384,7 @@ function SourceCardImpl({
               disabled={!onRetry}
               className="h-7 text-xs"
             >
-              <RefreshCw className="h-3 w-3 mr-1" />
+              <IconRefresh className="h-3 w-3 mr-1" />
               {t('sources.retryProcessing')}
             </Button>
           </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import { AlertCircle, FileQuestion } from 'lucide-react'
+import { IconAlertCircle, IconFileUnknown } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
 import { EmptyState } from '@/components/common/EmptyState'
 import { useTranslation } from '@/lib/hooks/use-translation'
@@ -31,7 +31,7 @@ export function ContentUnavailable({ variant, onClose }: ContentUnavailableProps
       data-testid="content-unavailable"
     >
       <EmptyState
-        icon={notFound ? FileQuestion : AlertCircle}
+        icon={notFound ? IconFileUnknown : IconAlertCircle}
         title={
           notFound
             ? t('common.contentUnavailable.notFoundTitle')

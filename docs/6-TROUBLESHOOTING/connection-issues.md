@@ -7,6 +7,7 @@ Frontend can't reach API or services won't communicate.
 ## "Cannot connect to server" (Most Common)
 
 **What it looks like:**
+
 - Browser shows error page
 - "Unable to reach API"
 - "Cannot connect to server"
@@ -31,6 +32,7 @@ docker ps | grep frontend
 **Solutions:**
 
 ### Solution 1: API Not Running
+
 ```bash
 # Start API
 docker compose up api -d
@@ -43,6 +45,7 @@ docker compose logs api | tail -20
 ```
 
 ### Solution 2: Port Not Exposed
+
 ```bash
 # Check docker-compose.yml has port mapping:
 # api:
@@ -55,6 +58,7 @@ docker compose up -d
 ```
 
 ### Solution 3: API_URL Mismatch
+
 ```bash
 # In .env, check API_URL:
 cat .env | grep API_URL
@@ -70,6 +74,7 @@ docker compose restart frontend
 ```
 
 ### Solution 4: Firewall Blocking
+
 ```bash
 # Verify port 5055 is accessible
 netstat -tlnp | grep 5055
@@ -81,6 +86,7 @@ API_URL=http://192.168.1.100:5055
 ```
 
 ### Solution 5: Services Not Started
+
 ```bash
 # Restart everything
 docker compose restart
@@ -98,6 +104,7 @@ docker compose ps
 ## Connection Refused
 
 **What it looks like:**
+
 ```
 Connection refused
 ECONNREFUSED
@@ -105,6 +112,7 @@ Error: socket hang up
 ```
 
 **Diagnosis:**
+
 - API port (5055) not open
 - API crashed
 - Wrong IP/hostname
@@ -134,11 +142,13 @@ docker compose logs api | grep -i "error"
 ## Timeout / Slow Connection
 
 **What it looks like:**
+
 - Page loads slowly
 - Request times out
 - "Gateway timeout" error
 
 **Causes:**
+
 - API is overloaded
 - Network is slow
 - Reverse proxy issue
@@ -146,6 +156,7 @@ docker compose logs api | grep -i "error"
 **Solutions:**
 
 ### Check API Performance
+
 ```bash
 # See CPU/memory usage
 docker stats
@@ -155,6 +166,7 @@ docker compose logs api | grep "slow\|timeout"
 ```
 
 ### Reduce Load
+
 ```bash
 # In .env:
 SURREAL_COMMANDS_MAX_TASKS=2
@@ -165,6 +177,7 @@ docker compose restart
 ```
 
 ### Check Network
+
 ```bash
 # Test latency
 ping localhost
@@ -180,6 +193,7 @@ time curl http://localhost:5055/health
 ## 502 Bad Gateway (Reverse Proxy)
 
 **What it looks like:**
+
 ```
 502 Bad Gateway
 The server is temporarily unable to service the request
@@ -190,6 +204,7 @@ The server is temporarily unable to service the request
 **Solutions:**
 
 ### Check Backend is Running
+
 ```bash
 # From the reverse proxy server
 curl http://localhost:5055/health
@@ -198,6 +213,7 @@ curl http://localhost:5055/health
 ```
 
 ### Check Reverse Proxy Config
+
 ```nginx
 # Nginx example (correct):
 location /api {
@@ -212,6 +228,7 @@ location /api {
 ```
 
 ### Set API_URL for HTTPS
+
 ```bash
 # In .env:
 API_URL=https://yourdomain.com
@@ -225,6 +242,7 @@ docker compose restart
 ## Intermittent Disconnects
 
 **What it looks like:**
+
 - Works sometimes, fails other times
 - Sporadic "cannot connect" errors
 - Works then stops working
@@ -234,6 +252,7 @@ docker compose restart
 **Solutions:**
 
 ### Enable Retry Logic
+
 ```bash
 # In .env:
 SURREAL_COMMANDS_RETRY_ENABLED=true
@@ -245,6 +264,7 @@ docker compose restart
 ```
 
 ### Reduce Concurrency
+
 ```bash
 # In .env:
 SURREAL_COMMANDS_MAX_TASKS=2
@@ -254,6 +274,7 @@ docker compose restart
 ```
 
 ### Check Network Stability
+
 ```bash
 # Monitor connection
 ping google.com
@@ -267,13 +288,14 @@ ping -c 100 google.com | grep "packet loss"
 
 ## Different Machine / Remote Access
 
-**You want to access Open Notebook from another computer**
+**You want to access NotebookE from another computer**
 
 **Solution:**
 
 ### Step 1: Get Your Machine IP
+
 ```bash
-# On the server running Open Notebook:
+# On the server running NotebookE:
 ifconfig | grep "inet "
 # or
 hostname -I
@@ -281,6 +303,7 @@ hostname -I
 ```
 
 ### Step 2: Update API_URL
+
 ```bash
 # In .env:
 API_URL=http://192.168.1.100:5055
@@ -290,6 +313,7 @@ docker compose restart
 ```
 
 ### Step 3: Access from Other Machine
+
 ```bash
 # In browser on other machine:
 http://192.168.1.100:8502
@@ -297,6 +321,7 @@ http://192.168.1.100:8502
 ```
 
 ### Step 4: Verify Port is Exposed
+
 ```bash
 # On server:
 docker compose ps
@@ -307,6 +332,7 @@ docker compose ps
 ```
 
 ### If Still Doesn't Work
+
 ```bash
 # Check firewall on server
 sudo ufw status
@@ -324,12 +350,14 @@ telnet 192.168.1.100 5055
 ## CORS Error (Browser Console)
 
 **What it looks like:**
+
 ```
 Cross-Origin Request Blocked
 Access-Control-Allow-Origin
 ```
 
 **In browser console (F12):**
+
 ```
 CORS policy: Response to preflight request doesn't pass access control check
 ```
@@ -389,13 +417,14 @@ sudo ufw status | grep -E "5055|8502|8000"
 - [ ] Firewall allows ports 8502, 5055, 8000
 - [ ] Can reach server from client machine (ping IP)
 - [ ] All services running (docker compose ps)
-- [ ] Can curl API from client (curl http://IP:5055/health)
+- [ ] Can curl API from client (curl <http://IP:5055/health>)
 
 ---
 
 ## SSL Certificate Errors
 
 **What it looks like:**
+
 ```
 [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed
 Connection error when using HTTPS endpoints
@@ -407,6 +436,7 @@ Works with HTTP but fails with HTTPS
 **Solutions:**
 
 ### Solution 1: Use Custom CA Bundle (Recommended)
+
 ```bash
 # In .env:
 ESPERANTO_SSL_CA_BUNDLE=/path/to/your/ca-bundle.pem
@@ -420,6 +450,7 @@ environment:
 ```
 
 ### Solution 2: Disable SSL Verification (Development Only)
+
 ```bash
 # WARNING: Only use in trusted development environments
 # In .env:
@@ -427,7 +458,9 @@ ESPERANTO_SSL_VERIFY=false
 ```
 
 ### Solution 3: Use HTTP Instead
+
 If services are on a trusted local network, HTTP is acceptable:
+
 ```
 Change the base URL in your credential (Settings → API Keys) from https:// to http://
 Example: http://localhost:1234/v1

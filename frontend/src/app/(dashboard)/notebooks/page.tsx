@@ -6,7 +6,7 @@ import { AppShell } from '@/components/layout/AppShell'
 import { NotebookList } from './components/NotebookList'
 import { RecentlyViewed } from './components/RecentlyViewed'
 import { Button } from '@/components/ui/button'
-import { Plus, RefreshCw, LayoutGrid, List } from 'lucide-react'
+import { IconCategory2, IconList, IconPlus, IconRefresh, IconSearch } from '@tabler/icons-react'
 import { useNotebooks } from '@/lib/hooks/use-notebooks'
 import { CreateNotebookDialog } from '@/components/notebooks/CreateNotebookDialog'
 import { Input } from '@/components/ui/input'
@@ -53,54 +53,75 @@ export default function NotebooksPage() {
 
   return (
     <AppShell>
-      <div className="flex-1 overflow-y-auto">
-        <div className="p-6 space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <h1 className="font-display text-2xl font-bold tracking-tight">{t('notebooks.title')}</h1>
-            <Button variant="outline" size="sm" onClick={() => refetch()}>
-              <RefreshCw className="h-4 w-4" />
-            </Button>
-          </div>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
-            <div className="flex items-center rounded-md border p-0.5">
-              <Button
-                variant={viewMode === 'tile' ? 'secondary' : 'ghost'}
-                size="sm"
-                onClick={() => setViewMode('tile')}
-                aria-label={t('notebooks.tileView')}
-                aria-pressed={viewMode === 'tile'}
-                title={t('notebooks.tileView')}
-              >
-                <LayoutGrid className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={viewMode === 'list' ? 'secondary' : 'ghost'}
-                size="sm"
-                onClick={() => setViewMode('list')}
-                aria-label={t('notebooks.listView')}
-                aria-pressed={viewMode === 'list'}
-                title={t('notebooks.listView')}
-              >
-                <List className="h-4 w-4" />
-              </Button>
+      <div className="flex-1 overflow-y-auto bg-background">
+        <div className="max-w-[1400px] mx-auto px-6 py-8 space-y-8 animate-in fade-in duration-500">
+          
+          {/* Header Section */}
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-3">
+                  <h1 className="font-display text-4xl font-bold tracking-tight text-foreground">
+                    {t('notebooks.title')}
+                  </h1>
+                  <Button variant="ghost" size="icon" onClick={() => refetch()} className="rounded-md hover:bg-surface-raised h-8 w-8 transition-colors">
+                    <IconRefresh className="h-4 w-4 text-muted-foreground" />
+                  </Button>
+                </div>
+              </div>
+              
+              <div className="flex items-center gap-3 w-full md:w-auto">
+                <div className="relative w-full md:w-[320px]">
+                  <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                    <IconSearch className="h-4 w-4 text-muted-foreground" />
+                  </div>
+                  <Input
+                    id="notebook-search"
+                    name="notebook-search"
+                    value={searchTerm}
+                    onChange={(event) => setSearchTerm(event.target.value)}
+                    placeholder={t('notebooks.searchPlaceholder')}
+                    autoComplete="off"
+                    aria-label={t('common.accessibility.searchNotebooks') || "IconSearch notebooks"}
+                    className="w-full pl-9 h-10 bg-card border border-border hover:border-foreground/20 rounded-full focus-visible:ring-1 focus-visible:ring-primary focus-visible:border-primary transition-all shadow-sm text-foreground placeholder:text-muted-foreground"
+                  />
+                </div>
+                
+                <div className="flex items-center gap-1 bg-surface-recessed p-1 rounded-full border border-border/50 shrink-0">
+                  <Button
+                    variant={viewMode === 'tile' ? 'secondary' : 'ghost'}
+                    size="sm"
+                    onClick={() => setViewMode('tile')}
+                    aria-label={t('notebooks.tileView')}
+                    aria-pressed={viewMode === 'tile'}
+                    title={t('notebooks.tileView')}
+                    className={`rounded-full h-8 w-8 p-0 ${viewMode === 'tile' ? 'bg-card shadow-soft text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-transparent'}`}
+                  >
+                    <IconCategory2 className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant={viewMode === 'list' ? 'secondary' : 'ghost'}
+                    size="sm"
+                    onClick={() => setViewMode('list')}
+                    aria-label={t('notebooks.listView')}
+                    aria-pressed={viewMode === 'list'}
+                    title={t('notebooks.listView')}
+                    className={`rounded-full h-8 w-8 p-0 ${viewMode === 'list' ? 'bg-card shadow-soft text-foreground' : 'text-muted-foreground hover:text-foreground hover:bg-transparent'}`}
+                  >
+                    <IconList className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                <Button 
+                  onClick={() => setCreateDialogOpen(true)} 
+                  className="rounded-full h-10 shadow-sm hover:shadow-md hover:-translate-y-[1px] transition-all bg-foreground hover:bg-foreground/90 text-background font-semibold px-6 shrink-0"
+                >
+                  <IconPlus className="h-5 w-5 mr-2" />
+                  {t('notebooks.newNotebook')}
+                </Button>
+              </div>
             </div>
-            <Input
-              id="notebook-search"
-              name="notebook-search"
-              value={searchTerm}
-              onChange={(event) => setSearchTerm(event.target.value)}
-              placeholder={t('notebooks.searchPlaceholder')}
-              autoComplete="off"
-              aria-label={t('common.accessibility.searchNotebooks') || "Search notebooks"}
-              className="w-full sm:w-64"
-            />
-            <Button onClick={() => setCreateDialogOpen(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              {t('notebooks.newNotebook')}
-            </Button>
           </div>
-        </div>
         
         <div className="space-y-8">
           <RecentlyViewed />

@@ -1,6 +1,6 @@
 'use client'
 
-import { FileText, Lightbulb, StickyNote } from 'lucide-react'
+import { IconBulb, IconFileText, IconNote } from '@tabler/icons-react'
 import { Badge } from '@/components/ui/badge'
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
@@ -44,8 +44,8 @@ export function ContextIndicator({
   }
 
   return (
-    <div className={cn('flex-shrink-0 flex items-center justify-between gap-2 py-2 px-3 border-t bg-muted/30', className)}>
-      <div className="flex items-center gap-2">
+    <div className={cn('flex items-center justify-between flex-wrap gap-2 py-2 px-3 border-t bg-muted/30', className)}>
+      <div className="flex items-center flex-wrap gap-2">
         <span className="text-xs font-medium text-muted-foreground">Context:</span>
 
         <div className="flex items-center gap-1.5">
@@ -53,7 +53,7 @@ export function ContextIndicator({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Badge variant="outline" className="text-xs flex items-center gap-1 px-1.5 py-0.5 text-ctx-insights border-ctx-insights/50 cursor-default">
-                  <Lightbulb className="h-3 w-3" />
+                  <IconBulb className="h-3 w-3" />
                   <span>{sourcesInsights}</span>
                 </Badge>
               </TooltipTrigger>
@@ -67,7 +67,7 @@ export function ContextIndicator({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Badge variant="outline" className="text-xs flex items-center gap-1 px-1.5 py-0.5 text-ctx-full border-ctx-full/50 cursor-default">
-                  <FileText className="h-3 w-3" />
+                  <IconFileText className="h-3 w-3" />
                   <span>{sourcesFull}</span>
                 </Badge>
               </TooltipTrigger>
@@ -86,7 +86,7 @@ export function ContextIndicator({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Badge variant="outline" className="text-xs flex items-center gap-1 px-1.5 py-0.5 text-ctx-full border-ctx-full/50 cursor-default">
-                  <StickyNote className="h-3 w-3" />
+                  <IconNote className="h-3 w-3" />
                   <span>{notesCount}</span>
                 </Badge>
               </TooltipTrigger>

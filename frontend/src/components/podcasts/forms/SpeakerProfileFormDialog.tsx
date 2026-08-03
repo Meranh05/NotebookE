@@ -5,7 +5,7 @@ import { Controller, useFieldArray, useForm } from 'react-hook-form'
 import type { FieldErrorsImpl } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Plus, Trash2 } from 'lucide-react'
+import { IconPlus, IconTrash } from '@tabler/icons-react'
 
 import { SpeakerProfile } from '@/lib/types/podcasts'
 import {
@@ -231,7 +231,7 @@ export function SpeakerProfileFormDialog({
                 onClick={() => append({ ...EMPTY_SPEAKER })}
                 disabled={fields.length >= 4}
               >
-                <Plus className="mr-2 h-4 w-4" /> {t('podcasts.addSpeaker')}
+                <IconPlus className="mr-2 h-4 w-4" /> {t('podcasts.addSpeaker')}
               </Button>
             </div>
             <Separator />
@@ -250,7 +250,7 @@ export function SpeakerProfileFormDialog({
                     disabled={fields.length <= 1}
                     className="text-destructive"
                   >
-                    <Trash2 className="mr-2 h-4 w-4" /> {t('common.remove')}
+                    <IconTrash className="mr-2 h-4 w-4" /> {t('common.remove')}
                   </Button>
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { PlusIcon } from 'lucide-react'
+import { IconPlus } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
 import { AddSourceDialog } from './AddSourceDialog'
 
@@ -30,7 +30,7 @@ export function AddSourceButton({
         size={size}
         className={className}
       >
-        <PlusIcon className={iconOnly ? "h-4 w-4" : "h-4 w-4 mr-2"} />
+        <IconPlus className={iconOnly ? "h-4 w-4" : "h-4 w-4 mr-2"} />
         {!iconOnly && "Add Source"}
       </Button>
 

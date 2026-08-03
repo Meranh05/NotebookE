@@ -1,5 +1,5 @@
 #!/bin/sh
-# Open Notebook container entrypoint.
+# NotebookE container entrypoint.
 #
 # Installs the OPT-IN heavy extraction runtimes (Docling, Crawl4AI local) when the
 # operator enables them via env vars, then hands off to CMD (supervisord).
@@ -112,5 +112,5 @@ if is_true "$OPEN_NOTEBOOK_ENABLE_CRAWL4AI"; then
     fi
 fi
 
-log "Starting Open Notebook."
+log "Starting NotebookE."
 exec "$@"

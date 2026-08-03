@@ -6,15 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Badge } from '@/components/ui/badge'
-import {
-  MessageSquare,
-  Plus,
-  Trash2,
-  Edit2,
-  Check,
-  X,
-  Clock
-} from 'lucide-react'
+import { IconCheck, IconClock, IconEdit, IconMessage, IconPlus, IconTrash, IconX } from '@tabler/icons-react'
 import { formatDistanceToNow } from 'date-fns'
 import { getDateLocale } from '@/lib/utils/date-locale'
 import { useTranslation } from '@/lib/hooks/use-translation'
@@ -107,7 +99,7 @@ export function SessionManager({
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center justify-between">
             <span className="flex items-center gap-2">
-              <MessageSquare className="h-5 w-5" />
+              <IconMessage className="h-5 w-5" />
               {t('chat.sessions')}
             </span>
             <Button
@@ -115,7 +107,7 @@ export function SessionManager({
               variant="outline"
               onClick={() => setIsCreating(true)}
             >
-              <Plus className="h-4 w-4" />
+              <IconPlus className="h-4 w-4" />
             </Button>
           </CardTitle>
         </CardHeader>
@@ -157,7 +149,7 @@ export function SessionManager({
               </div>
             ) : sessions.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
-                <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <IconMessage className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p className="text-sm">{t('chat.noSessions')}</p>
                 <p className="text-xs mt-2">{t('chat.createToStart')}</p>
               </div>
@@ -186,14 +178,14 @@ export function SessionManager({
                         />
                         <div className="flex gap-2">
                           <Button size="sm" onClick={handleSaveEdit}>
-                            <Check className="h-3 w-3" />
+                            <IconCheck className="h-3 w-3" />
                           </Button>
                           <Button
                             size="sm"
                             variant="outline"
                             onClick={handleCancelEdit}
                           >
-                            <X className="h-3 w-3" />
+                            <IconX className="h-3 w-3" />
                           </Button>
                         </div>
                       </div>
@@ -210,7 +202,7 @@ export function SessionManager({
                               className="h-6 w-6 p-0"
                               onClick={() => handleStartEdit(session)}
                             >
-                              <Edit2 className="h-3 w-3" />
+                              <IconEdit className="h-3 w-3" />
                             </Button>
                             <Button
                               size="sm"
@@ -218,12 +210,12 @@ export function SessionManager({
                               className="h-6 w-6 p-0"
                               onClick={() => setDeleteConfirmId(session.id)}
                             >
-                              <Trash2 className="h-3 w-3" />
+                              <IconTrash className="h-3 w-3" />
                             </Button>
                           </div>
                         </div>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <Clock className="h-3 w-3" />
+                          <IconClock className="h-3 w-3" />
                           {formatDistanceToNow(new Date(session.created), {
                             addSuffix: true,
                             locale: getDateLocale(language)

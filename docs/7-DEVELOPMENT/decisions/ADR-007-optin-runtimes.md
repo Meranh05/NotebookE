@@ -13,7 +13,7 @@ The Content Core 2.x upgrade (#939) exposed two selectable extraction runtimes t
 
 The initial 2.x work bundled Crawl4AI into every image (#1118) and shipped an OCR toggle (#1120) that depended on Docling — which was never actually installed, making the toggle a silent no-op and image sources unsupported. So the default image was simultaneously **too heavy** (Chromium for everyone) and **missing** a runtime its own UI advertised.
 
-Baking both into the default image would push it into the multi-GB range and contradict Open Notebook's lean, privacy-first, self-hostable posture (ADR-002 keeps this repo focused on the knowledge layer, delegating extraction to Content Core). Most users need neither runtime.
+Baking both into the default image would push it into the multi-GB range and contradict NotebookE's lean, privacy-first, self-hostable posture (ADR-002 keeps this repo focused on the knowledge layer, delegating extraction to Content Core). Most users need neither runtime.
 
 ## Decision
 

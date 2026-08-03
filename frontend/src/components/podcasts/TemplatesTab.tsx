@@ -1,6 +1,6 @@
 'use client'
 
-import { AlertCircle, Lightbulb, Loader2 } from 'lucide-react'
+import { IconAlertCircle, IconBulb, IconLoader2 } from '@tabler/icons-react'
 
 import { EpisodeProfilesPanel } from '@/components/podcasts/EpisodeProfilesPanel'
 import { SpeakerProfilesPanel } from '@/components/podcasts/SpeakerProfilesPanel'
@@ -43,7 +43,7 @@ export function TemplatesTab() {
         >
           <AccordionTrigger className="gap-2 py-4 text-left text-sm font-semibold">
             <div className="flex items-center gap-2">
-              <Lightbulb className="h-4 w-4 text-gold" />
+              <IconBulb className="h-4 w-4 text-gold" />
               {t('podcasts.howTemplatesPowerTitle')}
             </div>
           </AccordionTrigger>
@@ -89,7 +89,7 @@ export function TemplatesTab() {
 
       {hasError ? (
         <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
+          <IconAlertCircle className="h-4 w-4" />
           <AlertTitle>{t('podcasts.failedToLoadTemplates')}</AlertTitle>
           <AlertDescription>
             {t('podcasts.failedToLoadTemplatesDesc')}
@@ -99,7 +99,7 @@ export function TemplatesTab() {
 
       {isLoading ? (
         <div className="flex items-center gap-3 rounded-lg border border-dashed p-6 text-sm text-muted-foreground">
-          <Loader2 className="h-4 w-4 animate-spin" />
+          <IconLoader2 className="h-4 w-4 animate-spin" />
           {t('podcasts.loadingTemplates')}
         </div>
       ) : (

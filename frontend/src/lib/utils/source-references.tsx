@@ -1,5 +1,5 @@
 import React from 'react'
-import { FileText, Lightbulb, FileEdit } from 'lucide-react'
+import { IconBulb, IconFilePencil, IconFileText } from '@tabler/icons-react'
 
 export type ReferenceType = 'source' | 'note' | 'source_insight'
 
@@ -292,9 +292,9 @@ export function createReferenceLinkComponent(
 
       // Select appropriate icon based on reference type
       const IconComponent =
-        type === 'source' ? FileText :
-        type === 'source_insight' ? Lightbulb :
-        FileEdit // note
+        type === 'source' ? IconFileText :
+        type === 'source_insight' ? IconBulb :
+        IconFilePencil // note
 
       return (
         <button

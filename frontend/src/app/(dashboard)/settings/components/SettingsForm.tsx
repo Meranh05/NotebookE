@@ -14,7 +14,7 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { useSettings, useUpdateSettings } from '@/lib/hooks/use-settings'
 import { useCapabilities } from '@/lib/hooks/use-capabilities'
 import { useEffect, useState } from 'react'
-import { ChevronDownIcon } from 'lucide-react'
+import { IconChevronDown } from '@tabler/icons-react'
 import { useTranslation } from '@/lib/hooks/use-translation'
 
 const settingsSchema = z.object({
@@ -152,7 +152,7 @@ export function SettingsForm() {
             )}
             <Collapsible open={expandedSections.doc} onOpenChange={() => toggleSection('doc')}>
               <CollapsibleTrigger className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                <ChevronDownIcon className={`h-4 w-4 transition-transform ${expandedSections.doc ? 'rotate-180' : ''}`} />
+                <IconChevronDown className={`h-4 w-4 transition-transform ${expandedSections.doc ? 'rotate-180' : ''}`} />
                 {t('settings.helpMeChoose')}
               </CollapsibleTrigger>
               <CollapsibleContent className="mt-2 text-sm text-muted-foreground space-y-2">
@@ -249,7 +249,7 @@ export function SettingsForm() {
             )}
              <Collapsible open={expandedSections.url} onOpenChange={() => toggleSection('url')}>
               <CollapsibleTrigger className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                <ChevronDownIcon className={`h-4 w-4 transition-transform ${expandedSections.url ? 'rotate-180' : ''}`} />
+                <IconChevronDown className={`h-4 w-4 transition-transform ${expandedSections.url ? 'rotate-180' : ''}`} />
                 {t('settings.helpMeChoose')}
               </CollapsibleTrigger>
               <CollapsibleContent className="mt-2 text-sm text-muted-foreground space-y-2">
@@ -294,7 +294,7 @@ export function SettingsForm() {
             />
              <Collapsible open={expandedSections.embedding} onOpenChange={() => toggleSection('embedding')}>
               <CollapsibleTrigger className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                <ChevronDownIcon className={`h-4 w-4 transition-transform ${expandedSections.embedding ? 'rotate-180' : ''}`} />
+                <IconChevronDown className={`h-4 w-4 transition-transform ${expandedSections.embedding ? 'rotate-180' : ''}`} />
                 {t('settings.helpMeChoose')}
               </CollapsibleTrigger>
               <CollapsibleContent className="mt-2 text-sm text-muted-foreground space-y-2">
@@ -338,7 +338,7 @@ export function SettingsForm() {
             />
              <Collapsible open={expandedSections.files} onOpenChange={() => toggleSection('files')}>
               <CollapsibleTrigger className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                <ChevronDownIcon className={`h-4 w-4 transition-transform ${expandedSections.files ? 'rotate-180' : ''}`} />
+                <IconChevronDown className={`h-4 w-4 transition-transform ${expandedSections.files ? 'rotate-180' : ''}`} />
                 {t('settings.helpMeChoose')}
               </CollapsibleTrigger>
               <CollapsibleContent className="mt-2 text-sm text-muted-foreground space-y-2">

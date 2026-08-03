@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
 import { Badge } from '@/components/ui/badge'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-import { ChevronDown, ChevronRight, Trash2, Wand2, Edit } from 'lucide-react'
+import { IconChevronDown, IconChevronRight, IconEdit, IconTrash, IconWand } from '@tabler/icons-react'
 import { Transformation } from '@/lib/types/transformations'
 import { useDeleteTransformation } from '@/lib/hooks/use-transformations'
 import { useTranslation } from '@/lib/hooks/use-translation'
@@ -38,9 +38,9 @@ export function TransformationCard({ transformation, onPlayground, onEdit }: Tra
               <CollapsibleTrigger className="flex-1 text-left">
                 <div className={cn('flex items-center gap-3', isExpanded ? 'mb-2' : '')}>
                   {isExpanded ? (
-                    <ChevronDown className="h-5 w-5" />
+                    <IconChevronDown className="h-5 w-5" />
                   ) : (
-                    <ChevronRight className="h-5 w-5" />
+                    <IconChevronRight className="h-5 w-5" />
                   )}
                   <div className="flex flex-col">
                     <span className="font-semibold">{transformation.name}</span>
@@ -57,13 +57,13 @@ export function TransformationCard({ transformation, onPlayground, onEdit }: Tra
               <div className="flex items-center gap-2">
                 {onPlayground && (
                   <Button variant="outline" size="sm" onClick={onPlayground}>
-                    <Wand2 className="h-4 w-4 mr-2" />
+                    <IconWand className="h-4 w-4 mr-2" />
                     {t('transformations.playground')}
                   </Button>
                 )}
                 {onEdit && (
                   <Button variant="outline" size="sm" onClick={onEdit}>
-                    <Edit className="h-4 w-4 mr-2" />
+                    <IconEdit className="h-4 w-4 mr-2" />
                     {t('common.edit')}
                   </Button>
                 )}
@@ -73,7 +73,7 @@ export function TransformationCard({ transformation, onPlayground, onEdit }: Tra
                   className="text-destructive hover:text-destructive"
                   onClick={() => setShowDeleteDialog(true)}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <IconTrash className="h-4 w-4" />
                 </Button>
               </div>
             </div>

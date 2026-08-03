@@ -8,7 +8,7 @@ import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { EmptyState } from '@/components/common/EmptyState'
 import { AppShell } from '@/components/layout/AppShell'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
-import { FileText, Trash2, ArrowDown, ArrowUp, ArrowUpDown, Plus } from 'lucide-react'
+import { IconAlignLeft, IconArrowDown, IconArrowUp, IconArrowsVertical, IconFileSpreadsheet, IconFileText, IconFileZip, IconLink, IconMusic, IconPhoto, IconPlus, IconPresentation, IconTrash, IconUpload, IconVideo } from '@tabler/icons-react'
 import { formatDistanceToNow } from 'date-fns'
 import { Button } from '@/components/ui/button'
 import { useTranslation } from '@/lib/hooks/use-translation'
@@ -104,7 +104,7 @@ export default function SourcesPage() {
       if (sources.length === 0) return
 
       switch (e.key) {
-        case 'ArrowDown':
+        case 'IconArrowDown':
           e.preventDefault()
           setSelectedIndex((prev) => {
             const newIndex = Math.min(prev + 1, sources.length - 1)
@@ -113,7 +113,7 @@ export default function SourcesPage() {
             return newIndex
           })
           break
-        case 'ArrowUp':
+        case 'IconArrowUp':
           e.preventDefault()
           setSelectedIndex((prev) => {
             const newIndex = Math.max(prev - 1, 0)
@@ -222,7 +222,7 @@ export default function SourcesPage() {
     align: 'left' | 'center' = 'left'
   ) => {
     const active = sortBy === field
-    const SortIcon = active ? (sortOrder === 'asc' ? ArrowUp : ArrowDown) : ArrowUpDown
+    const SortIcon = active ? (sortOrder === 'asc' ? IconArrowUp : IconArrowDown) : IconArrowsVertical
 
     return (
       <Button
@@ -248,6 +248,59 @@ export default function SourcesPage() {
     if (source.asset?.url) return 'bg-type-web'
     if (source.asset?.file_path) return 'bg-type-pdf'
     return 'bg-type-note'
+  }
+
+  const getSourceIcon = (source: SourceListResponse) => {
+    if (source.asset?.url) {
+      return (
+        <div className="flex-shrink-0 flex flex-col items-center justify-center w-9 h-9 rounded-lg mr-3 bg-muted">
+          <IconLink className="h-4 w-4 text-muted-foreground" />
+          <span className="text-[7px] font-bold leading-none text-muted-foreground mt-0.5">LINK</span>
+        </div>
+      )
+    }
+    
+    if (source.asset?.file_path) {
+      const ext = (source.title || '').split('.').pop()?.toLowerCase() ?? ''
+      
+      let Icon = IconFileText
+      let colorClass = 'text-slate-600 dark:text-slate-400'
+      let bgClass = 'bg-slate-100 dark:bg-slate-800'
+      
+      if (['pdf'].includes(ext)) {
+        Icon = IconFileText; colorClass = 'text-red-600 dark:text-red-400'; bgClass = 'bg-red-100 dark:bg-red-900/30'
+      } else if (['doc', 'docx'].includes(ext)) {
+        Icon = IconFileText; colorClass = 'text-blue-600 dark:text-blue-400'; bgClass = 'bg-blue-100 dark:bg-blue-900/30'
+      } else if (['xls', 'xlsx'].includes(ext)) {
+        Icon = IconFileSpreadsheet; colorClass = 'text-emerald-600 dark:text-emerald-400'; bgClass = 'bg-emerald-100 dark:bg-emerald-900/30'
+      } else if (['ppt', 'pptx'].includes(ext)) {
+        Icon = IconPresentation; colorClass = 'text-orange-600 dark:text-orange-400'; bgClass = 'bg-orange-100 dark:bg-orange-900/30'
+      } else if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(ext)) {
+        Icon = IconPhoto; colorClass = 'text-amber-600 dark:text-amber-400'; bgClass = 'bg-amber-100 dark:bg-amber-900/30'
+      } else if (['mp4', 'mov', 'avi', 'webm'].includes(ext)) {
+        Icon = IconVideo; colorClass = 'text-purple-600 dark:text-purple-400'; bgClass = 'bg-purple-100 dark:bg-purple-900/30'
+      } else if (['mp3', 'wav', 'm4a'].includes(ext)) {
+        Icon = IconMusic; colorClass = 'text-pink-600 dark:text-pink-400'; bgClass = 'bg-pink-100 dark:bg-pink-900/30'
+      } else if (['zip', 'rar', 'tar', 'gz'].includes(ext)) {
+        Icon = IconFileZip; colorClass = 'text-gray-600 dark:text-gray-400'; bgClass = 'bg-gray-100 dark:bg-gray-800'
+      }
+      
+      return (
+        <div className={cn("flex-shrink-0 flex flex-col items-center justify-center w-9 h-9 rounded-lg mr-3 gap-0.5", bgClass)}>
+          <Icon className={cn("h-4 w-4", colorClass)} />
+          <span className={cn("text-[7.5px] font-bold leading-none", colorClass)}>
+            {(ext || 'FILE').toUpperCase().slice(0, 4)}
+          </span>
+        </div>
+      )
+    }
+    
+    return (
+      <div className="flex-shrink-0 flex flex-col items-center justify-center w-9 h-9 rounded-lg mr-3 bg-muted">
+        <IconAlignLeft className="h-4 w-4 text-muted-foreground" />
+        <span className="text-[7px] font-bold leading-none text-muted-foreground mt-0.5">TEXT</span>
+      </div>
+    )
   }
 
   const getSourceType = (source: SourceListResponse) => {
@@ -302,12 +355,12 @@ export default function SourcesPage() {
     if (sources.length === 0) {
       return (
         <EmptyState
-          icon={FileText}
+          icon={IconFileText}
           title={t('sources.noSourcesYet')}
           description={t('sources.allSourcesDescShort')}
           action={
             <Button onClick={() => setSourceDialogOpen(true)} variant="outline" className="mt-4">
-              <Plus className="h-4 w-4 mr-2" />
+              <IconPlus className="h-4 w-4 mr-2" />
               {t('sources.newSource')}
             </Button>
           }
@@ -328,15 +381,15 @@ export default function SourcesPage() {
           <table
             ref={tableRef}
             tabIndex={0}
-            className="w-full min-w-[920px] outline-none table-fixed"
+            className="w-full min-w-[1100px] outline-none table-fixed"
           >
             <colgroup>
-              <col className="w-[120px]" />
+              <col className="w-[110px]" />
               <col className="w-auto" />
               <col className="w-[140px]" />
               <col className="w-[140px]" />
-              <col className="w-[100px]" />
-              <col className="w-[100px]" />
+              <col className="w-[160px]" />
+              <col className="w-[180px]" />
               <col className="w-[100px]" />
             </colgroup>
             <thead className="sticky top-0 bg-background z-10">
@@ -388,16 +441,25 @@ export default function SourcesPage() {
                       </span>
                     </div>
                   </td>
-                  <td className="h-12 px-4">
-                    <div className="flex flex-col overflow-hidden">
-                      <span className="font-medium truncate">
-                        {source.title || t('sources.untitledSource')}
-                      </span>
-                      {source.asset?.url && (
-                        <span className="text-xs text-muted-foreground truncate">
-                          {source.asset.url}
+                  <td className="h-12 px-4 max-w-0">
+                    <div className="flex items-center">
+                      {getSourceIcon(source)}
+                      <div className="flex flex-col overflow-hidden w-full">
+                        <span 
+                          className="font-medium truncate" 
+                          title={source.title || t('sources.untitledSource')}
+                        >
+                          {source.title || t('sources.untitledSource')}
                         </span>
-                      )}
+                        {source.asset?.url && (
+                          <span 
+                            className="text-xs text-muted-foreground truncate" 
+                            title={source.asset.url}
+                          >
+                            {source.asset.url}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </td>
                   <td className="h-12 px-4 text-muted-foreground text-sm hidden sm:table-cell">
@@ -434,7 +496,7 @@ export default function SourcesPage() {
                       onClick={(e) => handleDeleteClick(e, source)}
                       className="text-destructive hover:text-destructive"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <IconTrash className="h-4 w-4" />
                     </Button>
                   </td>
                 </tr>

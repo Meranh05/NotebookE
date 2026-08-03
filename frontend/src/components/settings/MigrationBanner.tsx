@@ -2,7 +2,7 @@
 
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
-import { AlertTriangle, ArrowRight, Loader2 } from 'lucide-react'
+import { IconAlertTriangle, IconArrowRight, IconLoader2 } from '@tabler/icons-react'
 import { useTranslation } from '@/lib/hooks/use-translation'
 import { useMigrateFromEnv } from '@/lib/hooks/use-credentials'
 
@@ -20,7 +20,7 @@ export function MigrationBanner({ providersToMigrate }: MigrationBannerProps) {
 
   return (
     <Alert className="border-warn/30 bg-warn-tint">
-      <AlertTriangle className="h-4 w-4 text-warn" />
+      <IconAlertTriangle className="h-4 w-4 text-warn" />
       <AlertTitle className="text-warn">
         {t('apiKeys.migrationAvailable')}
       </AlertTitle>
@@ -37,13 +37,13 @@ export function MigrationBanner({ providersToMigrate }: MigrationBannerProps) {
         >
           {migrate.isPending ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
               {t('apiKeys.migrating')}
             </>
           ) : (
             <>
               {t('apiKeys.migrateToDatabase')}
-              <ArrowRight className="ml-2 h-4 w-4" />
+              <IconArrowRight className="ml-2 h-4 w-4" />
             </>
           )}
         </Button>

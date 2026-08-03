@@ -10,7 +10,7 @@ Multi-user support is a recurring community request (#712 tracks it), and it wou
 
 ## Decision
 
-Open Notebook remains a **single-user product for now** — but this is a *directional constraint*, not a verdict: **new features must not gratuitously preclude multi-user.** Concretely, when designing a feature, avoid hard-coding single-tenancy where a neutral choice costs the same: data models that could carry an owner scope, auth touchpoints that assume exactly one identity, global singletons for per-user state.
+NotebookE remains a **single-user product for now** — but this is a *directional constraint*, not a verdict: **new features must not gratuitously preclude multi-user.** Concretely, when designing a feature, avoid hard-coding single-tenancy where a neutral choice costs the same: data models that could carry an owner scope, auth touchpoints that assume exactly one identity, global singletons for per-user state.
 
 This record does **not** commit to building multi-user. It commits to keeping the door open until the vision call in #712 is made.
 

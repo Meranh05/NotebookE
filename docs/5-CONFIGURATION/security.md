@@ -1,12 +1,12 @@
 # Security Configuration
 
-Protect your Open Notebook deployment with password authentication and production hardening.
+Protect your NotebookE deployment with password authentication and production hardening.
 
 ---
 
 ## API Key Encryption
 
-Open Notebook encrypts API keys stored in the database using Fernet symmetric encryption (AES-128-CBC with HMAC-SHA256).
+NotebookE encrypts API keys stored in the database using Fernet symmetric encryption (AES-128-CBC with HMAC-SHA256).
 
 ### Configuration Methods
 
@@ -48,7 +48,7 @@ environment:
 ### Security Notes
 
 | Scenario | Behavior |
-|----------|----------|
+| ---------- | ---------- |
 | Key configured | API keys encrypted with your key |
 | No key configured | Encryption/decryption will fail (key is required) |
 | Key changed | Old encrypted keys become unreadable |
@@ -65,12 +65,14 @@ environment:
 
 ## When to Use Password Protection
 
-### Use it for:
+### Use it for
+
 - Public cloud deployments (PikaPods, Railway, DigitalOcean)
 - Shared network environments
 - Any deployment accessible beyond localhost
 
-### You can skip it for:
+### You can skip it for
+
 - Local development on your machine
 - Private, isolated networks
 - Single-user local setups
@@ -316,10 +318,10 @@ CORS_ORIGINS=https://notebook.example.com,https://admin.example.com
 
 ## Security Limitations
 
-Open Notebook's password protection provides **basic access control**, not enterprise-grade security:
+NotebookE's password protection provides **basic access control**, not enterprise-grade security:
 
 | Feature | Status |
-|---------|--------|
+| --------- | -------- |
 | Password transmission | Plain text (use HTTPS!) |
 | Password storage | In memory |
 | User management | Single password for all |
@@ -343,7 +345,7 @@ Open Notebook's password protection provides **basic access control**, not enter
 For deployments requiring advanced security:
 
 | Need | Solution |
-|------|----------|
+| ------ | ---------- |
 | SSO/OAuth | Implement OAuth2/SAML proxy |
 | Role-based access | Custom middleware |
 | Audit logging | Log aggregation service |

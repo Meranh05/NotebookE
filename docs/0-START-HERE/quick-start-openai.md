@@ -1,6 +1,6 @@
 # Quick Start - OpenAI (5 minutes)
 
-Get Open Notebook running with OpenAI's GPT models. Fast, powerful, and simple.
+Get NotebookE running with OpenAI's GPT models. Fast, powerful, and simple.
 
 ## Prerequisites
 
@@ -9,7 +9,7 @@ Get Open Notebook running with OpenAI's GPT models. Fast, powerful, and simple.
    - Already have it? Skip to step 2
 
 2. **OpenAI API Key** (required)
-   - Go to https://platform.openai.com/api-keys
+   - Go to <https://platform.openai.com/api-keys>
    - Create account → Create new secret key
    - Add at least $5 in credits to your account
    - Copy the key (starts with `sk-`)
@@ -19,6 +19,7 @@ Get Open Notebook running with OpenAI's GPT models. Fast, powerful, and simple.
 Create a new folder `open-notebook` and add this file:
 
 **docker-compose.yml**:
+
 ```yaml
 services:
   surrealdb:
@@ -56,6 +57,7 @@ services:
 ```
 
 **Edit the file:**
+
 - Replace `change-me-to-a-secret-string` with your own secret (any string works)
 
 ---
@@ -72,14 +74,15 @@ Wait 15-20 seconds for services to start.
 
 ---
 
-## Step 3: Access Open Notebook (instant)
+## Step 3: Access NotebookE (instant)
 
 Open your browser:
+
 ```
 http://localhost:8502
 ```
 
-You should see the Open Notebook interface!
+You should see the NotebookE interface!
 
 ---
 
@@ -141,6 +144,7 @@ Your OpenAI models are now available!
 ## Using Different Models
 
 In your notebook, go to **Settings** → **Models** to choose:
+
 - `gpt-4o` - Best quality (recommended)
 - `gpt-4o-mini` - Fast and cheap (good for testing)
 
@@ -151,6 +155,7 @@ In your notebook, go to **Settings** → **Models** to choose:
 ### "Port 8502 already in use"
 
 Change the port in docker-compose.yml:
+
 ```yaml
 ports:
   - "8503:8502"  # Use 8503 instead
@@ -162,7 +167,7 @@ Then access at `http://localhost:8503`
 
 1. Go to **Settings** → **API Keys**
 2. Click **Test Connection** on your OpenAI credential
-3. If it fails, verify your key at https://platform.openai.com
+3. If it fails, verify your key at <https://platform.openai.com>
 4. Delete the credential and create a new one with the correct key
 
 ### "Cannot connect to server"
@@ -186,11 +191,12 @@ docker compose restart  # Restart everything
 ## Cost Estimate
 
 OpenAI pricing (approximate):
+
 - **Conversation**: $0.01-0.10 per 1K tokens
 - **Embeddings**: $0.02 per 1M tokens
 - **Typical usage**: $1-5/month for light use, $20-50/month for heavy use
 
-Check https://openai.com/pricing for current rates.
+Check <https://openai.com/pricing> for current rates.
 
 ---
 

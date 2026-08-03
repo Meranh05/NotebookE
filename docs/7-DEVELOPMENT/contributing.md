@@ -1,10 +1,10 @@
-# Contributing to Open Notebook
+# Contributing to NotebookE
 
-Thank you for your interest in contributing to Open Notebook! We welcome contributions from developers of all skill levels. This guide will help you understand our contribution workflow and what makes a good contribution.
+Thank you for your interest in contributing to NotebookE! We welcome contributions from developers of all skill levels. This guide will help you understand our contribution workflow and what makes a good contribution.
 
 ## 🚦 Discussions for Ideas, Issues for Work
 
-Open Notebook separates **exploration** from **execution**:
+NotebookE separates **exploration** from **execution**:
 
 - **Feature requests, ideas, behavior changes, product/design/architecture proposals, and contribution proposals start in [GitHub Discussions](https://github.com/lfnovo/open-notebook/discussions/new?category=ideas).** This is where the community explores the problem and maintainers make the product or design decision.
 - **Reproducible bugs start in [GitHub Issues](https://github.com/lfnovo/open-notebook/issues/new/choose).**
@@ -18,11 +18,13 @@ Reproducible bug               → triaged Issue  → code → PR
 ```
 
 **When you can skip both and just open a PR:**
+
 - Typos, broken links, and small documentation clarifications
 - Small, obvious bug fixes — a few lines, one clear right answer, no design decisions
 - Translation fixes or completing missing i18n keys
 
 **When a Discussion is definitely required first:**
+
 - New features, of any size
 - Architecture or structural changes
 - Breaking changes
@@ -32,6 +34,7 @@ Reproducible bug               → triaged Issue  → code → PR
 **Already coded something sizeable without prior discussion or an approved Issue?** Don't throw it away: mark the PR as **draft**. Open a Discussion for a feature or design proposal, or an Issue for a reproducible bug, and link it from the PR. A maintainer will help route the work.
 
 **Why this process?**
+
 - Prevents duplicate work
 - Ensures solutions align with our architecture and design principles
 - Saves your time by getting feedback before coding
@@ -53,7 +56,7 @@ By participating in this project, you are expected to uphold our [Code of Conduc
    - Steps to reproduce
    - Expected vs actual behavior
    - Logs, screenshots, or error messages
-   - Your environment (OS, Docker version, Open Notebook version)
+   - Your environment (OS, Docker version, NotebookE version)
 4. **Indicate if you want to fix it** - Check the "I would like to work on this" box if you're interested
 
 ### Suggesting Features
@@ -86,6 +89,7 @@ Once your issue is assigned:
 ### What Makes a Good Contribution?
 
 ✅ **We love PRs that:**
+
 - Solve a real problem described in an issue
 - Follow our architecture and coding standards
 - Include tests and documentation
@@ -93,6 +97,7 @@ Once your issue is assigned:
 - Have clear commit messages
 
 ❌ **We may close PRs that:**
+
 - Are non-trivial and don't have an associated approved Issue (small obvious fixes are exempt — see the workflow above)
 - Introduce breaking changes without discussion
 - Conflict with our architectural vision
@@ -132,13 +137,15 @@ We use a **feature branch workflow**:
 ### Making Changes
 
 1. **Create a feature branch**:
+
 ```bash
 git checkout -b feature/amazing-new-feature
 ```
 
-2. **Make your changes** following our coding standards
+1. **Make your changes** following our coding standards
 
-3. **Test your changes**:
+2. **Test your changes**:
+
 ```bash
 # Run tests
 uv run pytest
@@ -150,13 +157,15 @@ uv run ruff check .
 uv run ruff format .
 ```
 
-4. **Commit your changes**:
+1. **Commit your changes**:
+
 ```bash
 git add .
 git commit -m "feat: add amazing new feature"
 ```
 
-5. **Push and create PR**:
+1. **Push and create PR**:
+
 ```bash
 git push origin feature/amazing-new-feature
 # Then create a Pull Request on GitHub
@@ -231,6 +240,6 @@ We recognize contributions through:
 
 ---
 
-Thank you for contributing to Open Notebook! Your contributions help make research more accessible and private for everyone.
+Thank you for contributing to NotebookE! Your contributions help make research more accessible and private for everyone.
 
 For questions about this guide or contributing in general, please reach out on [Discord](https://discord.gg/37XJPXfz2w) or open a GitHub Discussion.

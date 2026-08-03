@@ -1,4 +1,4 @@
-import { Loader2 } from 'lucide-react'
+import { IconLoader2 } from '@tabler/icons-react'
 import { cn } from '@/lib/utils'
 
 interface LoadingSpinnerProps {
@@ -14,7 +14,7 @@ export function LoadingSpinner({ className, size = 'md' }: LoadingSpinnerProps) 
   }
 
   return (
-    <Loader2 
+    <IconLoader2 
       data-testid="loading-spinner"
       className={cn('animate-spin', sizeClasses[size], className)} 
     />

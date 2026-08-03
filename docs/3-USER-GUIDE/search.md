@@ -23,11 +23,12 @@ But you can do much better...
 
 ## Two Search Modes Explained
 
-Open Notebook has two fundamentally different search approaches.
+NotebookE has two fundamentally different search approaches.
 
 ### Search Type 1: TEXT SEARCH (Keyword Matching)
 
 **How it works:**
+
 - You search for words: "transformer"
 - System finds chunks containing "transformer"
 - Ranked by relevance: frequency, position, context
@@ -35,12 +36,14 @@ Open Notebook has two fundamentally different search approaches.
 **Speed:** Very fast (instant)
 
 **When to use:**
+
 - You remember exact words or phrases
 - You're looking for specific terms
 - You want precise keyword matches
 - You need exact quotes
 
 **Example:**
+
 ```
 Search: "attention mechanism"
 Results:
@@ -53,6 +56,7 @@ Ranked by how close together they are
 ```
 
 **What it finds:**
+
 - Exact phrases: "transformer model"
 - Individual words: transformer OR model (too broad)
 - Names: "Vaswani et al."
@@ -60,6 +64,7 @@ Ranked by how close together they are
 - Technical terms: "LSTM", "convolution"
 
 **What it doesn't find:**
+
 - Similar words: searching "attention" won't find "focus"
 - Synonyms: searching "large" won't find "big"
 - Concepts: searching "similarity" won't find "likeness"
@@ -69,6 +74,7 @@ Ranked by how close together they are
 ### Search Type 2: VECTOR SEARCH (Semantic/Concept Matching)
 
 **How it works:**
+
 - Your search converted to embedding (vector)
 - All chunks converted to embeddings
 - System finds most similar embeddings
@@ -77,12 +83,14 @@ Ranked by how close together they are
 **Speed:** A bit slower (1-2 seconds)
 
 **When to use:**
+
 - You're exploring a concept
 - You don't know exact words
 - You want semantically similar content
 - You're discovering, not searching
 
 **Example:**
+
 ```
 Search: "What's the mechanism for understanding in models?"
 (Notice: No chunk likely says exactly that)
@@ -97,12 +105,14 @@ But all are semantically related
 ```
 
 **What it finds:**
+
 - Similar concepts: "understanding" + "interpretation" + "explainability" (all related)
 - Paraphrases: "big" and "large" (same meaning)
 - Related ideas: "safety" relates to "alignment" (connected concepts)
 - Analogies: content about biological learning when searching "learning"
 
 **What it doesn't find:**
+
 - Exact keywords: if you search a rare word, vector search might miss it
 - Specific numbers: "1994" vs "1993" are semantically different
 - Technical jargon: "LSTM" and "RNN" are different even if related
@@ -196,7 +206,7 @@ Result: Comprehensive answer, not just search results
 ### When to Use Ask vs. Simple Search
 
 | Task | Use | Why |
-|------|-----|-----|
+| ------ | ----- | ----- |
 | "Find the quote about X" | **TEXT SEARCH** | Need exact words |
 | "What does source A say about X?" | **TEXT SEARCH** | Direct, fast answer |
 | "Find content about X" | **VECTOR SEARCH** | Semantic discovery |
@@ -268,7 +278,7 @@ Result: Comprehensive answer, not just search results
 ### Getting No Results
 
 | Problem | Cause | Solution |
-|---------|-------|----------|
+| --------- | ------- | ---------- |
 | Text search: no results | Word doesn't appear | Try vector search instead |
 | Vector search: no results | Concept not in content | Try broader search term |
 | Both empty | Content not in notebook | Add sources to notebook |
@@ -277,7 +287,7 @@ Result: Comprehensive answer, not just search results
 ### Getting Too Many Results
 
 | Problem | Cause | Solution |
-|---------|-------|----------|
+| --------- | ------- | ---------- |
 | 1000+ results | Search too broad | Be more specific |
 | | All sources | Filter by source |
 | | Keyword matches rare words | Use vector search instead |
@@ -285,7 +295,7 @@ Result: Comprehensive answer, not just search results
 ### Getting Wrong Results
 
 | Problem | Cause | Solution |
-|---------|-------|----------|
+| --------- | ------- | ---------- |
 | Results irrelevant | Search term has multiple meanings | Provide more context |
 | | Using text search for concepts | Try vector search |
 | Different meaning | Homonym (word means multiple things) | Add context (e.g., "attention mechanism") |
@@ -293,7 +303,7 @@ Result: Comprehensive answer, not just search results
 ### Getting Low Quality Results
 
 | Problem | Cause | Solution |
-|---------|-------|----------|
+| --------- | ------- | ---------- |
 | Results don't match intent | Vague search term | Be specific ("Who invented X?" vs "X") |
 | | Concept not well-represented | Add more sources on that topic |
 | | Vector embedding not trained on domain | Use text search as fallback |
@@ -303,6 +313,7 @@ Result: Comprehensive answer, not just search results
 ## Tips for Better Searches
 
 ### For Text Search
+
 1. **Be specific** — "attention mechanism" not just "attention"
 2. **Use exact phrases** — Put quotes around: "attention is all you need"
 3. **Include context** — "LSTM vs attention" not just "attention"
@@ -310,6 +321,7 @@ Result: Comprehensive answer, not just search results
 5. **Try synonyms** — If first search fails, try related terms
 
 ### For Vector Search
+
 1. **Ask a question** — "What's the best way to X?" is better than "best way"
 2. **Use natural language** — Explain what you're looking for
 3. **Be specific about intent** — "Compare X and Y" not "X and Y"
@@ -317,6 +329,7 @@ Result: Comprehensive answer, not just search results
 5. **Think conceptually** — What idea are you exploring?
 
 ### General Tips
+
 1. **Start broad, then narrow** — "AI papers" → "transformers" → "attention mechanism"
 2. **Try both search types** — Each finds different things
 3. **Use Ask for complex questions** — Don't just search
@@ -455,18 +468,21 @@ NOTES (save insights)
 ## Summary: Know Your Search
 
 **TEXT SEARCH** — "I know what I'm looking for"
+
 - Fast, precise, keyword-based
 - Use when you remember exact words/phrases
 - Best for: Finding specific facts, quotes, technical terms
 - Speed: Instant
 
 **VECTOR SEARCH** — "I'm exploring an idea"
+
 - Slow-ish, concept-based, semantic
 - Use when you're discovering connections
 - Best for: Concept exploration, related ideas, synonyms
 - Speed: 1-2 seconds
 
 **ASK** — "I want a comprehensive answer"
+
 - Auto-searches, auto-analyzes, synthesizes
 - Use for complex questions needing multiple sources
 - Best for: Comparisons, big-picture questions, synthesis

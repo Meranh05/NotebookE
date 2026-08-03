@@ -1,6 +1,6 @@
 # Interface Overview - Finding Your Way Around
 
-Open Notebook uses a clean three-panel layout. This guide shows you where everything is.
+NotebookE uses a clean three-panel layout. This guide shows you where everything is.
 
 ---
 
@@ -29,7 +29,7 @@ Open Notebook uses a clean three-panel layout. This guide shows you where everyt
 The top navigation takes you to main sections:
 
 | Icon | Page | What It Does |
-|------|------|--------------|
+| ------ | ------ | -------------- |
 | **Notebooks** | Main workspace | Your research projects |
 | **Search** | Ask & Search | Query across all notebooks |
 | **Podcasts** | Audio generation | Manage podcast profiles |
@@ -76,6 +76,7 @@ Your research materials live here.
 ### Add Source Button
 
 Click to add:
+
 - File upload (PDF, DOCX, etc.)
 - Web URL
 - YouTube video
@@ -118,6 +119,7 @@ Your insights and AI-generated content.
 ### Write Note Button
 
 Click to:
+
 - Create manual note
 - Add your own insights
 - Markdown supported
@@ -180,7 +182,7 @@ Context: 3 sources (12,450 tokens)
 ### Per-Source Indicators
 
 | Indicator | Meaning | AI Access |
-|-----------|---------|-----------|
+| ----------- | --------- | ----------- |
 | 🟢 Full Content | Complete text | Everything |
 | 🟡 Summary Only | AI summary | Key points only |
 | ⛔ Not in Context | Excluded | Nothing |
@@ -221,7 +223,7 @@ Access via navigation bar → Settings:
 ### Key Sections
 
 | Section | What It Controls |
-|---------|------------------|
+| --------- | ------------------ |
 | **Processing** | Document and URL extraction engines |
 | **Embedding** | Auto-embed settings |
 | **Files** | Auto-delete uploads after processing |
@@ -332,7 +334,7 @@ Podcasts tab → Select profile → Choose sources → [Generate] → Wait → D
 ## Keyboard Shortcuts
 
 | Key | Action |
-|-----|--------|
+| ----- | -------- |
 | `Enter` | Send chat message |
 | `Shift + Enter` | New line in chat |
 | `Escape` | Close dialogs |

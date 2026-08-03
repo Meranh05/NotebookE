@@ -244,9 +244,17 @@ export function useAsk() {
     })
   }, [clearStreamTimeout])
 
+  const cancel = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+    }
+    stopStreaming()
+  }, [stopStreaming])
+
   return {
     ...state,
     sendAsk,
-    reset
+    reset,
+    cancel
   }
 }

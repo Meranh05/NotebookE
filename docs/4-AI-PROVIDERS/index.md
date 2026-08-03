@@ -1,6 +1,6 @@
 # AI Providers - Comparison & Selection Guide
 
-Open Notebook supports 17+ AI providers. This guide helps you **choose the right provider** for your needs.
+NotebookE supports 17+ AI providers. This guide helps you **choose the right provider** for your needs.
 
 > 💡 **Just want to set up a provider?** Skip to the [Configuration Guide](../5-CONFIGURATION/ai-providers.md) for detailed setup instructions.
 
@@ -11,6 +11,7 @@ Open Notebook supports 17+ AI providers. This guide helps you **choose the right
 ### Cloud Providers (Easiest)
 
 **OpenAI (Recommended)**
+
 - Cost: ~$0.03-0.15 per 1K tokens
 - Speed: Very fast
 - Quality: Excellent
@@ -19,6 +20,7 @@ Open Notebook supports 17+ AI providers. This guide helps you **choose the right
 → [Setup Guide](../5-CONFIGURATION/ai-providers.md#openai)
 
 **Anthropic (Claude)**
+
 - Cost: ~$0.80-3.00 per 1M tokens
 - Speed: Fast
 - Quality: Excellent
@@ -28,6 +30,7 @@ Open Notebook supports 17+ AI providers. This guide helps you **choose the right
 → [Setup Guide](../5-CONFIGURATION/ai-providers.md#anthropic-claude)
 
 **Google Gemini**
+
 - Cost: ~$0.075-0.30 per 1K tokens
 - Speed: Very fast
 - Quality: Good to excellent
@@ -37,6 +40,7 @@ Open Notebook supports 17+ AI providers. This guide helps you **choose the right
 → [Setup Guide](../5-CONFIGURATION/ai-providers.md#google-gemini)
 
 **Groq (Ultra-Fast)**
+
 - Cost: ~$0.05 per 1M tokens (cheapest)
 - Speed: Ultra-fast (fastest available)
 - Quality: Good
@@ -46,6 +50,7 @@ Open Notebook supports 17+ AI providers. This guide helps you **choose the right
 → [Setup Guide](../5-CONFIGURATION/ai-providers.md#groq)
 
 **OpenRouter (100+ Models)**
+
 - Cost: Pay-per-model (varies widely)
 - Speed: Varies by model
 - Quality: Varies by model
@@ -56,6 +61,7 @@ Open Notebook supports 17+ AI providers. This guide helps you **choose the right
 → [Setup Guide](../5-CONFIGURATION/ai-providers.md#openrouter)
 
 **DashScope (Qwen)**
+
 - Cost: ~$0.01-0.06 per 1K tokens
 - Speed: Fast
 - Quality: Good
@@ -65,6 +71,7 @@ Open Notebook supports 17+ AI providers. This guide helps you **choose the right
 → [Setup Guide](../5-CONFIGURATION/ai-providers.md#dashscope-qwen)
 
 **MiniMax**
+
 - Cost: Varies by model
 - Speed: Fast
 - Quality: Good
@@ -74,6 +81,7 @@ Open Notebook supports 17+ AI providers. This guide helps you **choose the right
 → [Setup Guide](../5-CONFIGURATION/ai-providers.md#minimax)
 
 **Cohere**
+
 - Cost: Usage-based
 - Speed: Fast
 - Quality: Good (Command family)
@@ -81,6 +89,7 @@ Open Notebook supports 17+ AI providers. This guide helps you **choose the right
 - Advantage: Language **and** embedding models from one key (`embed-v4.0`); reranking is not yet wired in
 
 **Novita**
+
 - Cost: Pay-per-model (competitive)
 - Speed: Fast
 - Quality: Varies by model
@@ -88,6 +97,7 @@ Open Notebook supports 17+ AI providers. This guide helps you **choose the right
 - Advantage: Broad open-model catalog
 
 **PayPerQ (PPQ)**
+
 - Cost: Pay-as-you-go across providers
 - Speed: Varies by routed model
 - Quality: Varies by routed model
@@ -97,6 +107,7 @@ Open Notebook supports 17+ AI providers. This guide helps you **choose the right
 ### Local / Self-Hosted (Free)
 
 **Ollama (Recommended for Local)**
+
 - Cost: Free (electricity only)
 - Speed: Depends on hardware (slow on CPU, fast on GPU)
 - Quality: Good (open-source models)
@@ -107,6 +118,7 @@ Open Notebook supports 17+ AI providers. This guide helps you **choose the right
 → [Setup Guide](../5-CONFIGURATION/ai-providers.md#ollama-recommended-for-local)
 
 **oMLX (Apple Silicon)**
+
 - Cost: Free (electricity only)
 - Speed: Fast on M-series GPUs (MLX)
 - Quality: Good (bring-your-own MLX models)
@@ -117,6 +129,7 @@ Open Notebook supports 17+ AI providers. This guide helps you **choose the right
 → [Setup Guide](../5-CONFIGURATION/omlx.md)
 
 **LM Studio (Alternative)**
+
 - Cost: Free (electricity only)
 - Speed: Depends on hardware
 - Quality: Good (same models as Ollama)
@@ -129,6 +142,7 @@ Open Notebook supports 17+ AI providers. This guide helps you **choose the right
 ### Enterprise
 
 **Azure OpenAI**
+
 - Cost: Same as OpenAI (usage-based)
 - Speed: Very fast
 - Quality: Excellent (same models as OpenAI)
@@ -142,7 +156,7 @@ Open Notebook supports 17+ AI providers. This guide helps you **choose the right
 ## Comparison Table
 
 | Provider | Speed | Cost | Quality | Privacy | Setup | Context |
-|----------|-------|------|---------|---------|-------|---------|
+| ---------- | ------- | ------ | --------- | --------- | ------- | --------- |
 | **OpenAI** | Very Fast | $$ | Excellent | Low | 5 min | 128K |
 | **Anthropic** | Fast | $$ | Excellent | Low | 5 min | 200K |
 | **Google** | Very Fast | $$ | Good-Excellent | Low | 5 min | 2M |
@@ -163,33 +177,43 @@ Open Notebook supports 17+ AI providers. This guide helps you **choose the right
 ## Choosing Your Provider
 
 ### I want the easiest setup
+
 → **OpenAI** — Most popular, best community support
 
 ### I have unlimited budget
+
 → **OpenAI** — Best quality
 
 ### I want to save money
+
 → **Groq** — Cheapest cloud ($0.05 per 1M tokens)
 
 ### I want privacy/offline
+
 → **Ollama** — Free, local, private
 
 ### I have an Apple Silicon Mac
+
 → **oMLX** — Free, local MLX inference ([setup](../5-CONFIGURATION/omlx.md))
 
 ### I want a GUI (not CLI)
+
 → **LM Studio** — Desktop app
 
 ### I'm in an enterprise
+
 → **Azure OpenAI** — Compliance, support
 
 ### I need long context (200K+ tokens)
+
 → **Anthropic** — Best long-context model
 
 ### I need multimodal (images, audio, video)
+
 → **Google Gemini** — Best multimodal support
 
 ### I want access to many models with one API key
+
 → **OpenRouter** — 100+ models, unified billing
 
 ---
@@ -201,6 +225,7 @@ Now that you've chosen a provider, follow the detailed setup instructions:
 → **[AI Providers Configuration Guide](../5-CONFIGURATION/ai-providers.md)**
 
 This guide includes:
+
 - Step-by-step setup instructions for each provider via the Settings UI
 - How to add credentials, test connections, and discover models
 - Model selection and recommendations
@@ -213,6 +238,7 @@ This guide includes:
 ## Cost Estimator
 
 ### OpenAI
+
 ```
 Light use (10 chats/day): $1-5/month
 Medium use (50 chats/day): $10-30/month
@@ -220,6 +246,7 @@ Heavy use (all-day use): $50-100+/month
 ```
 
 ### Anthropic
+
 ```
 Light use: $1-3/month
 Medium use: $5-20/month
@@ -227,6 +254,7 @@ Heavy use: $20-50+/month
 ```
 
 ### Groq
+
 ```
 Light use: $0-1/month
 Medium use: $2-5/month
@@ -234,6 +262,7 @@ Heavy use: $5-20/month
 ```
 
 ### Ollama
+
 ```
 Any use: Free (electricity only)
 8GB GPU running 24/7: ~$10/month electricity
@@ -247,7 +276,7 @@ Any use: Free (electricity only)
 2. **Follow the setup guide**: [AI Providers Configuration](../5-CONFIGURATION/ai-providers.md)
 3. **Add your credential** in Settings → API Keys
 4. **Test your connection** and discover models
-5. **Start using Open Notebook!**
+5. **Start using NotebookE!**
 
 ---
 

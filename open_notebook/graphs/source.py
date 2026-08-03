@@ -18,7 +18,7 @@ from open_notebook.graphs.transformation import graph as transform_graph
 from open_notebook.utils.runtime_capabilities import engine_runtime_missing
 
 # Preferred languages for YouTube transcript selection. content-core's own
-# default is only ["en", "es", "pt"]; we keep the broader list Open Notebook has
+# default is only ["en", "es", "pt"]; we keep the broader list NotebookE has
 # always intended so non-English videos still resolve a transcript.
 YOUTUBE_PREFERRED_LANGUAGES = [
     "en",

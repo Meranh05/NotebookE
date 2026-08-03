@@ -28,14 +28,14 @@ export function CheckboxList({
 }: CheckboxListProps) {
   if (loading) {
     return (
-      <div className={cn('border border-border rounded-md p-4 bg-card', className)}>
+      <div className={cn('border-2 border-border rounded-2xl p-4 bg-card', className)}>
         <div className="animate-pulse space-y-3">
           {[...Array(3)].map((_, i) => (
             <div key={i} className="flex items-center gap-3">
-              <div className="w-4 h-4 bg-muted rounded" />
+              <div className="w-4 h-4 bg-muted rounded-md" />
               <div className="flex-1">
-                <div className="h-4 bg-muted rounded w-3/4 mb-1" />
-                <div className="h-3 bg-muted rounded w-1/2" />
+                <div className="h-4 bg-muted rounded-lg w-3/4 mb-1.5" />
+                <div className="h-3 bg-muted rounded-lg w-1/2" />
               </div>
             </div>
           ))}
@@ -46,41 +46,49 @@ export function CheckboxList({
 
   if (items.length === 0) {
     return (
-      <div className={cn('border border-border rounded-md p-4 bg-card', className)}>
+      <div className={cn('border-2 border-border rounded-2xl p-4 bg-card', className)}>
         <p className="text-sm text-muted-foreground">{emptyMessage}</p>
       </div>
     )
   }
 
   return (
-    <div className={cn('border border-border rounded-md bg-card', className)}>
-      <div className="max-h-48 overflow-y-auto p-4">
-        <div className="space-y-3">
-          {items.map((item) => (
-            <label
-              key={item.id}
-              htmlFor={`checkbox-${item.id}`}
-              className="flex items-start gap-3 cursor-pointer hover:bg-muted p-2 rounded-md -m-2 transition-colors"
-            >
-              <Checkbox
-                id={`checkbox-${item.id}`}
-                name={`checkbox-${item.id}`}
-                checked={selectedIds.includes(item.id)}
-                onCheckedChange={() => onToggle(item.id)}
-                className="mt-0.5"
-              />
-              <div className="flex-1 min-w-0">
-                <span className="text-sm font-medium block">
-                  {item.title}
-                </span>
-                {item.description && (
-                  <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                    {item.description}
-                  </p>
+    <div className={cn('border-2 border-border rounded-2xl bg-card overflow-hidden', className)}>
+      <div className="max-h-48 overflow-y-auto p-3">
+        <div className="space-y-1.5">
+          {items.map((item) => {
+            const isSelected = selectedIds.includes(item.id);
+            return (
+              <label
+                key={item.id}
+                htmlFor={`checkbox-${item.id}`}
+                className={cn(
+                  "flex items-start gap-3 cursor-pointer p-3 rounded-xl transition-all border-2",
+                  isSelected
+                    ? "bg-primary/8 border-primary/30"
+                    : "bg-transparent border-transparent hover:bg-muted/60 hover:border-border"
                 )}
-              </div>
-            </label>
-          ))}
+              >
+                <Checkbox
+                  id={`checkbox-${item.id}`}
+                  name={`checkbox-${item.id}`}
+                  checked={isSelected}
+                  onCheckedChange={() => onToggle(item.id)}
+                  className="mt-0.5"
+                />
+                <div className="flex-1 min-w-0">
+                  <span className={cn("text-[13px] font-semibold block transition-colors", isSelected ? "text-primary" : "text-foreground")}>
+                    {item.title}
+                  </span>
+                  {item.description && (
+                    <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+                      {item.description}
+                    </p>
+                  )}
+                </div>
+              </label>
+            )
+          })}
         </div>
       </div>
     </div>

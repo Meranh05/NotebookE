@@ -13,7 +13,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { AlertTriangle, ExternalLink } from 'lucide-react'
+import { IconAlertTriangle, IconExternalLink } from '@tabler/icons-react'
 import { useTranslation } from '@/lib/hooks/use-translation'
 
 interface EmbeddingModelChangeDialogProps {
@@ -56,7 +56,7 @@ export function EmbeddingModelChangeDialog({
       <AlertDialogContent className="max-w-lg">
         <AlertDialogHeader>
           <div className="flex items-center gap-2 mb-2">
-            <AlertTriangle className="h-5 w-5 text-warn" />
+            <IconAlertTriangle className="h-5 w-5 text-warn" />
             <AlertDialogTitle>{t('models.embeddingChangeTitle')}</AlertDialogTitle>
           </div>
           <AlertDialogDescription asChild>
@@ -104,7 +104,7 @@ export function EmbeddingModelChangeDialog({
             disabled={isConfirming}
             className="bg-primary"
           >
-            <ExternalLink className="mr-2 h-4 w-4" />
+            <IconExternalLink className="mr-2 h-4 w-4" />
             {t('models.changeAndRebuild')}
           </AlertDialogAction>
         </AlertDialogFooter>

@@ -1,4 +1,4 @@
-"""Surreal-commands integration for Open Notebook"""
+"""Surreal-commands integration for NotebookE"""
 
 # The worker starts via `surreal-commands-worker --import-modules commands`,
 # so this package is imported before the worker connects to SurrealDB. Inject
@@ -15,7 +15,7 @@ from .embedding_commands import (
     rebuild_embeddings_command,
 )
 from .podcast_commands import generate_podcast_command
-from .source_commands import process_source_command
+from .source_commands import process_source_command, run_transformation_command
 
 __all__ = [
     # Embedding commands
@@ -26,4 +26,5 @@ __all__ = [
     # Other commands
     "generate_podcast_command",
     "process_source_command",
+    "run_transformation_command",
 ]

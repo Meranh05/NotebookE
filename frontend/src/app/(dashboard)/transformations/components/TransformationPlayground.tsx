@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Play, Loader2 } from 'lucide-react'
+import { IconLoader2, IconPlayerPlay } from '@tabler/icons-react'
 import { Transformation } from '@/lib/types/transformations'
 import { useExecuteTransformation } from '@/lib/hooks/use-transformations'
 import { ModelSelector } from '@/components/common/ModelSelector'
@@ -107,12 +107,12 @@ export function TransformationPlayground({ transformations, selectedTransformati
             >
               {executeTransformation.isPending ? (
                 <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  <IconLoader2 className="h-4 w-4 mr-2 animate-spin" />
                   {t('transformations.running')}
                 </>
               ) : (
                 <>
-                  <Play className="h-4 w-4 mr-2" />
+                  <IconPlayerPlay className="h-4 w-4 mr-2" />
                   {t('transformations.runTest')}
                 </>
               )}

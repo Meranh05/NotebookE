@@ -1,14 +1,13 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { AlertTriangle } from 'lucide-react'
+import { IconAlertTriangle, IconMicrophone, IconLayout2 } from '@tabler/icons-react'
 
 import { AppShell } from '@/components/layout/AppShell'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { EpisodesTab } from '@/components/podcasts/EpisodesTab'
 import { TemplatesTab } from '@/components/podcasts/TemplatesTab'
-import { Mic, LayoutTemplate } from 'lucide-react'
 import { useTranslation } from '@/lib/hooks/use-translation'
 import { useEpisodeProfiles, useSpeakerProfiles } from '@/lib/hooks/use-podcasts'
 import { needsModelSetup } from '@/lib/types/podcasts'
@@ -37,7 +36,7 @@ export default function PodcastsPage() {
 
           {hasUnconfiguredProfiles ? (
             <Alert className="bg-warn-tint text-warn border-warn/30">
-              <AlertTriangle className="h-4 w-4" />
+              <IconAlertTriangle className="h-4 w-4" />
               <AlertTitle>{t('podcasts.setupRequired')}</AlertTitle>
               <AlertDescription>
                 {t('podcasts.setupRequiredDesc')}
@@ -54,11 +53,11 @@ export default function PodcastsPage() {
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('podcasts.chooseAView')}</p>
               <TabsList aria-label={t('common.accessibility.podcastViews')} className="w-full max-w-md">
                 <TabsTrigger value="episodes">
-                  <Mic className="h-4 w-4" />
+                  <IconMicrophone className="h-4 w-4" />
                   {t('podcasts.episodesTab')}
                 </TabsTrigger>
                 <TabsTrigger value="templates">
-                  <LayoutTemplate className="h-4 w-4" />
+                  <IconLayout2 className="h-4 w-4" />
                   {t('podcasts.templatesTab')}
                 </TabsTrigger>
               </TabsList>

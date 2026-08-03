@@ -8,7 +8,7 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from '@/components/ui/collapsible'
-import { Database, Server, ChevronDown, ExternalLink } from 'lucide-react'
+import { IconChevronDown, IconDatabase, IconExternalLink, IconServer } from '@tabler/icons-react'
 import { ConnectionError } from '@/lib/types/config'
 import { useTranslation } from '@/lib/hooks/use-translation'
 
@@ -36,9 +36,9 @@ export function ConnectionErrorOverlay({
         {/* Error icon and title */}
         <div className="flex items-center gap-4">
           {isApiError ? (
-            <Server className="w-12 h-12 text-destructive" aria-hidden="true" />
+            <IconServer className="w-12 h-12 text-destructive" aria-hidden="true" />
           ) : (
-            <Database className="w-12 h-12 text-destructive" aria-hidden="true" />
+            <IconDatabase className="w-12 h-12 text-destructive" aria-hidden="true" />
           )}
           <div>
             <h1 className="text-2xl font-bold" id="error-title">
@@ -112,7 +112,7 @@ export function ConnectionErrorOverlay({
             className="text-primary hover:underline inline-flex items-center gap-1"
           >
             {t('connectionErrors.docLink')}
-            <ExternalLink className="w-4 h-4" />
+            <IconExternalLink className="w-4 h-4" />
           </a>
         </div>
 
@@ -122,7 +122,7 @@ export function ConnectionErrorOverlay({
             <CollapsibleTrigger asChild>
               <Button variant="ghost" size="sm" className="w-full justify-between">
                 <span>{t('connectionErrors.showTechnical')}</span>
-                <ChevronDown
+                <IconChevronDown
                   className={`w-4 h-4 transition-transform ${
                     showDetails ? 'rotate-180' : ''
                   }`}

@@ -13,46 +13,31 @@ import {
   CommandItem,
   CommandSeparator,
 } from '@/components/ui/command'
-import {
-  Book,
-  Search,
-  Mic,
-  Bot,
-  Shuffle,
-  Settings,
-  FileText,
-  Wrench,
-  MessageCircleQuestion,
-  Plus,
-  Sun,
-  Moon,
-  Monitor,
-  Loader2,
-} from 'lucide-react'
+import { IconArrowsShuffle, IconBook, IconDeviceDesktop, IconFileText, IconLoader2, IconMessageCircleQuestion, IconMicrophone, IconMoon, IconPlus, IconRobot, IconSearch, IconSettings, IconSun, IconTool } from '@tabler/icons-react'
 import { useTranslation } from '@/lib/hooks/use-translation'
 import type { TFunction } from 'i18next'
 
 const getNavigationItems = (t: TFunction) => [
-  { name: t('navigation.sources'), href: '/sources', icon: FileText, keywords: ['files', 'documents', 'upload'] },
-  { name: t('navigation.notebooks'), href: '/notebooks', icon: Book, keywords: ['notes', 'research', 'projects'] },
-  { name: t('navigation.askAndSearch'), href: '/search', icon: Search, keywords: ['find', 'query'] },
-  { name: t('navigation.podcasts'), href: '/podcasts', icon: Mic, keywords: ['audio', 'episodes', 'generate'] },
-  { name: t('navigation.models'), href: '/settings/api-keys', icon: Bot, keywords: ['ai', 'llm', 'providers', 'openai', 'anthropic'] },
-  { name: t('navigation.transformations'), href: '/transformations', icon: Shuffle, keywords: ['prompts', 'templates', 'actions'] },
-  { name: t('navigation.settings'), href: '/settings', icon: Settings, keywords: ['preferences', 'config', 'options'] },
-  { name: t('navigation.advanced'), href: '/advanced', icon: Wrench, keywords: ['debug', 'system', 'tools'] },
+  { name: t('navigation.sources'), href: '/sources', icon: IconFileText, keywords: ['files', 'documents', 'upload'] },
+  { name: t('navigation.notebooks'), href: '/notebooks', icon: IconBook, keywords: ['notes', 'research', 'projects'] },
+  { name: t('navigation.askAndSearch'), href: '/search', icon: IconSearch, keywords: ['find', 'query'] },
+  { name: t('navigation.podcasts'), href: '/podcasts', icon: IconMicrophone, keywords: ['audio', 'episodes', 'generate'] },
+  { name: t('navigation.models'), href: '/settings/api-keys', icon: IconRobot, keywords: ['ai', 'llm', 'providers', 'openai', 'anthropic'] },
+  { name: t('navigation.transformations'), href: '/transformations', icon: IconArrowsShuffle, keywords: ['prompts', 'templates', 'actions'] },
+  { name: t('navigation.settings'), href: '/settings', icon: IconSettings, keywords: ['preferences', 'config', 'options'] },
+  { name: t('navigation.advanced'), href: '/advanced', icon: IconTool, keywords: ['debug', 'system', 'tools'] },
 ]
 
 const getCreateItems = (t: TFunction) => [
-  { name: t('common.newSource'), action: 'source', icon: FileText },
-  { name: t('common.newNotebook'), action: 'notebook', icon: Book },
-  { name: t('common.newPodcast'), action: 'podcast', icon: Mic },
+  { name: t('common.newSource'), action: 'source', icon: IconFileText },
+  { name: t('common.newNotebook'), action: 'notebook', icon: IconBook },
+  { name: t('common.newPodcast'), action: 'podcast', icon: IconMicrophone },
 ]
 
 const getThemeItems = (t: TFunction) => [
-  { name: t('common.light'), value: 'light' as const, icon: Sun, keywords: ['bright', 'day'] },
-  { name: t('common.dark'), value: 'dark' as const, icon: Moon, keywords: ['night'] },
-  { name: t('common.system'), value: 'system' as const, icon: Monitor, keywords: ['auto', 'default'] },
+  { name: t('common.light'), value: 'light' as const, icon: IconSun, keywords: ['bright', 'day'] },
+  { name: t('common.dark'), value: 'dark' as const, icon: IconMoon, keywords: ['night'] },
+  { name: t('common.system'), value: 'system' as const, icon: IconDeviceDesktop, keywords: ['auto', 'default'] },
 ]
 
 export function CommandPalette() {
@@ -157,7 +142,7 @@ export function CommandPalette() {
     )
   }, [queryLower, notebooks, navigationItems, createItems, themeItems])
 
-  // Determine if we should show the Search/Ask section at the top
+  // Determine if we should show the IconSearch/Ask section at the top
   const showSearchFirst = query.trim() && !hasCommandMatch
 
   return (
@@ -178,7 +163,7 @@ export function CommandPalette() {
         autoComplete="off"
       />
       <CommandList>
-        {/* Search/Ask - show FIRST when there's a query with no command match */}
+        {/* IconSearch/Ask - show FIRST when there's a query with no command match */}
         {showSearchFirst && (
           <CommandGroup heading={t('searchPage.searchAndAsk')} forceMount>
             <CommandItem
@@ -186,7 +171,7 @@ export function CommandPalette() {
               onSelect={handleSearch}
               forceMount
             >
-              <Search className="h-4 w-4" />
+              <IconSearch className="h-4 w-4" />
               <span>{t('searchPage.searchResultsFor', { query: query })}</span>
             </CommandItem>
             <CommandItem
@@ -194,7 +179,7 @@ export function CommandPalette() {
               onSelect={handleAsk}
               forceMount
             >
-              <MessageCircleQuestion className="h-4 w-4" />
+              <IconMessageCircleQuestion className="h-4 w-4" />
               <span>{t('searchPage.askAbout', { query: query })}</span>
             </CommandItem>
           </CommandGroup>
@@ -218,7 +203,7 @@ export function CommandPalette() {
         <CommandGroup heading={t('notebooks.title')}>
           {notebooksLoading ? (
             <CommandItem disabled>
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <IconLoader2 className="h-4 w-4 animate-spin" />
               <span>{t('common.loading')}</span>
             </CommandItem>
           ) : notebooks && notebooks.length > 0 ? (
@@ -228,7 +213,7 @@ export function CommandPalette() {
                 value={`notebook ${notebook.name} ${notebook.description || ''}`}
                 onSelect={() => handleNavigate(`/notebooks/${notebook.id}`)}
               >
-                <Book className="h-4 w-4" />
+                <IconBook className="h-4 w-4" />
                 <span>{notebook.name}</span>
               </CommandItem>
             ))
@@ -243,7 +228,7 @@ export function CommandPalette() {
               value={`create ${item.name}`}
               onSelect={() => handleCreate(item.action)}
             >
-              <Plus className="h-4 w-4" />
+              <IconPlus className="h-4 w-4" />
               <span>{item.name}</span>
             </CommandItem>
           ))}
@@ -263,7 +248,7 @@ export function CommandPalette() {
           ))}
         </CommandGroup>
 
-        {/* Search/Ask - show at bottom when there IS a command match */}
+        {/* IconSearch/Ask - show at bottom when there IS a command match */}
         {query.trim() && hasCommandMatch && (
           <>
             <CommandSeparator />
@@ -273,7 +258,7 @@ export function CommandPalette() {
                 onSelect={handleSearch}
                 forceMount
               >
-                <Search className="h-4 w-4" />
+                <IconSearch className="h-4 w-4" />
                 <span>{t('searchPage.searchResultsFor', { query: query })}</span>
               </CommandItem>
               <CommandItem
@@ -281,7 +266,7 @@ export function CommandPalette() {
                 onSelect={handleAsk}
                 forceMount
               >
-                <MessageCircleQuestion className="h-4 w-4" />
+                <IconMessageCircleQuestion className="h-4 w-4" />
                 <span>{t('searchPage.askAbout', { query: query })}</span>
               </CommandItem>
             </CommandGroup>

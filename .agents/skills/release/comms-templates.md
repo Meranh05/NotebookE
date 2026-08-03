@@ -1,7 +1,7 @@
 # Communication Templates
 
 Reference implementation: the v1.11.0 release
-(https://github.com/lfnovo/open-notebook/releases/tag/v1.11.0).
+(<https://github.com/lfnovo/open-notebook/releases/tag/v1.11.0>).
 
 ## GitHub release notes structure
 
@@ -39,7 +39,7 @@ Tone: honest and specific. Say what protections do AND what stays supported
 ## Discord announcement skeleton
 
 ```
-📢 Open Notebook v<X.Y.Z> is out — <hook: why upgrade>!
+📢 NotebookE v<X.Y.Z> is out — <hook: why upgrade>!
 
 <2-3 lines: the headline theme (e.g. security pass) + feature highlights
 as a one-line · separated list>

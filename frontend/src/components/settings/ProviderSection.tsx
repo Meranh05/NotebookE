@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Plus, Check, X } from 'lucide-react'
+import { IconCheck, IconPlus, IconX } from '@tabler/icons-react'
 import { useTranslation } from '@/lib/hooks/use-translation'
 import { Credential } from '@/lib/api/credentials'
 import { ProviderInfo } from '@/lib/api/providers'
@@ -70,12 +70,12 @@ export function ProviderSection({
           <div className="flex items-center gap-2">
             {hasCredentials ? (
               <span className="inline-flex items-center gap-1.5 text-xs font-medium text-fern">
-                <Check className="h-3 w-3" />
+                <IconCheck className="h-3 w-3" />
                 {t('apiKeys.configured')}
               </span>
             ) : (
               <span className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground">
-                <X className="h-3 w-3" />
+                <IconX className="h-3 w-3" />
                 {t('apiKeys.notConfigured')}
               </span>
             )}
@@ -100,7 +100,7 @@ export function ProviderSection({
           className="w-full gap-2"
           disabled={!encryptionReady}
         >
-          <Plus className="h-4 w-4" />
+          <IconPlus className="h-4 w-4" />
           {t('apiKeys.addConfig')}
         </Button>
       </CardContent>

@@ -1,5 +1,5 @@
 """
-Unified embedding utilities for Open Notebook.
+Unified embedding utilities for NotebookE.
 
 Provides centralized embedding generation with support for:
 - Single text embedding (with automatic chunking and mean pooling for large texts)
@@ -175,6 +175,18 @@ async def generate_embeddings(
             try:
                 batch_embeddings = await embedding_model.aembed(batch)
                 all_embeddings.extend(batch_embeddings)
+                
+                if command_id:
+                    try:
+                        from api.command_service import CommandService
+                        progress = int((len(all_embeddings) / len(texts)) * 100)
+                        # We don't want to block or fail if progress update fails
+                        asyncio.create_task(
+                            CommandService.update_command_progress(command_id, progress)
+                        )
+                    except Exception as e:
+                        logger.debug(f"Failed to submit progress update: {e}")
+
                 break
             except Exception as e:
                 cmd_context = f" (command: {command_id})" if command_id else ""

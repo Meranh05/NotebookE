@@ -2,7 +2,7 @@
 
 Engineering practices and decision-making guidance for contributors.
 
-> **Looking for the product vision?** What Open Notebook is (and is not), the durable product
+> **Looking for the product vision?** What NotebookE is (and is not), the durable product
 > principles, and the current posture live in **[VISION.md](../../VISION.md)** — read that first.
 > The reasoning behind past structural choices lives in the
 > **[decision records](decisions/README.md)**.
@@ -35,6 +35,7 @@ Engineering practices and decision-making guidance for contributors.
 ### Clean Separation of Concerns
 
 **Layers should not leak**:
+
 - Frontend should not know about database structure
 - API should not contain business logic (delegate to domain layer)
 - Domain models should not know about HTTP requests
@@ -43,6 +44,7 @@ Engineering practices and decision-making guidance for contributors.
 ### Type Safety and Validation
 
 **Catch errors early**:
+
 - Use Pydantic models for all API boundaries
 - Type hints throughout Python codebase
 - TypeScript for frontend code
@@ -51,6 +53,7 @@ Engineering practices and decision-making guidance for contributors.
 ### Test What Matters
 
 **Focus on valuable tests**:
+
 - Test business logic and domain models
 - Test API contracts and error handling
 - Don't test framework code (FastAPI, React, etc.)
@@ -59,6 +62,7 @@ Engineering practices and decision-making guidance for contributors.
 ### Database as Source of Truth
 
 **SurrealDB is our single source of truth**:
+
 - All state persisted in database
 - No business logic in database layer
 - Use SurrealDB features (record links, queries) appropriately
@@ -69,6 +73,7 @@ Engineering practices and decision-making guidance for contributors.
 ### Feature Creep
 
 **What it looks like**:
+
 - Adding features because they're "cool" or "easy"
 - Building features for edge cases before common cases work well
 - Trying to be everything to everyone
@@ -79,6 +84,7 @@ Engineering practices and decision-making guidance for contributors.
 ### Premature Optimization
 
 **What it looks like**:
+
 - Optimizing code before knowing if it's slow
 - Complex caching strategies without measuring impact
 - Trading code clarity for marginal performance gains
@@ -89,6 +95,7 @@ making performance changes.
 ### Over-Engineering
 
 **What it looks like**:
+
 - Building abstraction layers "in case we need them later"
 - Implementing design patterns for 3-line functions
 - Creating frameworks instead of solving problems
@@ -99,6 +106,7 @@ abstractions when they simplify, not complicate.
 ### Breaking Changes Without Migration Path
 
 **What it looks like**:
+
 - Changing database schema without migration scripts
 - Modifying API contracts without versioning
 - Removing features without deprecation warnings
@@ -111,29 +119,34 @@ document breaking changes clearly.
 When evaluating new features or changes, ask:
 
 ### 1. Does it align with our vision?
+
 - Does it help users own their research data?
 - Does it support privacy and self-hosting?
 - Does it fit our core use cases? (See [VISION.md](../../VISION.md))
 
 ### 2. Does it follow our principles?
+
 - Is it simple to use and understand?
 - Does it work via API?
 - Does it support multiple providers?
 - Can it be extended by users?
 
 ### 3. Is the implementation sound?
+
 - Does it maintain separation of concerns?
 - Is it properly typed and validated?
 - Does it include tests?
 - Is it documented?
 
 ### 4. What is the cost?
+
 - How much complexity does it add?
 - How much maintenance burden?
 - Does it introduce new dependencies?
 - Will it be used enough to justify the cost?
 
 ### 5. Are there alternatives?
+
 - Can existing features solve this problem?
 - Can this be built as a plugin or extension?
 - Should this be a separate tool instead?

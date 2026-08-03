@@ -8,16 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - **New "Quiet Green" design foundation** — the first of three PRs applying the visual identity co-designed with the community in Discussion #1202. The design token system lands in `globals.css` (core palette, neutral reading surfaces, ink ramp, hairline borders, content-type hues, evidence/citation classes, context-state colors, a squared 4–6px radius scale and a near-flat shadow scale where popovers own the only real shadow); fonts move from Inter to Bricolage Grotesque (display) + Instrument Sans (UI) + Spline Sans Mono (data) via `next/font`; the shadcn primitives are restyled to the foundation's rules (fern green primary actions, red reserved exclusively for destructive/error, clay for warnings, teal as the AI/system voice, underline tabs, quiet neutral badges, teal focus ring); and hard-coded palette colors across 38 components were swept into the semantic tokens, which re-resolve automatically per theme. A dev-only living styleguide at `/dev/design` (404 in production) renders every token and primitive in both themes and serves as the review reference for the follow-up screen-by-screen PRs. Purely visual — no behavior, navigation or i18n changes
 - **Screen-by-screen reskin in the "Quiet Green" language** (the second redesign PR): the app shell gets the recomposed tri-hue pebble wordmark (fern/gold/teal — no red left), a fern spine on the active nav item and destination-hued nav icons; the notebook workspace gets display-type titles, panel headers with identity ticks (sources sage / notes gold / chat teal), one-line source-card metadata with the overflow menu at top-right, and de-washed chat bubbles (the AI speaks in teal accents, never washed backgrounds); the notebooks home separates compact recently-viewed rows from active-notebook cards; the sources table gets the library treatment (content-type pebbles, quiet embedded pills, hover that raises the surface); dialogs and the source viewer are flattened (no card-in-card boxes, uniform breathing room, no ⋮/close collision); and Models/Settings/Podcasts/Transformations/Ask-Search get the badge diet, quiet audio-player containers, mono for data and teal AI accents. Still purely visual — no behavior, columns, navigation or i18n changes
 
 ### Changed
+
 - Community contribution intake now separates exploration from execution: feature requests, product/design/architecture ideas and contribution proposals start in GitHub Discussions, while Issues are reserved for reproducible bugs and maintainer-approved work items. The Issue chooser routes contributors accordingly, a structured Ideas Discussion form starts from user goals and outcomes, and the contributor/maintainer docs plus PR template now describe the Discussion → Issue → PR graduation path (#1204).
 - Release image gate gained a `probe` scenario (`make release-test` runs it as part of `all`): container-level checks that a Python test suite can't cover because they depend on the shipped image's process supervision — `OPEN_NOTEBOOK_WORKER_MAX_TASKS` reaching the in-image worker (the supervisord `sh -c` expansion), and the worker surviving startup with `HTTP_PROXY` set while a user's `NO_PROXY` value is preserved (the internal SurrealDB websocket not being tunneled). Both were manual probes during the v1.14.0 release; they now run automatically. Release-process docs gained the post-tag re-cut sequence and a note on never leaving the version bump uncommitted (v1.14.0 retro)
 
 ## [1.14.0] - 2026-07-20
 
 ### Added
+
 - **Docling formula & vision enrichment toggles** in Settings → Content Processing. Two new opt-in checkboxes surface content-core 2.x's `docling_formulas` (extract mathematical formulas as structured markup) and `docling_vision` (describe images and extract chart data with a vision model) enrichment flags, mirroring the existing OCR toggle. Both default off; the vision help text warns it is significantly slower and may call a vision model. Like OCR, the toggles only take effect through the Docling engine, so they are gated on Docling availability. The settings persist via `GET`/`PUT /api/settings` and are threaded into content-core extraction alongside `docling_ocr` (migration 23 backfills the new fields); labels and help are translated across all 14 locales (#1131)
 - **OpenRouter now supports text-to-speech and speech-to-text**, not just LLMs and embeddings (esperanto 2.25.0). The provider's modalities were extended so the Settings UI offers TTS/STT when registering OpenRouter models. Because OpenRouter's `/models` listing does not reliably tag audio models, discovery seeds the working defaults esperanto ships — `microsoft/mai-voice-2` (TTS) and `openai/whisper-1` + `openai/whisper-large-v3` (STT) — alongside the API-discovered language models; any other `vendor/model` id can be added manually. Note that `microsoft/mai-voice-2` uses Microsoft neural voice names (e.g. `en-US-AvaNeural`), not OpenAI's `alloy`/`nova` set (#987)
 - Newer ElevenLabs models are now offered in model discovery: `eleven_v3`, `eleven_flash_v2_5` and `eleven_flash_v2` for text-to-speech, and `scribe_v2` for speech-to-text — alongside the existing models. Esperanto passes the `model_id` straight through to ElevenLabs, so no provider changes were needed (#1167)
@@ -33,13 +36,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - README now links to [@lfnovo on X](https://x.com/lfnovo) for project updates (#1158)
 
 ### Changed
+
 - Bumped the esperanto floor to `>=2.25.1`. This is the dependency change that unlocks the oMLX provider, the Cohere/Deepgram STT/PPQ/Novita providers, OpenRouter TTS/STT, Vertex service-account auth and the native Anthropic `to_langchain()` base URL forwarding listed elsewhere in this release. A clean drop-in — no application code changes were required (#1176)
 - Removed the `ChatAnthropic` re-injection shim used by `anthropic_compatible` models. esperanto 2.25.1 forwards a custom `base_url` natively through `to_langchain()`, so the `_to_langchain()` helper in `provision.py` and the `_open_notebook_provider` marker it depended on (its only consumer) are gone; provisioning now calls `model.to_langchain()` directly. No behavior change — custom Anthropic-compatible endpoints keep working, now through the upstream path (#1055)
 - Japanese (ja-JP) translations reviewed and improved throughout: "トランスフォーメーション" replaced with the natural 変換, duration formatting given proper spacing, and accessibility labels, error messages and assorted phrasings rewritten to read naturally rather than as literal translations (#998)
 
 ### Fixed
+
 - **A content-processing engine whose runtime is not installed no longer breaks ingestion silently.** The engine choice is persisted in the database, but the opt-in runtimes that serve it (Docling, local Crawl4AI) are installed from environment flags evaluated at boot — so a redeploy that drops `OPEN_NOTEBOOK_ENABLE_CRAWL4AI`/`_DOCLING`, a data volume moved to a new deployment, or a failed on-demand install leaves a stored selection pointing at a runtime that is absent. That selection was passed straight to content-core, and every affected extraction failed with "Could not extract any text content from this source" — naming neither the engine, the runtime, nor the flag that would fix it; with the URL engine set to Crawl4AI it broke URL ingestion entirely. The source graph now checks runtime availability first and degrades to content-core's `auto` chain, logging a warning that names the engine and the variable that would enable it; engines needing no opt-in runtime (`auto`/`simple`/`firecrawl`/`jina`) are untouched. The availability probes moved to `open_notebook/utils/runtime_capabilities.py` so the graph can share them with `GET /api/capabilities`, whose behavior is unchanged (#1194)
-- **HTTP proxy no longer breaks worker/API startup.** `websockets` 15.0 began auto-detecting `HTTP_PROXY`/`HTTPS_PROXY` and tunnels even `ws://` connections through the proxy, so with a proxy set the internal SurrealDB websocket (`ws://host.docker.internal:8018/rpc` or `ws://surrealdb:8000/rpc`) was routed through the external proxy, which rejected the internal host with HTTP 403 and killed the worker on startup. Open Notebook now injects `host.docker.internal,surrealdb,localhost,127.0.0.1` into `no_proxy`/`NO_PROXY` at startup (merged with any user value, never clobbering it), and the `.env.example` / docs `NO_PROXY` examples now include the internal DB hosts (#1160)
+- **HTTP proxy no longer breaks worker/API startup.** `websockets` 15.0 began auto-detecting `HTTP_PROXY`/`HTTPS_PROXY` and tunnels even `ws://` connections through the proxy, so with a proxy set the internal SurrealDB websocket (`ws://host.docker.internal:8018/rpc` or `ws://surrealdb:8000/rpc`) was routed through the external proxy, which rejected the internal host with HTTP 403 and killed the worker on startup. NotebookE now injects `host.docker.internal,surrealdb,localhost,127.0.0.1` into `no_proxy`/`NO_PROXY` at startup (merged with any user value, never clobbering it), and the `.env.example` / docs `NO_PROXY` examples now include the internal DB hosts (#1160)
 - Auto-assign no longer silently re-populates optional model defaults that were deliberately cleared. Previously `POST /models/auto-assign` treated every empty slot as "missing" and filled it, so an optional slot a user intentionally cleared (to fall back to the chat model) got re-assigned on the next run. Auto-assign now fills only the two required slots (chat, embedding); the optional slots (transformation, tools, large context, TTS, STT) are left untouched. `large_context` now also falls back to the chat model when unset (matching transformation/tools) instead of returning nothing, and the Settings UI shows an inline hint on each empty optional slot — "using chat model (…)" for the text slots, "not configured" for TTS/STT (#1098)
 - PPQ model discovery now lists all modalities, not just chat. PPQ's `/v1/models` returns only chat/language models by default; the discovery URL now requests `?type=all` so the embedding, speech-to-text and text-to-speech models this multi-modality gateway advertises actually surface in the provider matrix (`PPQ_MODEL_TYPES` classifies them into the right slots) (#1180)
 - Vertex credentials now configure text-to-speech (and other Vertex providers) correctly when used through a stored credential rather than environment variables. `Credential.to_esperanto_config()` emitted the generic `project`/`location` keys, but esperanto's Vertex providers expect `vertex_project`/`vertex_location` — so credential-linked Vertex TTS crashed with `__init__() got an unexpected keyword argument 'project'`. The config now maps to the Vertex-specific key names for the `vertex` provider only; the `Credential` schema/API fields stay `project`/`location`, and non-Vertex providers are unaffected (#1151)
@@ -53,21 +58,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.13.0] - 2026-07-13
 
 ### Added
+
 - **Opt-in heavy extraction runtimes.** Docling (layout parsing + OCR + image sources) and local Crawl4AI (JavaScript rendering) are now **opt-in**, installed automatically on first container startup when enabled — instead of being bundled into (or missing from) every image. Set `OPEN_NOTEBOOK_ENABLE_DOCLING=true` and/or `OPEN_NOTEBOOK_ENABLE_CRAWL4AI=true`; the downloads are cached on the `/app/data` volume so only the first boot is slow, and a failed install degrades gracefully (the app still starts, the engine is reported unavailable) with loud logs. A new `GET /api/capabilities` probe reports what's actually installed, and Settings → Content Processing disables the Docling engine, the Crawl4AI engine and the OCR toggle (with an env-var hint) until their runtime is available — so the UI never advertises an engine that isn't there. This keeps the default image lean (no Chromium, no multi-GB ML stack) while making both runtimes available on demand. A remote Crawl4AI server via `CRAWL4AI_API_URL` needs no local install. New hint strings added across all 14 locales; recorded as ADR-007 (#1122)
 - **OCR toggle** in Settings → Content Processing: a new "Enable OCR" checkbox controls whether the Docling engine runs OCR on scanned PDFs and images. It's on by default (matching content-core's behavior); turn it off to speed up processing of text-native documents. The setting is passed to content-core's `docling_ocr` config, and the label/help are translated across all 14 locales. OCR only runs through Docling, so the toggle takes effect once Docling is enabled (see #1122) (#1104)
 - **Crawl4AI** is now selectable as a URL processing engine in Settings → Content Processing, alongside Firecrawl, Jina and Simple. It renders JavaScript-heavy pages locally with no API key, or offloads to a Crawl4AI server when `CRAWL4AI_API_URL` is set. Local Crawl4AI (and its Chromium browser) is an opt-in runtime installed on first startup when `OPEN_NOTEBOOK_ENABLE_CRAWL4AI=true` (see #1122) — the default image stays lean. As part of this, the persisted document/URL engine choices now actually take effect: the source-processing graph reads the saved Content Settings and passes them to content-core (previously it always ran with hard-coded `auto` engines and silently ignored the selection). New engine label added across all 14 locales (#432)
 - Source extraction now logs the **effective content-core engine** at INFO (`url_engine` / `document_engine` / `docling_ocr`) right before it runs. content-core only logs its own engine dispatch at DEBUG, so operators previously had no way to confirm which engine actually processed a source — e.g. whether a persisted Crawl4AI/Docling selection took effect or the request silently fell back to the `auto` chain (#1125)
 
 ### Changed
+
 - Upgraded the content extraction dependency from content-core 1.14.x to 2.x (2.0.4). The source-processing graph was adapted to content-core's new keyword-only `extract_content()` API: engine/model overrides now travel through a `ContentCoreConfig` object instead of the input dict, and the extraction result (`ExtractionOutput`) no longer echoes the source `url`/`file_path` back, so those are carried from the request state into the saved source asset. Because content-core 2.x no longer deletes the uploaded file after extraction, the graph now honors the `delete_source` flag itself. Transitively this replaces the AGPL-licensed PyMuPDF with MIT-licensed pdfplumber for PDF extraction and drops moviepy in favor of direct ffmpeg calls (which fixes audio extraction from MP3 files carrying chapter metadata). No user-facing configuration changes in this step — document and URL engines stay on their `auto` defaults; new engine/OCR options are tracked separately under #939 (#1103)
 - Podcast episode audio paths are now stored relative to the podcasts folder (`episodes/<uuid>/audio/<name>.mp3`) instead of as absolute filesystem paths, validated at write time so the database can never hold an absolute or root-escaping value, and resolved + containment-checked through a single shared helper instead of per-endpoint guards. Migration 21 converts existing rows written under the known roots (plain `file:///` URIs, `/app/data/podcasts/`, `/data/podcasts/`, `./data/podcasts/`, `data/podcasts/`); previously generated episodes now survive a `DATA_FOLDER` relocation. Rows under any other root (e.g. a source checkout at a custom absolute path) or in exotic legacy forms (percent-encoded or host-qualified `file://` URIs) are left untouched and treated as legacy-invalid — the same 403/audio-unavailable handling out-of-root rows already had; regenerate the episode to restore playback. Podcast jobs whose audio combination fails (podcast-creator reports an in-band `ERROR:` value) now fail with the real ffmpeg/clip error instead of reporting success for an episode with no playable audio (#1030)
 - The source detail view (dialog and full page) now fetches through the shared `useSource` React Query hook instead of a hand-rolled fetch, matching the insight/note dialogs: caching and the never-retry-404 policy come from React Query, title edits and deletes go through the shared mutation hooks (so source lists refresh and a deleted source can't be served from the cache), and the `key={sourceId}` remount workaround on the parents was removed — the component resets its own per-source UI state (#1106)
 - The settings frontend now fetches the provider list from `GET /api/providers` (cached for the session) instead of keeping its own hardcoded provider tables, so adding a provider to the backend registry needs zero frontend edits: unknown modalities render with a fallback icon, the backend registry owns the display order, and the regex-based frontend/backend sync test was removed along with the duplicated tables in `frontend/src/lib/providers.tsx` (#1082)
 
 ### Removed
+
 - The legacy provider/model string fields on podcast profiles (`outline_provider`, `outline_model`, `transcript_provider`, `transcript_model` on episode profiles; `tts_provider`, `tts_model` on speaker profiles) are gone from the database, the API and the UI — the app has ignored them since the Model registry references landed in v1.11. Migration 22 first best-effort maps any profile whose `outline_llm`/`transcript_llm`/`voice_model` reference is still empty to an existing model record (matching provider + name + type; no auto-creation, since a migration must not touch credentials), then drops the six columns; the startup data migration that used to retry this mapping on every boot (`open_notebook/podcasts/migration.py`) was deleted. Accepted trade-off: profiles whose mapping never converged (e.g. the provider credential was never configured) lose the legacy strings and stay unresolved — they were already non-functional and the UI already flags them as needing model selection, so you just re-pick the models in the profile form once (#1107)
 
 ### Fixed
+
 - Uploading a file content-core can't extract now fails immediately at ingestion with a clear `415 Unsupported Media Type` error that names the detected MIME type, instead of enqueueing a background job that retried up to 15 times over ~1 hour before surfacing a generic "Failed" with no actionable detail. The pre-flight uses content-core 2.x's header-only `check_file_support()` — the same routing real extraction uses, so the verdict can't disagree with what would happen downstream — and the source-retry endpoint is guarded the same way; unexpected check errors (e.g. a file removed before a retry) fall through to normal extraction rather than becoming a hard rejection (#975)
 - Podcast episode cards no longer show "— / —" for the outline, transcript and speaker model rows on new episodes: the API now resolves the snapshot's model references (`outline_llm`/`transcript_llm`/`voice_model`) to provider/name display fields at serialization time — batched into a single query per request, so listing episodes never does a per-row model lookup — and the card falls back to the legacy snapshot strings for old episodes and degrades to "—" when a referenced model was deleted (#1114)
 - Renaming a speaker profile no longer breaks the episode profiles that use it: `episode_profile.speaker_config` now stores a `record<speaker_profile>` reference instead of the profile name (migration 20 converts existing rows; references whose speaker profile no longer exists at migration time become null, and any reference that later stops resolving is treated as "needs setup" — the UI asks you to pick a speaker again). The `POST /api/podcasts/generate` contract is unchanged — it still accepts the speaker profile by name and resolves it at the API boundary (#630)
@@ -84,9 +93,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.12.0] - 2026-07-12
 
 ### Fixed
+
 - Setup snippets no longer teach publishing SurrealDB on `0.0.0.0` — the compose and `docker run` examples across the README, quick starts, installation, configuration and development docs, and the `examples/docker-compose-*.yml` files now bind port 8000 to `127.0.0.1` (matching the shipped `docker-compose.yml`), with docs pointing to `docker-compose.override.yml.example` for opt-in remote access behind a firewall or SSH tunnel; the override example itself gained the `!override` tag it needs to actually replace the base port binding instead of colliding with it (#1034)
 
 ### Added
+
 - Docs: cubic platform mechanics recorded as comments in `cubic.yaml` (agent limits, config precedence, memory/learning) and a "Merging PR Batches" playbook added to the maintainer guide (squash policy, CHANGELOG conflict resolution, fork rebases, competing-PR checks) (#1086)
 - New `GET /api/providers` endpoint returning provider metadata from the registry (name, display name, modalities, docs URL, whether it is configured via environment variables), so clients can enumerate supported providers instead of hardcoding them (#1075)
 - Release confidence process, documented and executable: `.github/RELEASE_PROCESS.md` now covers the risk-based test matrix (buckets A/B/C), the Docker image gate, the fix-loop re-test policy and the communication/credits/retro structure, backed by a new decision record (ADR-005) and versioned tooling under `scripts/release-test/` — `make release-test TAG= OLD_TAG=` runs fresh-install + upgrade scenarios against real images, and `make release-stack TAG= [DUMP=]` boots a browsable, isolated release-candidate stack (optionally with a copy of dev data) for manual verification (#1052)
@@ -94,6 +105,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - CI now also gates every PR on `mypy` (backend typecheck): the repo-wide baseline went from 197 errors to 0 (enabling the pydantic mypy plugin resolved most of them; the rest got real annotations), so new type errors are blocked from here on. The `ignore_errors` burn-down also started: `open_notebook.graphs.transformation`, `open_notebook.graphs.ask` and `api.routers.models` are now type-checked (plus two stale entries for deleted modules removed); only `open_notebook.domain.notebook` remains exempt pending the surreal-basics migration (#1076)
 
 ### Changed
+
 - cubic AI review now skips `CHANGELOG.md`, `uv.lock` and `frontend/package-lock.json` (no reviewable logic; preserves the monthly reviewed-line quota) (#1080)
 - Context building consolidated into a single implementation (`open_notebook/utils/context_builder.py`): the copy-pasted source/note assembly loops behind `POST /api/chat/context` and the removed notebook-context endpoint, plus the 495-line generalized `ContextBuilder` class (whose only caller was the source-chat graph), are now two focused functions — `build_notebook_context()` (backs `POST /api/chat/context`, unchanged request/response shapes and config semantics) and `build_source_context()` (backs the source-chat graph, same context shape and 50k-token budget). Pinned by new characterization tests — no behavior change for the surviving paths (#1079)
 - **Removed** `POST /api/notebooks/{notebook_id}/context`: it duplicated `POST /api/chat/context` (same assembly logic, slightly different response envelope) and had zero callers — frontend, docs and tests only use `/api/chat/context`. If you called it programmatically, switch to `POST /api/chat/context` (body: `{notebook_id, context_config}`; response fields: `context.sources`/`context.notes`, `token_count`, `char_count`) (#1079)
@@ -110,6 +122,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Frontend locale files are now type-checked at compile time: every non-en-US locale declares `satisfies TranslationShape` (derived from the en-US object), so a missing or extra i18n key fails `tsc` in the editor instead of only the runtime parity test. Also removed two unused frontend dependencies (`next-themes`, `@monaco-editor/react`) and fixed `frontend/AGENTS.md` drift (14 locales, not 7; dark mode is the hand-rolled zustand theme-store, not next-themes) (#1061)
 
 ### Fixed
+
 - Eight podcast toast descriptions (speaker/episode profile created/updated/deleted/duplicated) showed the literal `{name}` placeholder instead of the profile name: the locale strings used single braces (which i18next ignores) and the `t()` call sites passed no values. Placeholders normalized to `{{name}}` across all locales and the actual name is now passed in from the mutation response/variables (#1077)
 - Typed domain errors now return their documented HTTP status codes instead of a generic 500: the API routers used to wrap endpoint bodies in a broad `except Exception` that swallowed the `open_notebook.exceptions` hierarchy before the global handlers could map it (`NotFoundError`→404, `InvalidInputError`→400, `ConfigurationError`→422, `RateLimitError`→429, `NetworkError`/`ExternalServiceError`→502). All 18 affected routers now re-raise `HTTPException` and `OpenNotebookError` and only convert genuinely unexpected exceptions into sanitized 500s. Most visible changes: a missing/unconfigured model (`ConfigurationError`) now returns 422 with an actionable message instead of 500; getting or deleting a source-chat session whose session isn't related to the source returns 404 (was a 500 wrapping the inner 404); fetching a missing credential returns 404 (was 500) (#1078)
 - Frontend translations now use i18next interpolation (`t('key', { count })`) instead of manual `.replace('{count}', ...)` string surgery across ~75 call sites — locale placeholders changed from `{name}` to `{{name}}` in all 14 locales. This restores proper pluralization (e.g. "used by N episodes" now goes through i18next plural forms) and lets translators reorder placeholders freely (#1074)
@@ -118,17 +131,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deduplicated the embedding commands (`commands/embedding_commands.py`, ~100 lines less): `embed_note`/`embed_insight`/`embed_source` now share one load→embed→write core with a single error-handling epilogue, the rebuild command uses one submission-loop helper for all three kinds, and the thrice-copied `full_model_dump()` moved to `open_notebook/utils/model_utils.py`. Pure refactor — same outputs, logs and retry behavior (#1071)
 
 ### Removed
+
 - Dead Streamlit-era service layer (~2,000 lines): `api/client.py` (a synchronous HTTP client that called the app's own API) and 13 `api/*_service.py` wrappers that consumed the app's own HTTP API — none were imported by any router, command or test. Also removed the toy `process_text`/`analyze_data` demo commands (`commands/example_commands.py`) from the background worker (#1054)
 - Pre-1.6 embedding job compatibility shims (the `embed_single_item`, `embed_chunk` and `vectorize_source` command handlers) — they existed only so jobs queued by a pre-1.6 version could drain after an upgrade, and any worker restarted on 1.6+ has no such jobs. **Upgrade note:** if you are upgrading from a version older than 1.6 with embedding jobs still queued, drain the queue on a 1.x release before upgrading past this change. Also removed dead tooling config from `pyproject.toml`: the `[tool.mypy]` block (the real config is `mypy.ini`) and Streamlit-era ruff per-file-ignores for files that no longer exist (#1056)
 - Committed QA screenshots (12 files) and a stray debug `history.txt` were removed from the repo root, with `.gitignore` rules added so they can't come back (#1053)
 
 ### Fixed
+
 - Podcast generation now honors the `speaker_profile` parameter of `POST /api/podcasts/generate` — previously it was silently ignored and the speaker was always re-derived from the episode profile's `speaker_config`, which failed when that pointed at a renamed/deleted speaker profile even if the caller supplied a valid one (#1044)
 
 ## [1.11.0] - 2026-07-11
 
 ### Added
-- `VISION.md` — the product's source of truth in two layers: durable identity (what Open Notebook is and is not, core principles) and current posture (the phase we're in, directional constraints, and the horizon clusters under consideration)
+
+- `VISION.md` — the product's source of truth in two layers: durable identity (what NotebookE is and is not, core principles) and current posture (the phase we're in, directional constraints, and the horizon clusters under consideration)
 - Decision records at `docs/7-DEVELOPMENT/decisions/` — short, immutable ADRs/PDRs answering "why is it like this?", seeded with 4 retroactive ADRs (SurrealDB, delegation to external libraries, Streamlit→Next.js, background workers) and 2 PDRs (single-user first, provider-agnostic core)
 - `AGENTS.md` files (root, `open_notebook/`, `frontend/`) with the normative rules for coding agents and humans — commands, hard rules, and gotchas not derivable from the code; `CLAUDE.md` files are now one-line pointers to them
 - Five new engineering docs pages under `docs/7-DEVELOPMENT/`: credentials, content processing, podcasts, prompts, and frontend architecture
@@ -149,6 +165,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Test coverage measurement in CI: backend via `pytest-cov` (terminal + XML reports), frontend via `@vitest/coverage-v8` and a new `test:coverage` script (#942)
 
 ### Changed
+
 - Developer documentation restructured: 17 knowledge-heavy `CLAUDE.md` files consolidated into the 3 `AGENTS.md` + docs pages above; `README.dev.md` became a pointer after its unique content moved into `development-setup.md` (make-workflow matrix), `.github/RELEASE_PROCESS.md` (Docker publishing) and the change playbooks (add-a-language); the maintainer guide now carries the curated label taxonomy (state funnel, `area:` labels, consolidation rules)
 - Fixed stale developer docs while migrating: real migration path/format (`open_notebook/database/migrations/N.surrealql` + `AsyncMigrationManager` registration), provider count (17), locale list (7), and 9 README links that pointed at documentation pages that never existed
 - The API's listen interface in the Docker images is now configurable via a new `API_HOST` environment variable instead of a hardcoded `--host 0.0.0.0`. The default is unchanged (`0.0.0.0`); set `API_HOST=::` to serve IPv6/dual-stack environments (#985)
@@ -156,6 +173,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Docs no longer claim a hardcoded default API password (`open-notebook-change-me`) exists; the actual behavior is that auth is disabled entirely when `OPEN_NOTEBOOK_PASSWORD` is unset. Also removed the dead `check_api_password` helper that had been superseded by the auth middleware (#1026)
 
 ### Fixed
+
 - Testing a valid Google/Vertex credential no longer fails after Google retires a Gemini model. The connection test used a hard-coded model id that Google shuts down on a schedule (`gemini-2.0-flash`), so a valid key surfaced as a broken connection (#970). The Google/Vertex test now uses Google's floating `gemini-flash-latest` alias, and the provider connection test was reframed so only a rejected key, missing permissions, or an unreachable endpoint count as failures — a missing/retired/rate-limited model still reports the credentials as valid. Deprecated `gemini-1.5`/`gemini-2.0` model references were also removed from the connection-test model lists and documentation
 - API startup no longer crashes when SurrealDB isn't ready yet (e.g. docker-compose race on host reboot: `Temporary failure in name resolution`). The lifespan now polls a lightweight readiness probe with bounded exponential backoff (~50s budget, 5s per-probe timeout) before running migrations; migration errors themselves still fail fast (#708)
 - Markdown typography styles (`prose` classes) are active again: the Tailwind v4 migration left the old `tailwind.config.ts` (which loaded `@tailwindcss/typography`) silently ignored, so rendered markdown lost its typographic styling. The plugin and class-based dark mode are now configured in `globals.css`, and markdown rendering is centralized in a shared `MarkdownRenderer` component (#783)
@@ -178,6 +196,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Clearing a credential field in the edit dialog (Ollama/OpenAI-compatible `base_url`, Vertex `project`/`location`/`credentials_path`) now actually clears it. Two mirror-image bugs made it impossible: the frontend dropped emptied fields from the PUT body (`undefined` keys are stripped by `JSON.stringify`), and the API ignored explicit `null`s (`is not None` guards) — so the old value survived while the UI reported success. The frontend now sends explicit `null` and the API keys partial updates on field presence (`model_fields_set`) (#1046)
 
 ### Security
+
 - Resolved dependency audit findings: added npm `overrides` for vulnerable transitive frontend packages (`ws`, `brace-expansion`, `ajv`, `@eslint/plugin-kit`, `postcss`) — `npm audit` now reports 0 vulnerabilities — refreshed `uv.lock` (`langsmith`, `pydantic-settings`, `pip`), and hardened external `window.open(..., '_blank')` calls with `noopener,noreferrer` (#962)
 - SurrealQL injection via record ids in `repo_relate()`/`repo_upsert()`/`repo_update()`: a crafted `notebook_id` on the save-insight-as-note flow could execute arbitrary SurrealQL. Record identifiers are now bound as query parameters, and the target notebook's existence is validated before relating (#1002)
 - The API password is now compared with `secrets.compare_digest()` instead of `!=`, closing a timing side-channel on authentication (#1003)
@@ -198,9 +217,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.10.0] - 2026-06-17
 
 ### Security
+
 - Bumped **Starlette to 1.2.1** and **FastAPI to 0.136.3** to address **CVE-2026-48710** ("BadHost"), a denial-of-service in Starlette's host header handling (#859)
 
 ### Added
+
 - LaTeX math rendering in chat — inline (`$...$`) and display (`$$...$$`) expressions are now rendered with KaTeX (#606)
 - `NEXT_PUBLIC_API_TIMEOUT_MS` environment variable to configure the frontend API request timeout (default `600000` = 10 minutes; set `0` to disable). Lets slow/long-running chat models finish without editing source (#880)
 - Bulk chat-context actions in a notebook, via a "Context" menu in the Sources and Notes column headers — translated across all 14 locales (#223):
@@ -209,10 +230,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Turkish (tr-TR) localization** — the UI is now fully translated into Turkish (#871)
 
 ### Changed
+
 - Failed source cards now show a prominent "Retry processing" button directly on the card instead of only inside the 3-dot dropdown; clicking it no longer also opens the source (the click was missing `stopPropagation`) (#726)
 - Docker base image updated to **Debian trixie** and **Node.js 22.x** (#914)
 
 ### Fixed
+
 - Podcast generation now uses the notebook's real content. `Notebook.get_context()` was missing, so generation ran against empty context; it now assembles source and note content as expected (#864)
 - `PUT` profile handlers now use `model_dump(exclude_unset=True)`, so partial updates no longer overwrite unspecified fields with defaults (#860)
 - OpenRouter embedding models are now correctly recognized via their embedding modality (#842)
@@ -227,11 +250,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Worker no longer crashes on queued jobs from older versions; legacy embedding command aliases (`embed_single_item`, `embed_chunk`, `vectorize_source`) are registered and delegate to the current commands so stale queues drain cleanly (#695, #876)
 
 ### Performance
+
 - Notebook source list no longer re-renders every `SourceCard` on unrelated state changes (layout toggles, context selection), and completed sources no longer each open a status-polling query. Both scaled with the number of sources and caused UI lag on large notebooks (#503)
 
 ## [1.9.0] - 2026-06-02
 
 ### Added
+
 - **New audio providers**, surfacing the capabilities added in Esperanto 2.21–2.22:
   - **Mistral Voxtral** speech-to-text (`voxtral-*-latest`) and text-to-speech (`voxtral-mini-tts`), reusing the existing Mistral credential (#827)
   - **Deepgram** text-to-speech (Aura voice catalog) as a new provider (`DEEPGRAM_API_KEY`) (#827)
@@ -243,9 +268,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `OPEN_NOTEBOOK_MIN_CHUNK_SIZE` environment variable (default: 5 tokens) to filter out degenerate tiny chunks before embedding. Set to `0` to disable.
 
 ### Changed
+
 - Bumped **Esperanto 2.20.0 → 2.22.0**. Beyond the new audio providers above, this inherits several upstream fixes and behavior changes (see below).
 
 ### Inherited from Esperanto 2.21–2.22
+
 - **Fixed:** OpenRouter LLM and embedding requests now send a proper JSON body (previously sent a malformed form-encoded payload).
 - **Fixed:** OpenAI-compatible endpoints (e.g. llama.cpp) that return null embeddings now raise a clear, descriptive error instead of an opaque `TypeError`.
 - **Fixed:** Streaming tool calls now return proper `ToolCall` objects across Anthropic, Google, Vertex, and Ollama.
@@ -257,6 +284,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Fixed:** Google TTS default model updated to a currently-working preview model.
 
 ### Fixed
+
 - URL source embedding no longer crashes with `TypeError: float() argument must be a string or a real number, not 'NoneType'` when header-based splitters emit single-character fragments from complex HTML pages (e.g. Wikipedia, Project Gutenberg). Such chunks are now filtered before being sent to the embedding provider (#764)
 - Language toggle now uses `t('common.german')` instead of a hardcoded "Deutsch" label, matching the pattern used by every other language entry (follow-up to #794)
 - Speech-to-text model connection tests now transcribe a short bundled speech clip instead of silence, so a passing test returns real text instead of a blank transcription (#838)
@@ -264,10 +292,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.8.5] - 2026-04-14
 
 ### Changed
+
 - Embedding chunking is now token-based instead of character-based, improving chunk sizing consistency for CJK and mixed-language content (#542, #749)
 - `OPEN_NOTEBOOK_CHUNK_SIZE` and `OPEN_NOTEBOOK_CHUNK_OVERLAP` semantics changed from characters to tokens; default reduced from 1200 characters to 400 tokens to stay safely below the 512-token ceiling of BERT-family embedders (e.g. mxbai-embed-large) after accounting for tokenizer mismatch and splitter overshoot. Existing stored embeddings are unaffected; only new ingestions use the new chunking.
 
 ### Fixed
+
 - Credentials endpoint no longer crashes (500) when encryption key doesn't match stored credentials (#740)
 - Broken credentials are now shown with a decryption warning and can still be deleted
 - DELETE endpoint for broken credentials supports model migration (`migrate_to` parameter)
@@ -275,16 +305,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.8.4] - 2026-04-09
 
 ### Security
+
 - Fix Remote Code Execution (RCE) via Jinja2 Server-Side Template Injection in transformations (CVSS 9.2 Critical)
 - Fix arbitrary file write via path traversal in file upload (CVSS 7.0 High)
 - Fix arbitrary file read via Local File Inclusion in source creation (CVSS 8.2 High)
 
 ### Dependencies
+
 - Bump ai-prompter to >=0.4.0 (uses Jinja2 SandboxedEnvironment to prevent SSTI)
 
 ## [1.8.3] - 2026-04-07
 
 ### Security
+
 - Fix SurrealDB injection via unsanitized `order_by` query parameter in `GET /api/notebooks` (CVSS 8.7 High)
 - Add allowlist validation for sorting parameters in notebooks endpoint
 - Replace f-string query interpolation with parameterized `$variable` binding in source chat and migration queries
@@ -293,10 +326,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.8.2] - 2026-04-06
 
 ### Added
+
 - DashScope (Qwen) and MiniMax provider support via Esperanto v2.20.0 (#725)
 - Source list auto-refresh after adding a new source via URL, file upload, or text (#721)
 
 ### Fixed
+
 - Source asset persistence — failed sources now persist their asset (URL/file path), making them identifiable and retryable (#722)
 - Source title preservation — user-set custom titles are no longer overwritten after background processing (#722)
 - Credential cascade delete — deleting a credential now removes linked models instead of returning a 409 error (#722)
@@ -306,23 +341,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Esperanto embedding fixes — base_url/api_key config issues across multiple embedding providers (#664, #665)
 
 ### Docs
+
 - Deprecated single-container Docker image in favor of Docker Compose (#723)
 
 ### Dependencies
+
 - Bump esperanto to >=2.20.0
 
 ## [1.8.1] - 2026-03-10
 
 ### Added
+
 - i18n support for Bengali (bn-IN) (#643)
 - Podcast language support via podcast-creator 0.12.0 (#645)
 - Upgrade default Azure API version for model testing and fetching (#638)
 
 ### Fixed
+
 - Tiktoken network errors in offline/air-gapped Docker deployments — pre-downloads encoding at build time (#264, #622)
 - SurrealDB getting stuck (#656)
 
 ### Dependencies
+
 - Bump esperanto to 2.19.5 (#657)
 - Bump langgraph from 1.0.6 to 1.0.10rc1 (#658)
 - Bump authlib from 1.6.6 to 1.6.7 (#649)
@@ -334,6 +374,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.7.4] - 2026-02-18
 
 ### Fixed
+
 - Embedding large documents (3MB+) fails with 413 Payload Too Large (#594)
 - `generate_embeddings()` now batches texts in groups of 50 with per-batch retry, preventing provider payload limits from being exceeded
 - 413 errors now classified with user-friendly message in error classifier
@@ -342,27 +383,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.7.3] - 2026-02-17
 
 ### Added
+
 - Retry button for failed podcast episodes in the UI (#211, #218)
 - Error details displayed on failed podcast episodes (#185, #355)
 - `POST /podcasts/episodes/{id}/retry` API endpoint for re-submitting failed episodes
 - `error_message` field in podcast episode API responses
 
 ### Fixed
+
 - Podcast generation failures now correctly marked as "failed" instead of "completed" (#300, #335)
 - Disabled automatic retries for podcast generation to prevent duplicate episode records (#302)
 
 ### Dependencies
+
 - Bump podcast-creator to >= 0.11.2
 - Bump esperanto to >= 2.19.4
 
 ## [1.7.2] - 2026-02-16
 
 ### Added
+
 - Error classification utility that maps LLM provider errors to user-friendly messages (#506)
 - Global exception handlers in FastAPI for all custom exception types with proper HTTP status codes
 - `getApiErrorMessage()` frontend helper that falls back to backend messages when no i18n mapping exists
 
 ### Fixed
+
 - LLM errors (invalid API key, wrong model, rate limits) now show descriptive messages instead of "An unexpected error occurred" (#590)
 - SSE streaming error events in source chat and ask hooks were swallowed by inner JSON parse catch blocks
 - Transformation execution errors were caught and re-wrapped as generic 500s instead of using proper status codes
@@ -373,36 +419,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OpenAI-compatible provider name handling via Esperanto update (#583)
 
 ### Changed
+
 - `ValueError` replaced with `ConfigurationError` in model provisioning for proper error classification
 - `ConfigurationError` added to command retry `stop_on` lists to avoid retrying permanent config failures
 
 ### Dependencies
+
 - Bump esperanto to 2.19.3 (#583)
 - Bump podcast-creator to 0.9.1
 
 ## [1.7.1] - 2026-02-14
 
 ### Added
+
 - French (fr-FR) language support (#581)
 - CI test workflow and improved i18n validation (#580)
 - Expose embed `command_id` in note API responses (#545)
 
 ### Fixed
+
 - ElevenLabs TTS credential passthrough via Esperanto update (#578)
 - Handle empty/whitespace source content without retry loop (#576)
 - Increase transformation `max_tokens` and update Esperanto dep (#568)
 - Turn the embedding field into optional (#557)
 
 ### Docs
+
 - Fix docker container names in local setup guides (#577)
 
 ### Dependencies
+
 - Bump langchain-core from 1.2.7 to 1.2.11 (#564)
 - Bump cryptography from 46.0.3 to 46.0.5 (#563)
 
 ## [1.7.0] - 2026-02-10
 
 ### Added
+
 - **Credential-Based Provider Management** (#477)
   - New Settings → API Keys page for managing AI provider credentials via the UI
   - Support for 14 providers: OpenAI, Anthropic, Google, Groq, Mistral, DeepSeek, xAI, OpenRouter, Voyage AI, ElevenLabs, Ollama, Azure OpenAI, OpenAI-Compatible, and Vertex AI
@@ -438,6 +491,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - .env.example template with all configuration options
 
 ### Fixed
+
 - Azure form race condition: all configuration now saved in single atomic request
 - Migration API "error error" display: added proper MigrationResult model with message field
 - Connection tester for Ollama providers: improved error handling and URL validation
@@ -448,11 +502,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Large document embedding errors (#489)
 
 ### Security
+
 - API keys are encrypted at rest using Fernet symmetric encryption
 - Keys are never returned to the frontend, only configuration status
 - SSRF protection prevents internal network access via URL validation
 
 ### Docs
+
 - Complete documentation update for credential-based system across 25 files
 - All quick-start, installation, and configuration guides now use Settings UI workflow
 - Environment variable API key instructions moved to deprecated/legacy sections
@@ -461,32 +517,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated local-tts.md and local-stt.md with links to ready-made examples
 
 ### Internationalization
+
 - Added Russian (ru-RU) language support (#524)
 - Added Italian (it-IT) language support (#508)
 
 ## [1.6.2] - 2026-01-24
 
 ### Fixed
+
 - Connection error with llama.cpp and OpenAI-compatible providers (#465)
   - Bump Esperanto to 2.17.2 which fixes LangChain connection errors caused by garbage collection
 
 ## [1.6.1] - 2026-01-22
 
 ### Fixed
+
 - "Failed to send message" error with unhelpful logs when chat model is not configured (#358)
   - Added detailed error logging with model selection context and full traceback
   - Improved error messages to guide users to Settings → Models
   - Added warnings when default models are not configured
 
 ### Docs
+
 - Ollama troubleshooting: Added "Model Name Configuration" section emphasizing exact model names from `ollama list`
 - Added troubleshooting entry for "Failed to send message" error with step-by-step solutions
 - Updated AI Chat Issues documentation with model configuration guidance
 
-
 ## [1.6.0] - 2026-01-21
 
 ### Added
+
 - Content-type aware text chunking with automatic HTML, Markdown, and plain text detection (#350, #142)
 - Unified embedding generation with mean pooling for large content that exceeds model context limits
 - Dedicated embedding commands: `embed_note`, `embed_insight`, `embed_source`
@@ -494,17 +554,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Japanese (ja-JP) language support (#450)
 
 ### Changed
+
 - Embedding is now fire-and-forget: domain models submit embedding commands asynchronously after save
 - `rebuild_embeddings_command` now delegates to individual embed_* commands instead of inline processing
 - Chunk size reduced to 1500 characters for better compatibility with Ollama embedding models
 - Bump Esperanto to 2.16 for increased Ollama context window support
 
 ### Removed
+
 - Legacy embedding commands: `embed_single_item_command`, `embed_chunk_command`, `vectorize_source_command`
 - `needs_embedding()` and `get_embedding_content()` methods from domain models
 - `split_text()` function from text_utils (replaced by `chunk_text()` in chunking module)
 
 ### Fixed
+
 - Embedding failures when content exceeds model context limits (#350, #142)
 - Empty note titles when saving from chat (clean thinking tags from prompt graph output)
 - Orphaned embedding/insight records when deleting sources (cascade delete)
@@ -514,6 +577,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.5.2] - 2026-01-15
 
 ### Performance
+
 - Improved source listing speed by 20-30x (#436, closes #351)
   - Added database indexes on `source` field for `source_insight` and `source_embedding` tables
   - Use SurrealDB `FETCH` clause for command status instead of N async calls
@@ -521,6 +585,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.5.1] - 2026-01-15
 
 ### Fixed
+
 - Podcast dialog infinite loop error caused by excessive translation Proxy accesses in loops
 - Podcast dialog UI freezing when typing episode name or additional instructions
 - Removed incorrect translation keys for user-defined episode profiles (user content should not be translated)
@@ -528,6 +593,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.5.0] - 2026-01-15
 
 ### Added
+
 - Internationalization (i18n) support with Chinese (Simplified and Traditional) translations (#371, closes #344, #349, #360)
 - Frontend test infrastructure with Vitest (#371)
 - Language toggle component for switching UI language (#371)
@@ -535,22 +601,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Error message translation system (#371)
 
 ### Fixed
+
 - Accessibility improvements: added missing `id`, `name`, and `autoComplete` attributes to form inputs (#371)
 - Added `DialogDescription` to dialogs for Radix UI accessibility compliance (#371)
 - Fixed "Collapsible is changing from uncontrolled to controlled" warning in SettingsForm (#371)
 - Fixed lint command for Next.js 16 compatibility (`eslint` instead of `next lint`)
 
 ### Changed
+
 - Dockerfile optimizations: better layer caching, `--no-install-recommends` for smaller images (#371)
 - Dockerfile.single refactored into 3 separate build stages for better caching (#371)
 
 ## [1.4.0] - 2026-01-14
 
 ### Added
+
 - CTA button to empty state notebook list for better onboarding (#408)
 - Offline deployment support for Docker containers (#414)
 
 ### Fixed
+
 - Large file uploads (>10MB) by upgrading to Next.js 16 (#423)
 - Orphaned uploaded files when sources are removed (#421)
 - Broken documentation links to ai-providers.md (#419)
@@ -559,11 +629,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Claude Code review workflow now runs on PRs from forks (#416)
 
 ### Changed
+
 - Upgraded Next.js from 15.4.10 to 16.1.1 (#423)
 - Upgraded React from 19.1.0 to 19.2.3 (#423)
 - Renamed `middleware.ts` to `proxy.ts` for Next.js 16 compatibility (#423)
 
 ### Dependencies
+
 - next: 15.4.10 → 16.1.1
 - react: 19.1.0 → 19.2.3
 - react-dom: 19.1.0 → 19.2.3
@@ -571,10 +643,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.2.4] - 2025-12-14
 
 ### Added
+
 - Infinite scroll for notebook sources - no more 50 source limit (#325)
 - Markdown table rendering in chat responses, search results, and insights (#325)
 
 ### Fixed
+
 - Timeout errors with Ollama and local LLMs - increased to 10 minutes (#325)
 - "Unable to Connect to API Server" on Docker startup - frontend now waits for API health check (#325, #315)
 - SSL issues with langchain (#274)
@@ -582,8 +656,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Docker compose start-all flow (#323)
 
 ### Changed
+
 - Timeout configuration now uses granular httpx.Timeout (short connect, long read) (#325)
 
 ### Dependencies
+
 - Updated next.js to 15.4.10
 - Updated httpx to >=0.27.0 for SSL fix

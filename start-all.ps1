@@ -1,0 +1,20 @@
+Write-Host "Starting NotebookE (Database + API + Worker + Frontend)..."
+Write-Host "Starting SurrealDB..."
+docker compose -f docker-compose.yml up -d surrealdb
+
+Start-Sleep -Seconds 3
+Write-Host "Starting API backend in a new window..."
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "uv run --env-file .env run_api.py"
+
+Start-Sleep -Seconds 3
+Write-Host "Starting background worker in a new window..."
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "uv run --env-file .env surreal-commands-worker --import-modules commands --max-tasks 5 start"
+
+Start-Sleep -Seconds 2
+Write-Host "Starting Next.js frontend in a new window..."
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "cd frontend; npm run dev"
+
+Write-Host "All services started in separate windows!"
+Write-Host "Frontend: http://localhost:3000"
+Write-Host "API: http://localhost:5055"
+Write-Host "API Docs: http://localhost:5055/docs"

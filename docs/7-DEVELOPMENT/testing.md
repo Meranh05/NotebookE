@@ -1,6 +1,6 @@
 # Testing Guide
 
-This document provides guidelines for writing tests in Open Notebook. Testing is critical to maintaining code quality and preventing regressions.
+This document provides guidelines for writing tests in NotebookE. Testing is critical to maintaining code quality and preventing regressions.
 
 ## Testing Philosophy
 
@@ -396,6 +396,7 @@ async def test_concurrent_notebook_creation():
 ### Error: "event loop is closed"
 
 Solution: Use the async fixture properly:
+
 ```python
 @pytest.fixture
 async def notebook():  # Use async fixture
@@ -408,6 +409,7 @@ async def notebook():  # Use async fixture
 ### Error: "object is not awaitable"
 
 Solution: Make sure you're using await:
+
 ```python
 # Wrong
 result = create_notebook("Test", "")
@@ -419,5 +421,6 @@ result = await create_notebook("Test", "")
 ---
 
 **See also:**
+
 - [Code Standards](code-standards.md) - Code formatting and style
 - [Contributing Guide](contributing.md) - Overall contribution workflow

@@ -1,6 +1,6 @@
-# Open Notebook — Agent Rules
+# NotebookE — Agent Rules
 
-Open Notebook is an open-source, privacy-focused alternative to Google's Notebook LM: an AI-powered research assistant with multi-provider AI support, fully self-hostable.
+NotebookE is an open-source, privacy-focused alternative to Google's Notebook LM: an AI-powered research assistant with multi-provider AI support, fully self-hostable.
 
 This file holds the project-wide rules every coding session needs. Component rules: [open_notebook/AGENTS.md](open_notebook/AGENTS.md) (backend — also covers `api/`, `commands/`, `prompts/`) and [frontend/AGENTS.md](frontend/AGENTS.md). Knowledge lives in the docs (see [Where to look](#where-to-look)) — read it on demand instead of guessing.
 
@@ -34,7 +34,7 @@ Or all at once: `make start-all` (status: `make status`, stop: `make stop-all`).
 ## Where to look
 
 | Need | Location |
-|---|---|
+| --- | --- |
 | Architecture (3 tiers, workflows, data model) | [docs/7-DEVELOPMENT/architecture.md](docs/7-DEVELOPMENT/architecture.md) |
 | Step-by-step recipes (add endpoint, migration, i18n…) | [docs/7-DEVELOPMENT/change-playbooks.md](docs/7-DEVELOPMENT/change-playbooks.md) |
 | Dev environment setup | [docs/7-DEVELOPMENT/development-setup.md](docs/7-DEVELOPMENT/development-setup.md) |

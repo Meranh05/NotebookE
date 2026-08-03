@@ -1,12 +1,13 @@
 # Development
 
-Welcome to the Open Notebook development documentation! Whether you're contributing code, understanding our architecture, or maintaining the project, you'll find guidance here.
+Welcome to the NotebookE development documentation! Whether you're contributing code, understanding our architecture, or maintaining the project, you'll find guidance here.
 
 ## 🎯 Pick Your Path
 
 ### 👨‍💻 I Want to Contribute Code
 
 Start with **[Contributing Guide](contributing.md)** for the workflow, then check:
+
 - **[Quick Start](quick-start.md)** - Clone, install, verify in 5 minutes
 - **[Development Setup](development-setup.md)** - Complete local environment guide
 - **[Code Standards](code-standards.md)** - How to write code that fits our style
@@ -17,6 +18,7 @@ Start with **[Contributing Guide](contributing.md)** for the workflow, then chec
 ### 🔒 I Want to Understand Security Practices
 
 **[Security Guidelines](security.md)** covers:
+
 - Database query safety (preventing SurrealQL injection)
 - Template rendering safety (preventing SSTI)
 - File handling safety (preventing path traversal and LFI)
@@ -28,12 +30,14 @@ Start with **[Contributing Guide](contributing.md)** for the workflow, then chec
 ### 🏗️ I Want to Understand the Architecture
 
 **[Architecture Overview](architecture.md)** covers:
+
 - 3-tier system design
 - Tech stack and rationale
 - Key components and workflows
 - Design patterns we use
 
 For deeper dives into specific subsystems:
+
 - **[Credentials](credentials.md)** - Provider credential storage, encryption, provisioning
 - **[Content Processing](content-processing.md)** - Chunking, embedding, context building, encryption
 - **[Podcasts](podcasts.md)** - Profile system, model registry, job lifecycle
@@ -53,6 +57,7 @@ repo root, `open_notebook/`, and `frontend/`.
 ### 👨‍🔧 I'm a Maintainer
 
 **[Maintainer Guide](maintainer-guide.md)** covers:
+
 - Issue triage and management
 - Pull request review process
 - Communication templates
@@ -63,7 +68,7 @@ repo root, `open_notebook/`, and `frontend/`.
 ## 📚 Quick Links
 
 | Document | For | Purpose |
-|---|---|---|
+| --- | --- | --- |
 | [Quick Start](quick-start.md) | New developers | Clone, install, and verify setup (5 min) |
 | [Development Setup](development-setup.md) | Local development | Complete environment setup guide |
 | [Contributing](contributing.md) | Community & code contributors | Workflow: Discussion → Issue → PR |
@@ -112,12 +117,14 @@ Don't be shy! We're here to help new contributors succeed.
 ## 📖 Additional Resources
 
 ### External Documentation
+
 - [FastAPI Docs](https://fastapi.tiangolo.com/)
 - [SurrealDB Docs](https://surrealdb.com/docs)
 - [LangChain Docs](https://python.langchain.com/)
 - [Next.js Docs](https://nextjs.org/docs)
 
 ### Our Libraries
+
 - [Esperanto](https://github.com/lfnovo/esperanto) - Multi-provider AI abstraction
 - [Content Core](https://github.com/lfnovo/content-core) - Content processing
 - [Podcast Creator](https://github.com/lfnovo/podcast-creator) - Podcast generation

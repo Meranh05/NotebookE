@@ -19,7 +19,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { Settings2, Sparkles } from 'lucide-react'
+import { IconAdjustmentsHorizontal, IconSparkles } from '@tabler/icons-react'
 import { useModelDefaults, useModels } from '@/lib/hooks/use-models'
 import { useTranslation } from '@/lib/hooks/use-translation'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
@@ -90,7 +90,7 @@ export function ModelSelector({
           disabled={disabled}
           className="gap-2"
         >
-          <Settings2 className="h-4 w-4" />
+          <IconAdjustmentsHorizontal className="h-4 w-4" />
           <span className="text-xs">
             {currentModelName}
           </span>
@@ -99,7 +99,7 @@ export function ModelSelector({
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5" />
+            <IconSparkles className="h-5 w-5" />
             {t('common.modelConfiguration')}
           </DialogTitle>
           <DialogDescription>

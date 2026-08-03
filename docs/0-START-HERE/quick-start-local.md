@@ -1,6 +1,6 @@
 # Quick Start - Local & Private (5 minutes)
 
-Get Open Notebook running with **100% local AI** using Ollama. No cloud API keys needed, completely private.
+Get NotebookE running with **100% local AI** using Ollama. No cloud API keys needed, completely private.
 
 **Already have Ollama installed?** See [External Ollama Guide](quick-start-external-ollama.md) instead.
 
@@ -17,9 +17,11 @@ Get Open Notebook running with **100% local AI** using Ollama. No cloud API keys
 ## Step 1: Choose Your Setup (1 min)
 
 ### Local Machine (Same Computer)
+
 Everything runs on your machine. Recommended for testing/learning.
 
 ### Remote Server (Raspberry Pi, NAS, Cloud VM)
+
 Run on a different computer, access from another. Needs network configuration.
 
 ---
@@ -29,6 +31,7 @@ Run on a different computer, access from another. Needs network configuration.
 Create a new folder `open-notebook-local` and add this file:
 
 **docker-compose.yml**:
+
 ```yaml
 services:
   surrealdb:
@@ -86,6 +89,7 @@ services:
 ```
 
 **Edit the file:**
+
 - Replace `change-me-to-a-secret-string` with your own secret (any string works)
 
 ---
@@ -121,14 +125,15 @@ This downloads the model (will take 1-5 minutes depending on your internet).
 
 ---
 
-## Step 5: Access Open Notebook (instant)
+## Step 5: Access NotebookE (instant)
 
 Open your browser:
+
 ```
 http://localhost:8502
 ```
 
-You should see the Open Notebook interface.
+You should see the NotebookE interface.
 
 ---
 
@@ -210,6 +215,7 @@ You should see the Open Notebook interface.
 ### "ollama: command not found"
 
 Docker image name might be different:
+
 ```bash
 docker ps  # Find the Ollama container name
 docker exec <container_name> ollama pull mistral
@@ -218,6 +224,7 @@ docker exec <container_name> ollama pull mistral
 ### Model Download Stuck
 
 Check internet connection and restart:
+
 ```bash
 docker compose restart ollama
 ```
@@ -234,6 +241,7 @@ docker compose up -d
 ### Low Performance
 
 Check if GPU is available:
+
 ```bash
 # Show available GPUs
 docker exec open-notebook-local-ollama-1 ollama ps
@@ -269,10 +277,10 @@ docker exec open-notebook-local-ollama-1 ollama pull neural-chat
 
 **Prefer a GUI?** LM Studio is easier for non-technical users:
 
-1. Download LM Studio: https://lmstudio.ai
+1. Download LM Studio: <https://lmstudio.ai>
 2. Open the app, download a model from the library
 3. Go to "Local Server" tab, start server (port 1234)
-4. In Open Notebook, go to **Settings** → **API Keys**
+4. In NotebookE, go to **Settings** → **API Keys**
 5. Click **Add Credential** → Select **OpenAI-Compatible**
 6. Enter base URL: `http://host.docker.internal:1234/v1`
 7. Enter API key: `lm-studio` (placeholder)
@@ -297,7 +305,7 @@ docker exec open-notebook-local-ollama-1 ollama pull neural-chat
 ## Common Model Choices
 
 | Model | Speed | Quality | VRAM | Best For |
-|-------|-------|---------|------|----------|
+| ------- | ------- | --------- | ------ | ---------- |
 | **mistral** | Fast | Good | 4GB | Testing, general use |
 | **neural-chat** | Medium | Better | 6GB | Balanced, recommended |
 | **llama2** | Slow | Best | 8GB+ | Complex reasoning |

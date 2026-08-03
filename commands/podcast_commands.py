@@ -295,17 +295,74 @@ async def generate_podcast_command(
 
         logger.info(f"Created output directory: {output_dir}")
 
-        # 8. Generate podcast using podcast-creator
+        # 8. Generate podcast using podcast-creator with Auto-Fallback
         logger.info("Starting podcast generation with podcast-creator...")
 
-        result = await create_podcast(
-            content=input_data.content,
-            briefing=briefing,
-            episode_name=episode_dir_name,
-            output_dir=str(output_dir),
-            speaker_config=speaker_profile.name,
-            episode_profile=episode_profile.name,
-        )
+        max_attempts = 3
+        attempt = 1
+        tried_model_ids = {str(episode_profile.outline_llm), str(episode_profile.transcript_llm)}
+        
+        result = None
+        audio_error: Optional[str] = None
+        
+        from open_notebook.ai.models import Model
+        
+        while attempt <= max_attempts:
+            try:
+                result = await create_podcast(
+                    content=input_data.content,
+                    briefing=briefing,
+                    episode_name=episode_dir_name,
+                    output_dir=str(output_dir),
+                    speaker_config=speaker_profile.name,
+                    episode_profile=episode_profile.name,
+                )
+                
+                # Check for in-band audio combination errors
+                raw_audio_path = result.get("final_output_file_path") if result else None
+                if raw_audio_path is not None and str(raw_audio_path).startswith("ERROR:"):
+                    audio_error = str(raw_audio_path)
+                    result["final_output_file_path"] = None
+                    
+                break  # Success
+                
+            except Exception as e:
+                error_msg = str(e).lower()
+                is_quota_error = "429" in error_msg or "resource_exhausted" in error_msg or "quota" in error_msg or "rate_limit" in error_msg
+                
+                if not is_quota_error or attempt >= max_attempts:
+                    if is_quota_error:
+                        raise RuntimeError("Podcast generation failed: All available AI models have exhausted their Quota/Rate Limit. Please check your billing details or wait before trying again.") from e
+                    raise  # Re-raise if it's not a quota error or we're out of retries
+                
+                logger.warning(f"Attempt {attempt} failed due to Quota/Rate Limit. Finding fallback model...")
+                
+                all_lang_models = await Model.get_models_by_type("language")
+                fallback_model = next((m for m in all_lang_models if str(m.id) not in tried_model_ids), None)
+                
+                if not fallback_model:
+                    logger.warning("No more fallback language models available.")
+                    raise RuntimeError("Podcast generation failed: The selected model is out of Quota (Rate Limit), and no other fallback models are available in your system. Please add more API Keys or wait.") from e
+
+                
+                logger.info(f"Auto-Fallback: Switching to model {fallback_model.name} ({fallback_model.provider})")
+                tried_model_ids.add(str(fallback_model.id))
+                
+                try:
+                    prov, model_name, conf = await _resolve_model_config(str(fallback_model.id), max_tokens=episode_profile.max_tokens)
+                    ep_dict = episode_profiles_dict.get(episode_profile.name)
+                    if ep_dict:
+                        ep_dict["outline_provider"] = prov
+                        ep_dict["outline_model"] = model_name
+                        ep_dict["outline_config"] = conf
+                        ep_dict["transcript_provider"] = prov
+                        ep_dict["transcript_model"] = model_name
+                        ep_dict["transcript_config"] = conf
+                        configure("episode_config", {"profiles": episode_profiles_dict})
+                except Exception as resolve_err:
+                    logger.warning(f"Failed to resolve fallback model config: {resolve_err}")
+                
+                attempt += 1
 
         # podcast-creator reports audio-combination failures IN-BAND: on
         # ffmpeg/clip errors combine_audio_files() returns an "ERROR: ..."
@@ -314,10 +371,6 @@ async def generate_podcast_command(
         # the transcript/outline are persisted) instead of a misleading
         # "outside the podcasts folder" ValueError.
         raw_audio_path = result.get("final_output_file_path") if result else None
-        audio_error: Optional[str] = None
-        if raw_audio_path is not None and str(raw_audio_path).startswith("ERROR:"):
-            audio_error = str(raw_audio_path)
-            raw_audio_path = None
 
         # Store the audio path RELATIVE to PODCASTS_FOLDER (#1030). The
         # validation inside to_relative_audio_path guarantees the DB never

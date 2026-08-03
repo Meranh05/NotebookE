@@ -1,6 +1,6 @@
 'use client'
 
-import { Loader2 } from 'lucide-react'
+import { IconLoader2 } from '@tabler/icons-react'
 import { useQueryClient } from '@tanstack/react-query'
 
 import { sourcesApi } from '@/lib/api/sources'
@@ -96,7 +96,7 @@ export function ContentSelectionPanel({
       <div className="rounded-lg border bg-muted/30">
         {isLoading ? (
           <div className="flex items-center justify-center py-16 text-sm text-muted-foreground">
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('podcasts.loadingNotebooks')}
+            <IconLoader2 className="mr-2 h-4 w-4 animate-spin" /> {t('podcasts.loadingNotebooks')}
           </div>
         ) : notebooks.length === 0 ? (
           <div className="p-6 text-sm text-muted-foreground">
@@ -170,7 +170,7 @@ export function ContentSelectionPanel({
                               {t('podcasts.sources')}
                             </h4>
                             {fetchingNotebookIds.has(notebook.id) && (
-                              <Loader2 className="h-3 w-3 animate-spin text-muted-foreground" />
+                              <IconLoader2 className="h-3 w-3 animate-spin text-muted-foreground" />
                             )}
                           </div>
                           {sources.length === 0 ? (

@@ -1,10 +1,10 @@
 # Quick Start - External Ollama
 
-Run Open Notebook with a **separately installed Ollama** (not via Docker). This avoids Docker running the Ollama service while you use your own local Ollama installation.
+Run NotebookE with a **separately installed Ollama** (not via Docker). This avoids Docker running the Ollama service while you use your own local Ollama installation.
 
 ## Prerequisites
 
-1. **Docker Desktop** installed (for SurrealDB and Open Notebook)
+1. **Docker Desktop** installed (for SurrealDB and NotebookE)
    - [Download here](https://www.docker.com/products/docker-desktop/)
 
 2. **Ollama** installed separately
@@ -12,6 +12,7 @@ Run Open Notebook with a **separately installed Ollama** (not via Docker). This 
    - Verify: run `ollama --version`
 
 3. **Models downloaded** in Ollama:
+
    ```bash
    ollama pull mistral
    ollama pull nomic-embed-text
@@ -31,6 +32,7 @@ ollama serve
 Keep this terminal open. Ollama will run in the background.
 
 **Optional: Start Ollama on a custom port or network interface:**
+
 ```bash
 OLLAMA_HOST=0.0.0.0:11434 ollama serve
 ```
@@ -42,6 +44,7 @@ OLLAMA_HOST=0.0.0.0:11434 ollama serve
 Create a new folder `open-notebook-external-ollama` and add these files:
 
 **docker-compose.yml**:
+
 ```yaml
 services:
   surrealdb:
@@ -83,19 +86,19 @@ services:
 
 ---
 
-## Step 3: Connect Open Notebook to Host Ollama (1 min)
+## Step 3: Connect NotebookE to Host Ollama (1 min)
 
-When Open Notebook runs inside Docker, it cannot reach `localhost:11434` on your host directly. Use the special hostname:
+When NotebookE runs inside Docker, it cannot reach `localhost:11434` on your host directly. Use the special hostname:
 
-| Host OS | Ollama URL in Open Notebook |
-|---------|----------------------------|
+| Host OS | Ollama URL in NotebookE |
+| --------- | ---------------------------- |
 | Linux | `http://host.containers.internal:11434` |
 | macOS | `http://host.docker.internal:11434` |
 | Windows | `http://host.docker.internal:11434` |
 
 ---
 
-## Step 4: Start Open Notebook (1 min)
+## Step 4: Start NotebookE (1 min)
 
 Open terminal in your `open-notebook-external-ollama` folder:
 
@@ -132,9 +135,10 @@ Wait 10-15 seconds for services to start.
 
 ---
 
-## Step 7: Access Open Notebook (instant)
+## Step 7: Access NotebookE (instant)
 
 Open your browser:
+
 ```
 http://localhost:8502
 ```
@@ -157,6 +161,7 @@ http://localhost:8502
 ### "Connection failed" when testing Ollama credential
 
 1. Verify Ollama is running:
+
    ```bash
    curl http://localhost:11434/api/version
    ```
@@ -164,6 +169,7 @@ http://localhost:8502
 2. Check firewall allows local connections on port 11434
 
 3. For Windows/macOS, ensure `host.docker.internal` is reachable from inside the container:
+
    ```bash
    docker exec <open_notebook_container> curl http://host.docker.internal:11434/api/version
    ```
@@ -190,13 +196,14 @@ docker compose up -d
 ## Why External Ollama?
 
 | Approach | Ollama in Docker | Ollama External |
-|----------|-----------------|-----------------|
+| ---------- | ----------------- | ----------------- |
 | **Resource isolation** | Separated | Shares with host |
 | **GPU access** | Requires Docker GPU setup | Native GPU access |
 | **Model management** | Via `docker exec` | Via terminal directly |
 | **Memory usage** | Isolated from host | Shared with host apps |
 
 **External Ollama** is recommended if you:
+
 - Already have Ollama installed and configured
 - Want GPU access without Docker GPU passthrough complexity
 - Prefer managing models via command line directly
@@ -205,7 +212,7 @@ docker compose up -d
 
 ## Going Further
 
-- **Add more models**: Run `ollama pull <model>`, then re-discover from Open Notebook
+- **Add more models**: Run `ollama pull <model>`, then re-discover from NotebookE
 - **Check Ollama status**: `ollama list` shows downloaded models
 - **Customize Ollama**: Edit `~/.ollama/config.yaml` for advanced settings
 

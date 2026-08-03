@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { AppShell } from '@/components/layout/AppShell'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert'
-import { Key, ShieldAlert, AlertCircle } from 'lucide-react'
+import { IconAlertCircle, IconKey, IconShieldLock } from '@tabler/icons-react'
 import { useTranslation } from '@/lib/hooks/use-translation'
 import { useModels, useModelDefaults } from '@/lib/hooks/use-models'
 import {
@@ -92,7 +92,7 @@ export default function ApiKeysPage() {
           {/* Header */}
           <div>
             <h1 className="font-display text-2xl font-bold tracking-tight flex items-center gap-2">
-              <Key className="h-5 w-5 text-muted-foreground" />
+              <IconKey className="h-5 w-5 text-muted-foreground" />
               {t('apiKeys.title')}
             </h1>
             <p className="text-muted-foreground mt-1">{t('apiKeys.description')}</p>
@@ -101,7 +101,7 @@ export default function ApiKeysPage() {
           {/* Encryption warning */}
           {!encryptionReady && (
             <Alert className="border-destructive/30 bg-destructive-tint">
-              <ShieldAlert className="h-4 w-4 text-destructive" />
+              <IconShieldLock className="h-4 w-4 text-destructive" />
               <AlertTitle className="text-destructive">{t('apiKeys.encryptionRequired')}</AlertTitle>
               <AlertDescription className="text-destructive">
                 <code className="text-xs bg-destructive-tint px-1 py-0.5 rounded">
@@ -122,7 +122,7 @@ export default function ApiKeysPage() {
           {/* Provider Cards */}
           {providersError ? (
             <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
+              <IconAlertCircle className="h-4 w-4" />
               <AlertTitle>{t('apiKeys.providersLoadFailed')}</AlertTitle>
               <AlertDescription>{t('apiKeys.providersLoadFailedDescription')}</AlertDescription>
             </Alert>

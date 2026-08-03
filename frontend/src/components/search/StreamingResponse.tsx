@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-import { CheckCircle, Sparkles, Lightbulb, ChevronDown } from 'lucide-react'
+import { IconBulb, IconChevronDown, IconCircleCheck, IconSparkles } from '@tabler/icons-react'
 import { useState } from 'react'
 import { MarkdownRenderer } from '@/components/ui/markdown-renderer'
 import { convertReferencesToMarkdownLinks, createReferenceLinkComponent } from '@/lib/utils/source-references'
@@ -68,10 +68,10 @@ export function StreamingResponse({
             <CardHeader>
               <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-teal" />
+                  <IconSparkles className="h-4 w-4 text-teal" />
                   {t('common.strategy')}
                 </CardTitle>
-                <ChevronDown className={`h-4 w-4 transition-transform ${strategyOpen ? 'rotate-180' : ''}`} />
+                <IconChevronDown className={`h-4 w-4 transition-transform ${strategyOpen ? 'rotate-180' : ''}`} />
               </CollapsibleTrigger>
             </CardHeader>
             <CollapsibleContent>
@@ -109,10 +109,10 @@ export function StreamingResponse({
             <CardHeader>
               <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <Lightbulb className="h-4 w-4 text-teal" />
+                  <IconBulb className="h-4 w-4 text-teal" />
                   {t('common.individualAnswers', { count: answers.length })}
                 </CardTitle>
-                <ChevronDown className={`h-4 w-4 transition-transform ${answersOpen ? 'rotate-180' : ''}`} />
+                <IconChevronDown className={`h-4 w-4 transition-transform ${answersOpen ? 'rotate-180' : ''}`} />
               </CollapsibleTrigger>
             </CardHeader>
             <CollapsibleContent>
@@ -133,7 +133,7 @@ export function StreamingResponse({
         <Card className="border-teal">
           <CardHeader>
             <CardTitle className="text-base flex items-center gap-2">
-              <CheckCircle className="h-4 w-4 text-teal" />
+              <IconCircleCheck className="h-4 w-4 text-teal" />
               {t('common.finalAnswer')}
             </CardTitle>
           </CardHeader>

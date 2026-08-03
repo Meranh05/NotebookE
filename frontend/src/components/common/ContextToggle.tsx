@@ -1,6 +1,6 @@
 'use client'
 
-import { EyeOff, Lightbulb, FileText } from 'lucide-react'
+import { IconBulb, IconEyeOff, IconFileText } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
 import {
   Tooltip,
@@ -32,19 +32,19 @@ export function ContextToggle<TMode extends ContextMode = ContextMode>({
 
   const MODE_CONFIG = {
     off: {
-      icon: EyeOff,
+      icon: IconEyeOff,
       label: t('common.contextModes.off'),
       color: 'text-muted-foreground',
       bgColor: 'hover:bg-muted'
     },
     insights: {
-      icon: Lightbulb,
+      icon: IconBulb,
       label: t('common.contextModes.insights'),
       color: 'text-ctx-insights',
       bgColor: 'hover:bg-ctx-insights-tint'
     },
     full: {
-      icon: FileText,
+      icon: IconFileText,
       label: t('common.contextModes.full'),
       color: 'text-ctx-full',
       bgColor: 'hover:bg-ctx-full-tint'

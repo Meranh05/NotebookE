@@ -6,7 +6,7 @@
 
 ## Context
 
-Open Notebook routinely processes work that takes seconds to minutes: ingesting and embedding large volumes of content, generating insights, producing podcast episodes. Users run it on machines of very different sizes — from small home servers to beefy workstations — so the same job can be fast on one deployment and slow on another. None of that may lock product usage: the API and UI must stay responsive while heavy work happens (async-first principle).
+NotebookE routinely processes work that takes seconds to minutes: ingesting and embedding large volumes of content, generating insights, producing podcast episodes. Users run it on machines of very different sizes — from small home servers to beefy workstations — so the same job can be fast on one deployment and slow on another. None of that may lock product usage: the API and UI must stay responsive while heavy work happens (async-first principle).
 
 ## Decision
 

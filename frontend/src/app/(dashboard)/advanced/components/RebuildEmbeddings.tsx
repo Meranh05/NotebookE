@@ -9,7 +9,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Progress } from '@/components/ui/progress'
-import { Loader2, AlertCircle, CheckCircle2, XCircle, Clock } from 'lucide-react'
+import { IconAlertCircle, IconCircleCheck, IconCircleX, IconClock, IconLoader2 } from '@tabler/icons-react'
 import {
   Accordion,
   AccordionContent,
@@ -187,7 +187,7 @@ export function RebuildEmbeddings() {
               </div>
               {!isAnyTypeSelected && (
                 <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
+                  <IconAlertCircle className="h-4 w-4" />
                   <AlertDescription>
                     {t('advanced.rebuild.selectOneError')}
                   </AlertDescription>
@@ -202,7 +202,7 @@ export function RebuildEmbeddings() {
             >
               {rebuildMutation.isPending ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
                   {t('advanced.rebuild.starting')}
                 </>
               ) : (
@@ -212,7 +212,7 @@ export function RebuildEmbeddings() {
 
             {rebuildMutation.isError && (
               <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
+                <IconAlertCircle className="h-4 w-4" />
                 <AlertDescription>
                   {t('advanced.rebuild.failed')}: {(rebuildMutation.error as Error)?.message || t('common.error')}
                 </AlertDescription>
@@ -226,10 +226,10 @@ export function RebuildEmbeddings() {
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                {status.status === 'queued' && <Clock className="h-5 w-5 text-warn" />}
-                {status.status === 'running' && <Loader2 className="h-5 w-5 text-teal animate-spin" />}
-                {status.status === 'completed' && <CheckCircle2 className="h-5 w-5 text-fern" />}
-                {status.status === 'failed' && <XCircle className="h-5 w-5 text-destructive" />}
+                {status.status === 'queued' && <IconClock className="h-5 w-5 text-warn" />}
+                {status.status === 'running' && <IconLoader2 className="h-5 w-5 text-teal animate-spin" />}
+                {status.status === 'completed' && <IconCircleCheck className="h-5 w-5 text-fern" />}
+                {status.status === 'failed' && <IconCircleX className="h-5 w-5 text-destructive" />}
                 <div className="flex flex-col">
                   <span className="font-medium">
                     {status.status === 'queued' && t('advanced.rebuild.queued')}
@@ -293,7 +293,7 @@ export function RebuildEmbeddings() {
 
             {status.error_message && (
               <Alert variant="destructive">
-                <AlertCircle className="h-4 w-4" />
+                <IconAlertCircle className="h-4 w-4" />
                 <AlertDescription>{status.error_message}</AlertDescription>
               </Alert>
             )}

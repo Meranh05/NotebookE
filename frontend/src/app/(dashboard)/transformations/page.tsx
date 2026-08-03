@@ -9,7 +9,7 @@ import { TransformationsList } from './components/TransformationsList'
 import { TransformationPlayground } from './components/TransformationPlayground'
 import { useTransformations } from '@/lib/hooks/use-transformations'
 import { Transformation } from '@/lib/types/transformations'
-import { Wand2, Play, RefreshCw } from 'lucide-react'
+import { IconPlayerPlay, IconRefresh, IconWand } from '@tabler/icons-react'
 import { useTranslation } from '@/lib/hooks/use-translation'
 
 export default function TransformationsPage() {
@@ -31,7 +31,7 @@ export default function TransformationsPage() {
             <div className="flex items-center gap-4">
               <h1 className="font-display text-2xl font-bold tracking-tight">{t('transformations.title')}</h1>
               <Button variant="outline" size="sm" onClick={() => refetch()}>
-                <RefreshCw className="h-4 w-4" />
+                <IconRefresh className="h-4 w-4" />
             </Button>
           </div>
         </div>
@@ -47,11 +47,11 @@ export default function TransformationsPage() {
             <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('transformations.workspace')}</p>
             <TabsList aria-label={t('common.accessibility.transformationViews')} className="w-full max-w-xl">
               <TabsTrigger value="transformations" className="flex items-center gap-2">
-                <Wand2 className="h-4 w-4" />
+                <IconWand className="h-4 w-4" />
                 {t('transformations.title')}
               </TabsTrigger>
               <TabsTrigger value="playground" className="flex items-center gap-2">
-                <Play className="h-4 w-4" />
+                <IconPlayerPlay className="h-4 w-4" />
                 {t('transformations.playground')}
               </TabsTrigger>
             </TabsList>

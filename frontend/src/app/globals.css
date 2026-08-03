@@ -5,7 +5,7 @@
 @variant dark (&:where(.dark, .dark *));
 
 /* ============================================================================
-   OPEN NOTEBOOK — DESIGN FOUNDATION ("Quiet Green")
+   NotebookE — DESIGN FOUNDATION ("Quiet Green")
 
    The laws, in one breath:
      fern acts · teal speaks (AI/system voice) · red destroys, and only destroys
@@ -21,9 +21,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-instrument-sans), "Helvetica Neue", Arial, sans-serif;
+  --font-sans: var(--font-inter), "Helvetica Neue", Arial, sans-serif;
   --font-mono: var(--font-spline-mono), ui-monospace, "SF Mono", Menlo, monospace;
-  --font-display: var(--font-bricolage), "Avenir Next", "Trebuchet MS", sans-serif;
+  --font-display: var(--font-inter), "Helvetica Neue", Arial, sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -174,25 +174,25 @@
   /* --------------------------------------------------------------
      semantic raws — surfaces, ink, hairlines, action, danger
      -------------------------------------------------------------- */
-  --bg: #f5f5f2;
-  --bg-deep: #eeeee9;
-  --surface: #fefefc;
+  --bg: #f9fafb;
+  --bg-deep: #f3f4f6;
+  --surface: #ffffff;
   --surface-raised: #ffffff;
-  --surface-recessed: #f4f4f0;
-  --surface-sunken: #ecece7;
+  --surface-recessed: #f3f4f6;
+  --surface-sunken: #e5e7eb;
 
-  --ink: #23252a;
-  --ink-soft: #565a61;
-  --ink-faint: #878b92;
-  --ink-faintest: #a8abb1;
+  --ink: #111827;
+  --ink-soft: #4b5563;
+  --ink-faint: #6b7280;
+  --ink-faintest: #9ca3af;
 
-  --line: #e0e0da;
-  --line-soft: #e8e8e2;
-  --line-strong: #23252a;
+  --line: #e5e7eb;
+  --line-soft: #f3f4f6;
+  --line-strong: #9ca3af;
 
-  --primary: #2e6b4f;
-  --primary-hover: #245740;
-  --on-primary: #f1f8f3;
+  --primary: #111827;
+  --primary-hover: #000000;
+  --on-primary: #ffffff;
 
   --danger: #b0432d;
   --danger-deep: #93341f;
@@ -328,25 +328,25 @@
   --clay-tint: #35211a;
 
   /* semantic raws */
-  --bg: #17181b;
-  --bg-deep: #121316;
-  --surface: #1e2024;
-  --surface-raised: #24262b;
-  --surface-recessed: #24262b;
-  --surface-sunken: #2b2d33;
+  --bg: #1e1f22;
+  --bg-deep: #17181a;
+  --surface: #2b2d31;
+  --surface-raised: #313338;
+  --surface-recessed: #1e1f22;
+  --surface-sunken: #111214;
 
-  --ink: #ecedea;
-  --ink-soft: #a9acb1;
-  --ink-faint: #74777d;
-  --ink-faintest: #63666c;
+  --ink: #f2f3f5;
+  --ink-soft: #b5bac1;
+  --ink-faint: #949ba4;
+  --ink-faintest: #80848e;
 
-  --line: #2e3036;
-  --line-soft: #26282d;
-  --line-strong: #ecedea;
+  --line: #3f4147;
+  --line-soft: #35373c;
+  --line-strong: #f2f3f5;
 
-  --primary: #3d8e67;
-  --primary-hover: #479e74;
-  --on-primary: #ecf7f0;
+  --primary: #f9fafb;
+  --primary-hover: #ffffff;
+  --on-primary: #111827;
 
   --danger: #df7c63;
   --danger-deep: #e9937d;
@@ -437,4 +437,32 @@
   .prose blockquote p::after {
     content: none !important;
   }
+}
+
+/* Fix Radix ScrollArea viewport child expanding beyond container in chat.
+   Radix injects a child div with `display: table; min-width: 100%` which
+   allows content to grow past the column width. Override to block layout
+   so text wraps properly within the chat column.
+   Placed outside @layer for maximum specificity over Radix inline styles. */
+.chat-scroll-area [data-slot="scroll-area-viewport"] {
+  overflow-x: hidden !important;
+}
+
+.chat-scroll-area [data-slot="scroll-area-viewport"]>div {
+  display: block !important;
+  min-width: 0 !important;
+  width: 100% !important;
+}
+
+@keyframes progress-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+
+.animate-progress-indeterminate {
+  animation: progress-indeterminate 1.5s infinite linear;
 }

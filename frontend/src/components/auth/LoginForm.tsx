@@ -8,7 +8,7 @@ import { getConfig } from '@/lib/config'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { AlertCircle } from 'lucide-react'
+import { IconAlertCircle } from '@tabler/icons-react'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { useTranslation } from '@/lib/hooks/use-translation'
 
@@ -91,7 +91,7 @@ export function LoginForm() {
           <CardContent>
             <div className="space-y-4">
               <div className="flex items-start gap-2 text-destructive text-sm">
-                <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                <IconAlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
                 <div className="flex-1">
                   {error || t('auth.connectErrorHint')}
                 </div>
@@ -160,7 +160,7 @@ export function LoginForm() {
 
             {error && (
               <div className="flex items-center gap-2 text-destructive text-sm">
-                <AlertCircle className="h-4 w-4" />
+                <IconAlertCircle className="h-4 w-4" />
                 {error}
               </div>
             )}

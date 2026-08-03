@@ -16,6 +16,7 @@ SURREAL_COMMANDS_MAX_TASKS=5
 ```
 
 **Guidelines:**
+
 - CPU: 2 cores → 2-3 tasks
 - CPU: 4 cores → 5 tasks (default)
 - CPU: 8+ cores → 10-20 tasks
@@ -69,6 +70,7 @@ TTS_BATCH_SIZE=2
 ```
 
 **Providers and recommendations:**
+
 - OpenAI: 5 (can handle many concurrent)
 - Google: 4 (good concurrency)
 - ElevenLabs: 2 (limited concurrent requests)
@@ -109,10 +111,10 @@ For debugging LLM workflows:
 LANGCHAIN_TRACING_V2=true
 LANGCHAIN_ENDPOINT="https://api.smith.langchain.com"
 LANGCHAIN_API_KEY=your-key
-LANGCHAIN_PROJECT="Open Notebook"
+LANGCHAIN_PROJECT="NotebookE"
 ```
 
-Then visit https://smith.langchain.com to see traces.
+Then visit <https://smith.langchain.com> to see traces.
 
 ---
 
@@ -228,7 +230,7 @@ SURREAL_PASSWORD=$(openssl rand -base64 32)  # Generate secure password
 ### Add Password Protection
 
 ```env
-# Protect your Open Notebook instance
+# Protect your NotebookE instance
 OPEN_NOTEBOOK_PASSWORD=your_secure_password
 ```
 
@@ -241,7 +243,8 @@ API_URL=https://mynotebook.example.com
 
 ### Firewall Rules
 
-Restrict access to your Open Notebook:
+Restrict access to your NotebookE:
+
 - Port 8502 (frontend): Only from your IP
 - Port 5055 (API): Only from frontend
 - Port 8000 (SurrealDB): Never expose to internet
@@ -250,7 +253,7 @@ Restrict access to your Open Notebook:
 
 ## Web Scraping & Content Extraction
 
-Open Notebook uses multiple engines for content extraction. Which one runs is chosen in **Settings → Content Processing** (see the user-guide page on [Content Processing Engines](../3-USER-GUIDE/content-processing-engines.md)); the variables below configure them.
+NotebookE uses multiple engines for content extraction. Which one runs is chosen in **Settings → Content Processing** (see the user-guide page on [Content Processing Engines](../3-USER-GUIDE/content-processing-engines.md)); the variables below configure them.
 
 ### Firecrawl
 
@@ -269,7 +272,7 @@ CCORE_FIRECRAWL_PROXY=auto
 CCORE_FIRECRAWL_WAIT_FOR=3000
 ```
 
-Get key from: https://firecrawl.dev/
+Get key from: <https://firecrawl.dev/>
 
 ### Jina AI
 
@@ -279,7 +282,7 @@ Alternative web extraction:
 JINA_API_KEY=your-key
 ```
 
-Get key from: https://jina.ai/
+Get key from: <https://jina.ai/>
 
 ### Crawl4AI
 
@@ -296,6 +299,7 @@ See [Content Processing Engines → Optional engines](../3-USER-GUIDE/content-pr
 ## Environment Variable Groups
 
 ### Credential Storage (Required)
+
 ```env
 OPEN_NOTEBOOK_ENCRYPTION_KEY    # Required for storing credentials
 ```
@@ -303,6 +307,7 @@ OPEN_NOTEBOOK_ENCRYPTION_KEY    # Required for storing credentials
 AI provider API keys are configured via **Settings → API Keys** (not environment variables).
 
 ### Database
+
 ```env
 SURREAL_URL
 SURREAL_USER
@@ -312,6 +317,7 @@ SURREAL_DATABASE
 ```
 
 ### Performance
+
 ```env
 SURREAL_COMMANDS_MAX_TASKS
 SURREAL_COMMANDS_RETRY_ENABLED
@@ -322,6 +328,7 @@ SURREAL_COMMANDS_RETRY_WAIT_MAX
 ```
 
 ### API Settings
+
 ```env
 API_URL
 INTERNAL_API_URL
@@ -330,6 +337,7 @@ ESPERANTO_LLM_TIMEOUT
 ```
 
 ### Audio/TTS
+
 ```env
 TTS_BATCH_SIZE
 ```
@@ -337,6 +345,7 @@ TTS_BATCH_SIZE
 > **Note:** `ELEVENLABS_API_KEY` is deprecated. Configure ElevenLabs via **Settings → API Keys**.
 
 ### Debugging
+
 ```env
 LANGCHAIN_TRACING_V2
 LANGCHAIN_ENDPOINT
@@ -460,6 +469,7 @@ echo "Backup complete: open-notebook-$DATE.tar.gz"
 ```
 
 Add to cron:
+
 ```bash
 # Daily backup at 2 AM
 0 2 * * * /path/to/backup.sh >> /var/log/open-notebook-backup.log 2>&1
@@ -548,16 +558,19 @@ docker system prune -a
 ## Summary
 
 **Most deployments need:**
+
 - One AI provider API key
 - Default database settings
 - Default timeouts
 
 **Tune performance only if:**
+
 - You have specific bottlenecks
 - High-concurrency workload
 - Custom hardware (very fast or very slow)
 
 **Advanced features:**
+
 - Firecrawl for better web scraping
 - LangSmith for debugging workflows
 - Custom CA bundles for self-signed certs

@@ -1,6 +1,6 @@
 # Release Process
 
-Open Notebook uses a flow-driven release process. Work moves from `ready`
+NotebookE uses a flow-driven release process. Work moves from `ready`
 issues into pull requests, pull requests merge to `main`, and maintainers cut a
 version when the branch has enough validated change to ship.
 
@@ -131,7 +131,7 @@ accepted improvements immediately — update this document, the scripts under
 ## Docker Image Publishing (reference)
 
 | Command | What it does | Updates latest? |
-|---------|--------------|-----------------|
+| --------- | -------------- | ----------------- |
 | `make docker-build-local` | Build for current platform only (tags `<version>` + `local`) | No registry push |
 | CI *Build and Release* (`push_latest=false`) | Push version tags via CI credentials | ❌ No |
 | GitHub release published (non-prerelease) | CI pushes version + `v1-latest` | ✅ Yes |

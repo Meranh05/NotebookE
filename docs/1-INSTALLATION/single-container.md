@@ -40,6 +40,7 @@ services:
 ```
 
 Run:
+
 ```bash
 docker compose up -d
 ```
@@ -47,6 +48,7 @@ docker compose up -d
 Access: `http://localhost:8502`
 
 Then configure your AI provider:
+
 1. Go to **Settings** → **API Keys**
 2. Click **Add Credential** → Select your provider → Paste API key
 3. Click **Save**, then **Test Connection**
@@ -55,13 +57,15 @@ Then configure your AI provider:
 ### For Cloud Platforms
 
 **PikaPods:**
+
 1. Click "New App"
-2. Search "Open Notebook"
+2. Search "NotebookE"
 3. Set environment variables (at minimum: `OPEN_NOTEBOOK_ENCRYPTION_KEY`)
 4. Click "Deploy"
 5. Open the app → Go to **Settings → API Keys** to configure your AI provider
 
 **Railway:**
+
 1. Create new project
 2. Add `lfnovo/open_notebook:v1-latest-single`
 3. Set environment variables (at minimum: `OPEN_NOTEBOOK_ENCRYPTION_KEY`)
@@ -69,12 +73,14 @@ Then configure your AI provider:
 5. Open the app → Go to **Settings → API Keys** to configure your AI provider
 
 **Render:**
+
 1. Create new Web Service
 2. Use Docker image: `lfnovo/open_notebook:v1-latest-single`
 3. Set environment variables in dashboard (at minimum: `OPEN_NOTEBOOK_ENCRYPTION_KEY`)
 4. Configure persistent disk for `/app/data` and `/mydata`
 
 **DigitalOcean App Platform:**
+
 1. Create new app from Docker Hub
 2. Use image: `lfnovo/open_notebook:v1-latest-single`
 3. Set port to 8502
@@ -82,6 +88,7 @@ Then configure your AI provider:
 5. Configure persistent storage
 
 **Heroku:**
+
 ```bash
 # Using heroku.yml
 heroku container:push web
@@ -90,6 +97,7 @@ heroku config:set OPEN_NOTEBOOK_ENCRYPTION_KEY=your-secret-key
 ```
 
 **Coolify:**
+
 1. Add new service → Docker Image
 2. Image: `lfnovo/open_notebook:v1-latest-single`
 3. Port: 8502
@@ -99,9 +107,9 @@ heroku config:set OPEN_NOTEBOOK_ENCRYPTION_KEY=your-secret-key
 
 **EasyPanel:**
 
-Open Notebook ships an EasyPanel template at [`examples/easypanel/`](https://github.com/lfnovo/open-notebook/tree/main/examples/easypanel). Unlike the single-image options above, the template provisions **two services** — the Open Notebook app and a dedicated SurrealDB instance — and generates the database password, encryption key, and (optionally) the app password for you.
+NotebookE ships an EasyPanel template at [`examples/easypanel/`](https://github.com/lfnovo/open-notebook/tree/main/examples/easypanel). Unlike the single-image options above, the template provisions **two services** — the NotebookE app and a dedicated SurrealDB instance — and generates the database password, encryption key, and (optionally) the app password for you.
 
-- **One-click (recommended):** once the template is published to the official [EasyPanel template gallery](https://github.com/easypanel-io/templates), create a new service from "Open Notebook", set an app password (or leave it blank to auto-generate one), and deploy.
+- **One-click (recommended):** once the template is published to the official [EasyPanel template gallery](https://github.com/easypanel-io/templates), create a new service from "NotebookE", set an app password (or leave it blank to auto-generate one), and deploy.
 - **Manual:** copy `examples/easypanel/` into `templates/open-notebook` in a checkout of [`easypanel-io/templates`](https://github.com/easypanel-io/templates), run the templates playground (`npm run dev`), and create the template from the generated JSON in your EasyPanel instance.
 
 After deployment, open the EasyPanel domain and configure your AI provider in **Settings → API Keys**. See [`examples/easypanel/README.md`](https://github.com/lfnovo/open-notebook/blob/main/examples/easypanel/README.md) for details.
@@ -111,7 +119,7 @@ After deployment, open the EasyPanel domain and configure your AI provider in **
 ## Environment Variables
 
 | Variable | Purpose | Example |
-|----------|---------|---------|
+| ---------- | --------- | --------- |
 | `OPEN_NOTEBOOK_ENCRYPTION_KEY` | Encryption key for credentials (required) | `my-secret-key` |
 | `SURREAL_URL` | Database | `ws://localhost:8000/rpc` |
 | `SURREAL_USER` | DB user | `root` |
@@ -127,7 +135,7 @@ AI provider API keys are configured via the **Settings → API Keys** UI after d
 ## Limitations vs Docker Compose
 
 | Feature | Single Container | Docker Compose |
-|---------|------------------|-----------------|
+| --------- | ------------------ | ----------------- |
 | Setup time | 2 minutes | 5 minutes |
 | Complexity | Minimal | Moderate |
 | Services | All bundled | Separated |

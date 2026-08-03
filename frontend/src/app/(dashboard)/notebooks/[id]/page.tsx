@@ -16,7 +16,7 @@ import { useIsDesktop } from '@/lib/hooks/use-media-query'
 import { useTranslation } from '@/lib/hooks/use-translation'
 import { cn } from '@/lib/utils'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { FileText, StickyNote, MessageSquare } from 'lucide-react'
+import { IconFileText, IconMessage, IconNote } from '@tabler/icons-react'
 import {
   applyBulkSourceContext,
   applyBulkNoteContext,
@@ -158,7 +158,7 @@ export default function NotebookPage() {
           <NotebookHeader notebook={notebook} />
         </div>
 
-        <div className="flex-1 p-6 pt-6 overflow-x-auto flex flex-col">
+        <div className="flex-1 p-6 pt-6 overflow-x-hidden flex flex-col">
           {/* Mobile: Tabbed interface - only render on mobile to avoid double-mounting */}
           {!isDesktop && (
             <>
@@ -166,15 +166,15 @@ export default function NotebookPage() {
                 <Tabs value={mobileActiveTab} onValueChange={(value) => setMobileActiveTab(value as 'sources' | 'notes' | 'chat')}>
                   <TabsList className="grid w-full grid-cols-3">
                     <TabsTrigger value="sources" className="gap-2">
-                      <FileText className="h-4 w-4" />
+                      <IconFileText className="h-4 w-4" />
                       {t('navigation.sources')}
                     </TabsTrigger>
                     <TabsTrigger value="notes" className="gap-2">
-                      <StickyNote className="h-4 w-4" />
+                      <IconNote className="h-4 w-4" />
                       {t('common.notes')}
                     </TabsTrigger>
                     <TabsTrigger value="chat" className="gap-2">
-                      <MessageSquare className="h-4 w-4" />
+                      <IconMessage className="h-4 w-4" />
                       {t('common.chat')}
                     </TabsTrigger>
                   </TabsList>
@@ -228,7 +228,7 @@ export default function NotebookPage() {
             {/* Sources Column */}
             <div className={cn(
               'transition-all duration-150',
-              sourcesCollapsed ? 'w-12 flex-shrink-0' : 'flex-none basis-1/3'
+              sourcesCollapsed ? 'w-12 flex-shrink-0' : 'flex-none w-[28%] xl:w-[22%]'
             )}>
               <SourcesColumn
                 sources={sources}
@@ -245,10 +245,20 @@ export default function NotebookPage() {
               />
             </div>
 
+            {/* Chat Column - always expanded, takes remaining space */}
+            <div className="transition-all duration-150 flex-1 min-w-0">
+              <ChatColumn
+                notebookId={notebookId}
+                contextSelections={contextSelections}
+                sources={sources}
+                sourcesLoading={sourcesLoading}
+              />
+            </div>
+
             {/* Notes Column */}
             <div className={cn(
-              'transition-all duration-150',
-              notesCollapsed ? 'w-12 flex-shrink-0' : 'flex-none basis-1/3'
+              'transition-all duration-150 lg:pr-6 lg:-mr-6',
+              notesCollapsed ? 'w-12 flex-shrink-0' : 'flex-none w-[28%] xl:w-[22%]'
             )}>
               <NotesColumn
                 notes={notes}
@@ -257,16 +267,6 @@ export default function NotebookPage() {
                 contextSelections={contextSelections.notes}
                 onContextModeChange={handleNoteContextModeChange}
                 onBulkContextModeChange={handleBulkNoteContext}
-              />
-            </div>
-
-            {/* Chat Column - always expanded, takes remaining space */}
-            <div className="transition-all duration-150 flex-1 min-w-0 lg:pr-6 lg:-mr-6">
-              <ChatColumn
-                notebookId={notebookId}
-                contextSelections={contextSelections}
-                sources={sources}
-                sourcesLoading={sourcesLoading}
               />
             </div>
           </div>

@@ -1,11 +1,11 @@
 ---
 name: release
-description: Orchestrate an Open Notebook release — changelog audit, risk-based A/B/C test matrix, Docker image gate (fresh + upgrade), fix loop via PRs, cut, publication with credits, retro. Use when preparing, testing, cutting or publishing a release.
+description: Orchestrate an NotebookE release — changelog audit, risk-based A/B/C test matrix, Docker image gate (fresh + upgrade), fix loop via PRs, cut, publication with credits, retro. Use when preparing, testing, cutting or publishing a release.
 ---
 
-# Open Notebook Release Orchestrator
+# NotebookE Release Orchestrator
 
-You are conducting a release of Open Notebook, reproducing the process
+You are conducting a release of NotebookE, reproducing the process
 established in v1.11.0. The **source of truth for the process** is
 `.github/RELEASE_PROCESS.md` — read it first. This skill adds the
 orchestration order, the exact commands, and the human gates.

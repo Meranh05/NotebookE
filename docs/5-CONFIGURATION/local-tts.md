@@ -7,7 +7,7 @@ Run text-to-speech locally for free, private podcast generation using OpenAI-com
 ## Why Local TTS?
 
 | Benefit | Description |
-|---------|-------------|
+| --------- | ------------- |
 | **Free** | No per-character costs after setup |
 | **Private** | Audio never leaves your machine |
 | **Unlimited** | No rate limits or quotas |
@@ -20,7 +20,8 @@ Run text-to-speech locally for free, private podcast generation using OpenAI-com
 [Speaches](https://github.com/speaches-ai/speaches) is an open-source, OpenAI-compatible TTS server.
 
 > **💡 Ready-made Docker Compose files available:**
-> - **[docker-compose-speaches.yml](../../examples/docker-compose-speaches.yml)** - Speaches + Open Notebook
+>
+> - **[docker-compose-speaches.yml](../../examples/docker-compose-speaches.yml)** - Speaches + NotebookE
 > - **[docker-compose-full-local.yml](../../examples/docker-compose-full-local.yml)** - Speaches + Ollama (100% local setup)
 >
 > These include complete setup instructions and configuration examples. Just copy and run!
@@ -72,17 +73,19 @@ curl "http://localhost:8969/v1/audio/speech" -s \
 
 Play `test.mp3` to verify.
 
-### Step 4: Configure Open Notebook
+### Step 4: Configure NotebookE
 
 **Via Settings UI (Recommended):**
+
 1. Go to **Settings** → **API Keys**
 2. Click **Add Credential** → Select **OpenAI-Compatible**
 3. Enter base URL for TTS: `http://host.docker.internal:8969/v1` (Docker) or `http://localhost:8969/v1` (local)
 4. Click **Save**, then **Test Connection**
 
 **Legacy (Deprecated) — Environment variables:**
+
 ```yaml
-# In your Open Notebook docker-compose.yml
+# In your NotebookE docker-compose.yml
 environment:
   - OPENAI_COMPATIBLE_BASE_URL_TTS=http://host.docker.internal:8969/v1
 ```
@@ -92,7 +95,7 @@ environment:
 export OPENAI_COMPATIBLE_BASE_URL_TTS=http://localhost:8969/v1
 ```
 
-### Step 5: Add Model in Open Notebook
+### Step 5: Add Model in NotebookE
 
 1. Go to **Settings** → **Models**
 2. Click **Add Model** in Text-to-Speech section
@@ -110,19 +113,22 @@ export OPENAI_COMPATIBLE_BASE_URL_TTS=http://localhost:8969/v1
 The Kokoro model includes multiple voices:
 
 ### Female Voices
+
 | Voice ID | Description |
-|----------|-------------|
+| ---------- | ------------- |
 | `af_bella` | Clear, professional |
 | `af_sarah` | Warm, friendly |
 | `af_nicole` | Energetic, expressive |
 
 ### Male Voices
+
 | Voice ID | Description |
 |----------|-------------|
 | `am_adam` | Deep, authoritative |
 | `am_michael` | Friendly, conversational |
 
 ### British Accents
+
 | Voice ID | Description |
 |----------|-------------|
 | `bf_emma` | British female, professional |
@@ -177,11 +183,11 @@ volumes:
 
 When configuring your OpenAI-Compatible credential in **Settings → API Keys**, use the appropriate TTS base URL for your setup:
 
-### Open Notebook in Docker (macOS/Windows)
+### NotebookE in Docker (macOS/Windows)
 
 **TTS Base URL:** `http://host.docker.internal:8969/v1`
 
-### Open Notebook in Docker (Linux)
+### NotebookE in Docker (Linux)
 
 **TTS Base URL (Option 1 — Docker bridge IP):** `http://172.17.0.1:8969/v1`
 
@@ -236,7 +242,7 @@ docker compose down && docker compose up -d
 # Test Speaches is running
 curl http://localhost:8969/v1/models
 
-# From inside Open Notebook container
+# From inside NotebookE container
 docker exec -it open-notebook curl http://host.docker.internal:8969/v1/models
 ```
 
@@ -260,7 +266,7 @@ docker compose exec speaches uv tool run speaches-cli model download speaches-ai
 ### Slow Generation
 
 | Solution | How |
-|----------|-----|
+| ---------- | ----- |
 | Use GPU | Switch to `latest-cuda` image |
 | More CPU | Allocate more cores in Docker |
 | Faster model | Use smaller/quantized models |
@@ -273,7 +279,7 @@ docker compose exec speaches uv tool run speaches-cli model download speaches-ai
 ### Recommended Specs
 
 | Component | Minimum | Recommended |
-|-----------|---------|-------------|
+| ----------- | --------- | ------------- |
 | CPU | 2 cores | 4+ cores |
 | RAM | 2 GB | 4+ GB |
 | Storage | 5 GB | 10 GB (for multiple models) |
@@ -300,7 +306,7 @@ docker stats speaches
 ## Comparison: Local vs Cloud
 
 | Aspect | Local (Speaches) | Cloud (OpenAI/ElevenLabs) |
-|--------|------------------|---------------------------|
+| -------- | ------------------ | --------------------------- |
 | **Cost** | Free | $0.015-0.10/min |
 | **Privacy** | Complete | Data sent to provider |
 | **Speed** | Depends on hardware | Usually faster |

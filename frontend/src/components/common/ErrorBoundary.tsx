@@ -3,7 +3,7 @@
 import React from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { AlertTriangle, RefreshCw } from 'lucide-react'
+import { IconAlertTriangle, IconRefresh } from '@tabler/icons-react'
 import { enUS } from '@/lib/locales/en-US'
 
 // Use English as fallback for ErrorBoundary (class component cannot use hooks)
@@ -57,7 +57,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
           <Card className="w-full max-w-md">
             <CardHeader className="text-center">
               <div className="mx-auto w-12 h-12 rounded-full bg-destructive-tint flex items-center justify-center mb-4">
-                <AlertTriangle className="w-6 h-6 text-destructive" />
+                <IconAlertTriangle className="w-6 h-6 text-destructive" />
               </div>
               <CardTitle className="text-destructive">{t?.common?.error || 'Something went wrong'}</CardTitle>
               <CardDescription>
@@ -78,7 +78,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
                 className="w-full"
                 variant="outline"
               >
-                <RefreshCw className="w-4 h-4 mr-2" />
+                <IconRefresh className="w-4 h-4 mr-2" />
                 {t?.common?.retry || 'Try Again'}
               </Button>
               <Button 

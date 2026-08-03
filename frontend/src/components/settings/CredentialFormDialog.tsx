@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Loader2 } from 'lucide-react'
+import { IconLoader2 } from '@tabler/icons-react'
 import { useTranslation } from '@/lib/hooks/use-translation'
 import { useCreateCredential, useUpdateCredential } from '@/lib/hooks/use-credentials'
 import { Credential, CreateCredentialRequest } from '@/lib/api/credentials'
@@ -280,7 +280,7 @@ export function CredentialFormDialog({
               {t('common.cancel')}
             </Button>
             <Button type="submit" disabled={!isValid || isSubmitting}>
-              {isSubmitting && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+              {isSubmitting && <IconLoader2 className="h-4 w-4 animate-spin mr-2" />}
               {isEditing ? t('common.save') : t('apiKeys.addConfig')}
             </Button>
           </div>

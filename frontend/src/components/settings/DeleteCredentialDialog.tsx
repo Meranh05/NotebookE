@@ -13,7 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { Loader2, AlertCircle } from 'lucide-react'
+import { IconAlertCircle, IconLoader2 } from '@tabler/icons-react'
 import { useTranslation } from '@/lib/hooks/use-translation'
 import { useDeleteCredential } from '@/lib/hooks/use-credentials'
 import { Credential } from '@/lib/api/credentials'
@@ -73,7 +73,7 @@ export function DeleteCredentialDialog({
 
         {credential.model_count > 0 && (
           <Alert>
-            <AlertCircle className="h-4 w-4" />
+            <IconAlertCircle className="h-4 w-4" />
             <AlertDescription>
               This credential has {credential.model_count} linked model(s).
               {otherCredentials.length > 0 && (
@@ -101,7 +101,7 @@ export function DeleteCredentialDialog({
           </Button>
           {credential.model_count > 0 && migrateToId && (
             <Button onClick={handleMigrate} disabled={deleteCredential.isPending}>
-              {deleteCredential.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+              {deleteCredential.isPending && <IconLoader2 className="h-4 w-4 animate-spin mr-2" />}
               Migrate & Delete
             </Button>
           )}
@@ -110,7 +110,7 @@ export function DeleteCredentialDialog({
             onClick={credential.model_count > 0 ? handleDeleteWithModels : handleDeleteOnly}
             disabled={deleteCredential.isPending}
           >
-            {deleteCredential.isPending && <Loader2 className="h-4 w-4 animate-spin mr-2" />}
+            {deleteCredential.isPending && <IconLoader2 className="h-4 w-4 animate-spin mr-2" />}
             {credential.model_count > 0 ? 'Delete with Models' : t('common.delete')}
           </Button>
         </DialogFooter>

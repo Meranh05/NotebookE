@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import { getDateLocale } from '@/lib/utils/date-locale'
-import { InfoIcon, RefreshCcw, Trash2 } from 'lucide-react'
+import { IconInfoCircle, IconRefresh, IconTrash, IconLoader2, IconCopy } from '@tabler/icons-react'
 
 import apiClient from '@/lib/api/client'
 import { resolvePodcastAssetUrl } from '@/lib/api/podcasts'
@@ -162,6 +162,16 @@ export function EpisodeCard({ episode, onDelete, deleting, onRetry, retrying }: 
   const outlineSegments = useMemo(() => extractOutlineSegments(episode.outline), [episode.outline])
   const transcriptEntries = useMemo(() => extractTranscriptEntries(episode.transcript), [episode.transcript])
 
+  const displayErrorMessage = useMemo(() => {
+    if (!episode.error_message) return '';
+    const msg = episode.error_message;
+    const isQuotaError = (msg.includes('429') && (msg.includes('RESOURCE_EXHAUSTED') || msg.includes('Quota exceeded') || msg.includes('rate limit'))) || msg.includes('exhausted their Quota');
+    if (isQuotaError) {
+      return 'Quá trình tạo thất bại do tài khoản API đã hết hạn mức sử dụng (Hết Quota / Rate Limit) và không có Mô hình dự phòng nào khả dụng. Vui lòng thêm cấu hình API Key mới trong Cài đặt hoặc thử lại sau.';
+    }
+    return msg;
+  }, [episode.error_message]);
+
   useEffect(() => {
     let revokeUrl: string | undefined
     setAudioError(null)
@@ -223,30 +233,74 @@ export function EpisodeCard({ episode, onDelete, deleting, onRetry, retrying }: 
   }
 
   const isFailed = FAILED_EPISODE_STATUSES.includes(episode.job_status as EpisodeStatus)
+  const isActive = episode.job_status ? ['running', 'processing', 'pending', 'submitted'].includes(episode.job_status) : false
+  const isDone = episode.job_status === 'completed'
 
   return (
-    <Card>
-      <CardContent className="space-y-4 p-4">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="space-y-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-base font-semibold text-foreground">
-                {episode.name}
-              </h3>
-              <StatusBadge status={episode.job_status} />
-            </div>
-            <p className="text-xs text-muted-foreground">
-              {t('podcasts.profile')}: {episode.episode_profile?.name || t('common.unknown')}
-              {createdLabel ? ` • ${createdLabel}` : ''}
-            </p>
+    <Card className={cn(
+      "overflow-hidden transition-all duration-500", 
+      isActive 
+        ? "border-teal/40 shadow-[0_4px_20px_-4px_rgba(14,114,104,0.15)] dark:shadow-[0_4px_20px_-4px_rgba(63,179,165,0.15)] bg-gradient-to-r from-background via-teal/5 to-background" 
+        : isFailed 
+          ? "border-destructive/40 shadow-sm" 
+          : "hover:border-primary/40 hover:shadow-md"
+    )}>
+      <CardContent className="space-y-4 p-3 pb-3 relative">
+        {/* Top-aligned progress bar for active state */}
+        {isActive && (
+          <div className="absolute top-0 left-0 right-0 h-1 bg-teal/10 overflow-hidden">
+            <div className="h-full bg-teal w-1/2 animate-progress-indeterminate shadow-[0_0_10px_rgba(14,114,104,0.5)]"></div>
           </div>
-          <div className="flex items-center gap-2">
-            <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm">
-                  <InfoIcon className="mr-2 h-4 w-4" /> {t('podcasts.details')}
-                </Button>
-              </DialogTrigger>
+        )}
+        
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pt-1">
+          <div className="flex items-start gap-3">
+            <div className="flex flex-col gap-1.5">
+              <div className="flex items-center gap-2">
+                <h3 className="font-semibold leading-none tracking-tight">
+                  {episode.name}
+                </h3>
+                <StatusBadge status={episode.job_status} />
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {t('podcasts.profile')}: <span className="font-medium">{episode.episode_profile?.name || t('common.unknown')}</span>
+                {createdLabel ? ` • ${createdLabel}` : ''}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 self-end sm:self-auto">
+            {isActive && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 gap-2 border-teal/30 text-teal hover:bg-teal/10 hover:text-teal"
+                disabled
+              >
+                <IconLoader2 className="h-4 w-4 animate-spin" />
+                {t('podcasts.processing')}
+              </Button>
+            )}
+            
+            {isFailed && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="h-8 gap-2 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                onClick={handleRetry}
+                disabled={retrying}
+              >
+                <IconRefresh className={cn("h-4 w-4", retrying && "animate-spin")} />
+                {retrying ? t('podcasts.retrying') : t('podcasts.retry')}
+              </Button>
+            )}
+            
+            {isDone && (
+              <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="h-8 gap-2">
+                    <IconInfoCircle className="h-4 w-4" /> <span className="hidden sm:inline">{t('podcasts.details')}</span>
+                  </Button>
+                </DialogTrigger>
               <DialogContent className="w-[min(90vw,720px)] max-h-[85vh] overflow-hidden">
                 <DialogHeader>
                   <DialogTitle>{episode.name}</DialogTitle>
@@ -394,54 +448,80 @@ export function EpisodeCard({ episode, onDelete, deleting, onRetry, retrying }: 
                 </div>
               </DialogContent>
             </Dialog>
-            {isFailed && onRetry ? (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleRetry}
-                disabled={retrying}
-              >
-                <RefreshCcw className={cn('mr-2 h-4 w-4', retrying && 'animate-spin')} />
-                {retrying ? t('podcasts.retrying') : t('podcasts.retry')}
-              </Button>
-            ) : null}
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-destructive">
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  {t('podcasts.delete')}
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>{t('podcasts.deleteEpisodeTitle')}</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    {t('podcasts.deleteEpisodeDesc', { name: episode.name })}
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDelete} disabled={deleting}>
-                    {deleting ? t('podcasts.deleting') : t('podcasts.delete')}
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+            )}
+            {isDone && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive">
+                    <IconTrash className="h-4 w-4" />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t('podcasts.deleteEpisodeTitle')}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {t('podcasts.deleteEpisodeDesc', { name: episode.name })}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDelete} disabled={deleting}>
+                      {deleting ? t('podcasts.deleting') : t('podcasts.delete')}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
+            {isFailed && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive">
+                    <IconTrash className="h-4 w-4" />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t('podcasts.deleteEpisodeTitle')}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {t('podcasts.deleteEpisodeDesc', { name: episode.name })}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+                    <AlertDialogAction onClick={handleDelete} disabled={deleting}>
+                      {deleting ? t('podcasts.deleting') : t('podcasts.delete')}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
+
           </div>
         </div>
 
-        {audioSrc ? (
-          <div className="rounded-md border bg-card p-2">
-            <audio controls preload="none" src={audioSrc} className="w-full" />
+        {isDone && audioSrc ? (
+          <div className="rounded-lg bg-muted/50 p-2">
+            <audio controls preload="none" src={audioSrc} className="h-10 w-full" />
           </div>
         ) : audioError ? (
           <p className="text-sm text-destructive">{audioError}</p>
         ) : null}
 
-        {isFailed && episode.error_message ? (
-          <div className="rounded-md border border-destructive/30 bg-destructive-tint p-3">
-            <p className="text-xs font-medium text-destructive">{t('podcasts.errorDetails')}</p>
-            <p className="mt-1 text-xs whitespace-pre-wrap text-destructive">{episode.error_message}</p>
+        {isFailed && displayErrorMessage ? (
+          <div className="rounded-md border border-destructive/30 bg-destructive-tint p-2.5 mt-2 relative group">
+            <div className="flex items-center justify-between">
+              <p className="text-xs font-medium text-destructive">{t('podcasts.errorDetails')}</p>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-5 w-5 text-destructive hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                onClick={() => navigator.clipboard.writeText(displayErrorMessage)}
+                title="Copy error message"
+              >
+                <IconCopy className="h-3.5 w-3.5" />
+              </Button>
+            </div>
+            <p className="mt-0.5 text-xs whitespace-pre-wrap text-destructive opacity-90 pr-2">{displayErrorMessage}</p>
           </div>
         ) : null}
       </CardContent>

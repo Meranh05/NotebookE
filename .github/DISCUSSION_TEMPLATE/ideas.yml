@@ -4,7 +4,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thanks for helping shape Open Notebook.
+        Thanks for helping shape NotebookE.
 
         Ideas, feature requests, behavior changes, product/design/architecture proposals, and contribution proposals start here so the community can explore the problem before it becomes an implementation commitment. Reproducible bugs belong in [Issues](https://github.com/lfnovo/open-notebook/issues/new/choose).
 

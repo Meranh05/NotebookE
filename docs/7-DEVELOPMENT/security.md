@@ -1,6 +1,6 @@
 # Security Guidelines
 
-This document outlines security practices for Open Notebook development. It is informed by real vulnerabilities discovered through coordinated disclosure with [CERT-EU](https://cert.europa.eu) and should be treated as mandatory reading for all contributors.
+This document outlines security practices for NotebookE development. It is informed by real vulnerabilities discovered through coordinated disclosure with [CERT-EU](https://cert.europa.eu) and should be treated as mandatory reading for all contributors.
 
 ## Reporting Vulnerabilities
 
@@ -142,7 +142,7 @@ Never pass user-provided file paths directly to file reading or content extracti
 
 ### Authentication
 
-Open Notebook currently uses simple password-based middleware (`PasswordAuthMiddleware`). This is suitable for single-user self-hosted deployments but should be hardened for production:
+NotebookE currently uses simple password-based middleware (`PasswordAuthMiddleware`). This is suitable for single-user self-hosted deployments but should be hardened for production:
 
 - Set `OPEN_NOTEBOOK_PASSWORD` explicitly - there is no hardcoded default password; if it's unset, auth is fully disabled (all requests pass through unchecked)
 - Change the default encryption key (`OPEN_NOTEBOOK_ENCRYPTION_KEY`)
@@ -190,7 +190,7 @@ When reviewing PRs, check for:
 These vulnerabilities were reported by CERT-EU and are documented here as learning examples:
 
 | Version | Vulnerability | Severity | Advisory |
-|---------|--------------|----------|----------|
+| --------- | -------------- | ---------- | ---------- |
 | <= 1.8.2 | SurrealDB injection via `order_by` parameter | High (8.7) | [GHSA-5wj9-f8q5-8f9c](https://github.com/lfnovo/open-notebook/security/advisories/GHSA-5wj9-f8q5-8f9c) |
 | <= 1.8.3 | RCE via Jinja2 SSTI in transformations | Critical (9.2) | [GHSA-f35w-wx37-26q7](https://github.com/lfnovo/open-notebook/security/advisories/GHSA-f35w-wx37-26q7) |
 | <= 1.8.3 | Arbitrary file write via path traversal | High (7.0) | [GHSA-x4q2-89g5-594v](https://github.com/lfnovo/open-notebook/security/advisories/GHSA-x4q2-89g5-594v) |

@@ -1,17 +1,17 @@
 # Complete Environment Reference
 
-Comprehensive list of all environment variables available in Open Notebook.
+Comprehensive list of all environment variables available in NotebookE.
 
 ---
 
 ## API Configuration
 
 | Variable | Required? | Default | Description |
-|----------|-----------|---------|-------------|
-| `API_URL` | No | Auto-detected | URL where frontend reaches API (e.g., http://localhost:5055) |
-| `INTERNAL_API_URL` | No | http://localhost:5055 | Internal API URL for Next.js server-side proxying |
+| ---------- | ----------- | --------- | ------------- |
+| `API_URL` | No | Auto-detected | URL where frontend reaches API (e.g., <http://localhost:5055>) |
+| `INTERNAL_API_URL` | No | <http://localhost:5055> | Internal API URL for Next.js server-side proxying |
 | `API_CLIENT_TIMEOUT` | No | 300 | Client timeout in seconds (how long to wait for API response) |
-| `OPEN_NOTEBOOK_PASSWORD` | No | None | Password to protect Open Notebook instance |
+| `OPEN_NOTEBOOK_PASSWORD` | No | None | Password to protect NotebookE instance |
 | `OPEN_NOTEBOOK_ENCRYPTION_KEY` | **Yes** | None | Secret string to encrypt credentials stored in database (any string works). **Required** for the credential system. Supports Docker secrets via `_FILE` suffix. |
 | `FRONTEND_BIND_HOST` | No | `0.0.0.0` (in Docker) | Network interface for Next.js to bind to. Default `0.0.0.0` ensures accessibility from reverse proxies. (Replaces `HOSTNAME`, which container runtimes such as Podman override with the container/pod hostname, causing Next.js to bind to the wrong address) |
 | `API_HOST` | No | `0.0.0.0` (in Docker) | Network interface for the API (uvicorn) to bind to. Set to `::` for IPv6 dual-stack environments (listens on IPv6 and, on Linux defaults, IPv4 too) |
@@ -24,7 +24,7 @@ Comprehensive list of all environment variables available in Open Notebook.
 ## Database: SurrealDB
 
 | Variable | Required? | Default | Description |
-|----------|-----------|---------|-------------|
+| ---------- | ----------- | --------- | ------------- |
 | `SURREAL_URL` | Yes | ws://surrealdb:8000/rpc | SurrealDB WebSocket connection URL |
 | `SURREAL_USER` | Yes | root | SurrealDB username |
 | `SURREAL_PASSWORD` | Yes | root | SurrealDB password |
@@ -36,7 +36,7 @@ Comprehensive list of all environment variables available in Open Notebook.
 ## Database: Retry Configuration
 
 | Variable | Required? | Default | Description |
-|----------|-----------|---------|-------------|
+| ---------- | ----------- | --------- | ------------- |
 | `SURREAL_COMMANDS_RETRY_ENABLED` | No | true | Enable retries on failure |
 | `SURREAL_COMMANDS_RETRY_MAX_ATTEMPTS` | No | 3 | Maximum retry attempts |
 | `SURREAL_COMMANDS_RETRY_WAIT_STRATEGY` | No | exponential_jitter | Retry wait strategy (exponential_jitter/exponential/fixed/random) |
@@ -58,7 +58,7 @@ Comprehensive list of all environment variables available in Open Notebook.
 ## LLM Timeouts
 
 | Variable | Required? | Default | Description |
-|----------|-----------|---------|-------------|
+| ---------- | ----------- | --------- | ------------- |
 | `ESPERANTO_LLM_TIMEOUT` | No | 60 | LLM inference timeout in seconds |
 | `ESPERANTO_SSL_VERIFY` | No | true | Verify SSL certificates (false = development only) |
 | `ESPERANTO_SSL_CA_BUNDLE` | No | None | Path to custom CA certificate bundle |
@@ -81,6 +81,7 @@ Comprehensive list of all environment variables available in Open Notebook.
 | `CORS_ORIGINS` | No | `*` | Comma-separated list of origins allowed to call the API (e.g. `https://app.example.com,https://www.example.com`). Default `*` accepts any origin; **for production, set this explicitly to your frontend origin(s)**. Changes require an API restart. The API logs a warning on startup when unset. |
 
 **When to change this**:
+
 - You access the UI at a custom domain (reverse proxy, HTTPS, public deployment).
 - The frontend runs on a different port than `3000`.
 - You serve the frontend from a different host than the API (e.g. CDN).
@@ -105,7 +106,7 @@ CORS_ORIGINS=https://notebook.example.com
 ## Content Extraction
 
 | Variable | Required? | Default | Description |
-|----------|-----------|---------|-------------|
+| ---------- | ----------- | --------- | ------------- |
 | `FIRECRAWL_API_KEY` | No | None | Firecrawl API key for advanced web scraping |
 | `FIRECRAWL_API_URL` | No | None | Base URL of a self-hosted Firecrawl instance (use instead of the hosted service) |
 | `CCORE_FIRECRAWL_PROXY` | No | `auto` | Firecrawl proxy mode to bypass anti-bot protection: `basic`, `stealth`, or `auto` |
@@ -123,29 +124,31 @@ These are **off by default** to keep the image lean. Setting one to `true` makes
 | `OPEN_NOTEBOOK_ENABLE_CRAWL4AI` | No | `false` | Install the local Crawl4AI runtime + a Chromium browser on first startup: unlocks the `crawl4ai` URL engine. Not needed if `CRAWL4AI_API_URL` is set. |
 
 **Setup:**
-- Firecrawl: https://firecrawl.dev/
-- Jina: https://jina.ai/
-- Crawl4AI: https://github.com/unclecode/crawl4ai
 
-The `CCORE_FIRECRAWL_*` variables are passed straight through to the content-core library (its settings are prefixed with `CCORE_`); Open Notebook itself doesn't read them. See [Content Processing Engines](../3-USER-GUIDE/content-processing-engines.md) for how these engines are selected in the UI.
+- Firecrawl: <https://firecrawl.dev/>
+- Jina: <https://jina.ai/>
+- Crawl4AI: <https://github.com/unclecode/crawl4ai>
+
+The `CCORE_FIRECRAWL_*` variables are passed straight through to the content-core library (its settings are prefixed with `CCORE_`); NotebookE itself doesn't read them. See [Content Processing Engines](../3-USER-GUIDE/content-processing-engines.md) for how these engines are selected in the UI.
 
 ---
 
 ## Network / Proxy
 
 | Variable | Required? | Default | Description |
-|----------|-----------|---------|-------------|
+| ---------- | ----------- | --------- | ------------- |
 | `HTTP_PROXY` | No | None | HTTP proxy URL for outbound HTTP requests |
 | `HTTPS_PROXY` | No | None | HTTPS proxy URL for outbound HTTPS requests |
 | `NO_PROXY` | No | None | Comma-separated list of hosts to bypass proxy (must include the internal DB hosts — see below) |
 
 Route all outbound HTTP requests through a proxy server. Useful for corporate/firewalled environments.
 
-> **Important:** `NO_PROXY` must list the internal SurrealDB hosts — `host.docker.internal` (Docker) and `surrealdb` (the compose service name). The SurrealDB SDK connects over a websocket, and `websockets` 15.0+ tunnels even `ws://` connections through a configured proxy, which then rejects the internal host with **HTTP 403** and prevents the API and worker from starting. Open Notebook injects `host.docker.internal,surrealdb,localhost,127.0.0.1` into `NO_PROXY` automatically at startup as a safety net, but you should still set them explicitly.
+> **Important:** `NO_PROXY` must list the internal SurrealDB hosts — `host.docker.internal` (Docker) and `surrealdb` (the compose service name). The SurrealDB SDK connects over a websocket, and `websockets` 15.0+ tunnels even `ws://` connections through a configured proxy, which then rejects the internal host with **HTTP 403** and prevents the API and worker from starting. NotebookE injects `host.docker.internal,surrealdb,localhost,127.0.0.1` into `NO_PROXY` automatically at startup as a safety net, but you should still set them explicitly.
 
 The underlying libraries (esperanto, content-core, podcast-creator) automatically detect proxy settings from these standard environment variables.
 
 **Affects:**
+
 - AI provider API calls (OpenAI, Anthropic, Google, Groq, etc.)
 - Content extraction from URLs (web scraping, YouTube transcripts)
 - Podcast generation (LLM and TTS provider calls)
@@ -153,6 +156,7 @@ The underlying libraries (esperanto, content-core, podcast-creator) automaticall
 **Format:** `http://[user:pass@]host:port` or `https://[user:pass@]host:port`
 
 **Examples:**
+
 ```bash
 # Basic proxy
 HTTP_PROXY=http://proxy.corp.com:8080
@@ -171,19 +175,20 @@ NO_PROXY=localhost,127.0.0.1,host.docker.internal,surrealdb,.local
 ## Debugging & Monitoring
 
 | Variable | Required? | Default | Description |
-|----------|-----------|---------|-------------|
+| ---------- | ----------- | --------- | ------------- |
 | `LANGCHAIN_TRACING_V2` | No | false | Enable LangSmith tracing |
-| `LANGCHAIN_ENDPOINT` | No | https://api.smith.langchain.com | LangSmith endpoint |
+| `LANGCHAIN_ENDPOINT` | No | <https://api.smith.langchain.com> | LangSmith endpoint |
 | `LANGCHAIN_API_KEY` | No | None | LangSmith API key |
-| `LANGCHAIN_PROJECT` | No | Open Notebook | LangSmith project name |
+| `LANGCHAIN_PROJECT` | No | NotebookE | LangSmith project name |
 
-**Setup:** https://smith.langchain.com/
+**Setup:** <https://smith.langchain.com/>
 
 ---
 
 ## Environment Variables by Use Case
 
 ### Minimal Setup (New Installation)
+
 ```
 OPEN_NOTEBOOK_ENCRYPTION_KEY=my-secret-key
 SURREAL_URL=ws://surrealdb:8000/rpc
@@ -192,9 +197,11 @@ SURREAL_PASSWORD=password
 SURREAL_NAMESPACE=open_notebook
 SURREAL_DATABASE=open_notebook
 ```
+
 Then configure AI providers via **Settings → API Keys** in the browser.
 
 ### Production Deployment
+
 ```
 OPEN_NOTEBOOK_ENCRYPTION_KEY=your-strong-secret-key
 OPEN_NOTEBOOK_PASSWORD=your-secure-password
@@ -204,12 +211,14 @@ SURREAL_PASSWORD=secure_password
 ```
 
 ### Self-Hosted Behind Reverse Proxy
+
 ```
 OPEN_NOTEBOOK_ENCRYPTION_KEY=your-secret-key
 API_URL=https://mynotebook.example.com
 ```
 
 ### Corporate Environment (Behind Proxy)
+
 ```
 OPEN_NOTEBOOK_ENCRYPTION_KEY=your-secret-key
 HTTP_PROXY=http://proxy.corp.com:8080
@@ -218,6 +227,7 @@ NO_PROXY=localhost,127.0.0.1,host.docker.internal,surrealdb,.local
 ```
 
 ### High-Performance Deployment
+
 ```
 OPEN_NOTEBOOK_ENCRYPTION_KEY=your-secret-key
 SURREAL_COMMANDS_MAX_TASKS=10
@@ -226,6 +236,7 @@ API_CLIENT_TIMEOUT=600
 ```
 
 ### Debugging
+
 ```
 OPEN_NOTEBOOK_ENCRYPTION_KEY=your-secret-key
 LANGCHAIN_TRACING_V2=true
@@ -287,7 +298,7 @@ Done!
 If you have these variables configured from a previous installation, click the **Migrate to Database** button in **Settings → API Keys** to import them into the credential system, then remove them from your configuration.
 
 | Variable | Provider | Replacement |
-|----------|----------|-------------|
+| ---------- | ---------- | ------------- |
 | `OPENAI_API_KEY` | OpenAI | Settings → API Keys → Add OpenAI Credential |
 | `ANTHROPIC_API_KEY` | Anthropic | Settings → API Keys → Add Anthropic Credential |
 | `GOOGLE_API_KEY` | Google Gemini | Settings → API Keys → Add Google Credential |

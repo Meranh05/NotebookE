@@ -1,13 +1,14 @@
 'use client'
 
 import { memo, useCallback, useState, useRef, useEffect, useId } from 'react'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
-import { Bot, User, Send, Loader2, FileText, Lightbulb, StickyNote, Clock } from 'lucide-react'
+import { IconBulb, IconClock, IconFileText, IconLoader2, IconNote, IconRobot, IconSend, IconUser } from '@tabler/icons-react'
 import { MarkdownRenderer } from '@/components/ui/markdown-renderer'
 import {
   SourceChatMessage,
@@ -103,8 +104,8 @@ export function ChatPanel({
 
   return (
     <>
-    <Card className="flex flex-col h-full flex-1 overflow-hidden">
-      <CardHeader className="pb-3 flex-shrink-0">
+    <Card className="flex flex-col h-full flex-1 overflow-hidden border-border/60 bg-card/60 backdrop-blur-sm shadow-sm p-0 gap-0">
+      <CardHeader className="px-4 py-2.5 flex-shrink-0 border-b border-border/40 !pb-2.5">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.13em] text-muted-foreground">
             <span aria-hidden className="h-3.5 w-[3px] rounded-full bg-teal" />
@@ -115,11 +116,11 @@ export function ChatPanel({
               <Button
                 variant="ghost"
                 size="sm"
-                className="gap-2 text-muted-foreground"
+                className="gap-2 text-muted-foreground h-8 -mr-2"
                 onClick={() => setSessionManagerOpen(true)}
                 disabled={loadingSessions}
               >
-                <Clock className="h-4 w-4" />
+                <IconClock className="h-4 w-4" />
                 <span className="text-xs">{t('chat.sessions')}</span>
               </Button>
               <DialogContent className="sm:max-w-[420px] p-0 overflow-hidden">
@@ -142,11 +143,13 @@ export function ChatPanel({
         </div>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col min-h-0 p-0">
-        <ScrollArea className="flex-1 min-h-0 px-4" ref={scrollAreaRef}>
-          <div className="space-y-4 py-4">
+        <ScrollArea className="chat-scroll-area flex-1 min-h-0 px-4" ref={scrollAreaRef}>
+          <div className="space-y-4 pt-2 pb-4">
             {messages.length === 0 ? (
               <div className="text-center text-muted-foreground py-8">
-                <Bot className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <div className="h-16 w-16 mx-auto mb-6 bg-white dark:bg-black rounded-full border-2 border-border shadow-md flex items-center justify-center">
+                  <Image src="/logo.png" alt="AI" width={44} height={44} className="dark:invert" />
+                </div>
                 <p className="text-sm">
                   {t('chat.startConversation', { type: contextType === 'source' ? t('navigation.sources') : t('common.notebook') })}
                 </p>
@@ -165,12 +168,12 @@ export function ChatPanel({
             {isStreaming && (
               <div className="flex gap-3 justify-start">
                 <div className="flex-shrink-0">
-                  <div className="h-8 w-8 rounded-full bg-teal-tint flex items-center justify-center">
-                    <Bot className="h-4 w-4 text-teal" />
+                  <div className="h-8 w-8 rounded-full bg-white dark:bg-black border border-border shadow-sm flex items-center justify-center">
+                    <Image src="/logo.png" alt="AI" width={22} height={22} className="dark:invert" />
                   </div>
                 </div>
                 <div className="rounded-lg px-4 py-2 bg-card border">
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <IconLoader2 className="h-4 w-4 animate-spin" />
                 </div>
               </div>
             )}
@@ -178,49 +181,14 @@ export function ChatPanel({
           </div>
         </ScrollArea>
 
-        {/* Context Indicators */}
-        {contextIndicators && (
-          <div className="border-t px-4 py-2">
-            <div className="flex flex-wrap gap-2 text-xs">
-              {contextIndicators.sources?.length > 0 && (
-                <Badge variant="outline" className="gap-1">
-                  <FileText className="h-3 w-3" />
-                  {contextIndicators.sources.length} {t('navigation.sources')}
-                </Badge>
-              )}
-              {contextIndicators.insights?.length > 0 && (
-                <Badge variant="outline" className="gap-1">
-                  <Lightbulb className="h-3 w-3" />
-                  {contextIndicators.insights.length} {contextIndicators.insights.length === 1 ? t('common.insight') : t('common.insights')}
-                </Badge>
-              )}
-              {contextIndicators.notes?.length > 0 && (
-                <Badge variant="outline" className="gap-1">
-                  <StickyNote className="h-3 w-3" />
-                  {contextIndicators.notes.length} {contextIndicators.notes.length === 1 ? t('common.note') : t('common.notes')}
-                </Badge>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Notebook Context Indicator */}
-        {notebookContextStats && (
-          <ContextIndicator
-            sourcesInsights={notebookContextStats.sourcesInsights}
-            sourcesFull={notebookContextStats.sourcesFull}
-            notesCount={notebookContextStats.notesCount}
-            tokenCount={notebookContextStats.tokenCount}
-            charCount={notebookContextStats.charCount}
-          />
-        )}
-
         {/* Input Area */}
         <ChatComposer
           onSendMessage={onSendMessage}
           isStreaming={isStreaming}
           modelOverride={modelOverride}
           onModelChange={onModelChange}
+          contextIndicators={contextIndicators}
+          notebookContextStats={notebookContextStats}
         />
       </CardContent>
     </Card>
@@ -236,13 +204,27 @@ interface ChatComposerProps {
   isStreaming: boolean
   modelOverride?: string
   onModelChange?: (model?: string) => void
+  contextIndicators?: {
+    sources?: string[]
+    insights?: string[]
+    notes?: string[]
+  } | null
+  notebookContextStats?: {
+    sourcesInsights: number
+    sourcesFull: number
+    notesCount: number
+    tokenCount?: number
+    charCount?: number
+  }
 }
 
 function ChatComposer({
   onSendMessage,
   isStreaming,
   modelOverride,
-  onModelChange
+  onModelChange,
+  contextIndicators,
+  notebookContextStats
 }: ChatComposerProps) {
   const { t } = useTranslation()
   const chatInputId = useId()
@@ -270,45 +252,93 @@ function ChatComposer({
   const isMac = typeof navigator !== 'undefined' && navigator.userAgent.toUpperCase().indexOf('MAC') >= 0
   const keyHint = isMac ? '⌘+Enter' : 'Ctrl+Enter'
 
-  return (
-    <div className="flex-shrink-0 p-4 space-y-3 border-t">
-      {/* Model selector */}
-      {onModelChange && (
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-muted-foreground">{t('chat.model')}</span>
-          <ModelSelector
-            currentModel={modelOverride}
-            onModelChange={onModelChange}
-            disabled={isStreaming}
-          />
-        </div>
-      )}
+  const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInput(e.target.value)
+    // Auto-resize logic
+    const target = e.target
+    target.style.height = 'inherit'
+    target.style.height = `${Math.min(target.scrollHeight, 250)}px`
+  }
 
-      <div className="flex gap-2 items-end min-w-0">
+  return (
+    <div className="flex-shrink-0 p-4 space-y-3 border-t bg-card/60 backdrop-blur-sm">
+      {/* Top row: Context & Model */}
+      <div className="flex items-center justify-between flex-wrap gap-2">
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          {notebookContextStats && (
+            <ContextIndicator
+              sourcesInsights={notebookContextStats.sourcesInsights}
+              sourcesFull={notebookContextStats.sourcesFull}
+              notesCount={notebookContextStats.notesCount}
+              tokenCount={notebookContextStats.tokenCount}
+              charCount={notebookContextStats.charCount}
+              className="py-0 px-0 border-none bg-transparent"
+            />
+          )}
+          {contextIndicators && !notebookContextStats && (
+            <div className="flex flex-wrap gap-2 text-xs">
+              {(contextIndicators.sources?.length ?? 0) > 0 && (
+                <Badge variant="outline" className="gap-1">
+                  <IconFileText className="h-3 w-3" />
+                  {contextIndicators.sources!.length} {t('navigation.sources')}
+                </Badge>
+              )}
+              {(contextIndicators.insights?.length ?? 0) > 0 && (
+                <Badge variant="outline" className="gap-1">
+                  <IconBulb className="h-3 w-3" />
+                  {contextIndicators.insights!.length} {contextIndicators.insights!.length === 1 ? t('common.insight') : t('common.insights')}
+                </Badge>
+              )}
+              {(contextIndicators.notes?.length ?? 0) > 0 && (
+                <Badge variant="outline" className="gap-1">
+                  <IconNote className="h-3 w-3" />
+                  {contextIndicators.notes!.length} {contextIndicators.notes!.length === 1 ? t('common.note') : t('common.notes')}
+                </Badge>
+              )}
+            </div>
+          )}
+        </div>
+
+        {onModelChange && (
+          <div className="flex items-center gap-2 flex-shrink-0">
+            <span className="text-xs text-muted-foreground">{t('chat.model')}</span>
+            <ModelSelector
+              currentModel={modelOverride}
+              onModelChange={onModelChange}
+              disabled={isStreaming}
+            />
+          </div>
+        )}
+      </div>
+
+      <div className="flex gap-2 items-end min-w-0 bg-muted/20 border border-border/50 rounded-xl focus-within:ring-1 focus-within:ring-primary focus-within:border-primary transition-all pr-2">
         <Textarea
           id={chatInputId}
           name="chat-message"
           autoComplete="off"
           value={input}
-          onChange={(e) => setInput(e.target.value)}
+          onChange={handleInput}
           onKeyDown={handleKeyDown}
           placeholder={`${t('chat.sendPlaceholder')} (${t('chat.pressToSend', { key: keyHint })})`}
           disabled={isStreaming}
-          className="flex-1 min-h-[40px] max-h-[100px] resize-none py-2 px-3 min-w-0"
+          className="flex-1 min-h-[50px] max-h-[250px] resize-none py-3 px-4 min-w-0 bg-transparent border-0 focus-visible:ring-0 shadow-none leading-relaxed"
           rows={1}
+          style={{ height: '50px' }}
         />
-        <Button
-          onClick={handleSend}
-          disabled={!input.trim() || isStreaming}
-          size="icon"
-          className="h-[40px] w-[40px] flex-shrink-0"
-        >
-          {isStreaming ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <Send className="h-4 w-4" />
-          )}
-        </Button>
+        <div className="pb-2 flex-shrink-0">
+          <Button
+            onClick={handleSend}
+            disabled={!input.trim() || isStreaming}
+            size="icon"
+            className="h-[36px] w-[36px] rounded-lg transition-all"
+          >
+            {isStreaming ? (
+              <IconLoader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <IconSend className="h-4 w-4" />
+            )}
+          </Button>
+        </div>
       </div>
     </div>
   )
@@ -329,23 +359,23 @@ const ChatMessage = memo(function ChatMessage({
 }: ChatMessageProps) {
   return (
     <div
-      className={`flex gap-3 ${
+      className={`flex gap-3 w-full min-w-0 ${
         message.type === 'human' ? 'justify-end' : 'justify-start'
       }`}
     >
       {message.type === 'ai' && (
-        <div className="flex-shrink-0">
-          <div className="h-8 w-8 rounded-full bg-teal-tint flex items-center justify-center">
-            <Bot className="h-4 w-4 text-teal" />
+        <div className="flex-shrink-0 mt-1">
+          <div className="h-7 w-7 rounded-full bg-white dark:bg-black border border-border shadow-sm flex items-center justify-center">
+            <Image src="/logo.png" alt="AI" width={20} height={20} className="dark:invert" />
           </div>
         </div>
       )}
-      <div className="flex flex-col gap-2 max-w-[80%]">
+      <div className={`flex flex-col gap-1.5 max-w-[95%] min-w-0 overflow-hidden ${message.type === 'human' ? 'items-end' : 'items-start'}`}>
         <div
-          className={`rounded-lg px-4 py-2 border ${
+          className={`px-4 py-2.5 shadow-sm min-w-0 max-w-full overflow-hidden ${
             message.type === 'human'
-              ? 'bg-muted'
-              : 'bg-card'
+              ? 'bg-primary text-primary-foreground rounded-2xl rounded-tr-sm'
+              : 'bg-muted/40 border border-border/50 rounded-2xl rounded-tl-sm'
           }`}
         >
           {message.type === 'ai' ? (
@@ -354,20 +384,24 @@ const ChatMessage = memo(function ChatMessage({
               onReferenceClick={onReferenceClick}
             />
           ) : (
-            <p className="text-sm break-all">{message.content}</p>
+            <div className="text-[14px] leading-relaxed whitespace-pre-wrap break-words font-medium">
+              {message.content}
+            </div>
           )}
         </div>
         {message.type === 'ai' && (
-          <MessageActions
-            content={message.content}
-            notebookId={notebookId}
-          />
+          <div className="pl-1">
+            <MessageActions
+              content={message.content}
+              notebookId={notebookId}
+            />
+          </div>
         )}
       </div>
       {message.type === 'human' && (
-        <div className="flex-shrink-0">
-          <div className="h-8 w-8 rounded-full bg-muted border flex items-center justify-center">
-            <User className="h-4 w-4 text-muted-foreground" />
+        <div className="flex-shrink-0 mt-1">
+          <div className="h-7 w-7 rounded-full bg-muted border border-border/50 flex items-center justify-center">
+            <IconUser className="h-3.5 w-3.5 text-muted-foreground" />
           </div>
         </div>
       )}

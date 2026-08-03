@@ -1,13 +1,13 @@
 # Local Development Setup
 
-This guide walks you through setting up Open Notebook for local development. Follow these steps to get the full stack running on your machine.
+This guide walks you through setting up NotebookE for local development. Follow these steps to get the full stack running on your machine.
 
 ## Prerequisites
 
 Before you start, ensure you have the following installed:
 
 - **Python 3.11+** - Check with: `python --version`
-- **uv** (recommended) or **pip** - Install from: https://github.com/astral-sh/uv
+- **uv** (recommended) or **pip** - Install from: <https://github.com/astral-sh/uv>
 - **SurrealDB** - Via Docker or binary (see below)
 - **Docker** (optional) - For containerized database
 - **Node.js 18+** (optional) - For frontend development
@@ -66,19 +66,21 @@ LOG_LEVEL=DEBUG
 
 After starting the API and frontend, configure your AI provider via the Settings UI:
 
-1. Open **http://localhost:3000** → **Settings** → **API Keys**
+1. Open **<http://localhost:3000>** → **Settings** → **API Keys**
 2. Click **Add Credential** → Select your provider
 3. Enter your API key (get from provider dashboard)
 4. Click **Save**, then **Test Connection**
 5. Click **Discover Models** → **Register Models**
 
 Popular providers:
-- **OpenAI** - https://platform.openai.com/api-keys
-- **Anthropic (Claude)** - https://console.anthropic.com/
-- **Google** - https://ai.google.dev/
-- **Groq** - https://console.groq.com/
+
+- **OpenAI** - <https://platform.openai.com/api-keys>
+- **Anthropic (Claude)** - <https://console.anthropic.com/>
+- **Google** - <https://ai.google.dev/>
+- **Groq** - <https://console.groq.com/>
 
 For local development, you can also use:
+
 - **Ollama** - Run locally without API keys (see "Local Ollama" below)
 
 > **Note:** API key environment variables (e.g., `OPENAI_API_KEY`) are deprecated. Use the Settings UI to manage credentials instead.
@@ -134,6 +136,7 @@ uv run python -m api.main
 ```
 
 Check the logs - you should see messages like:
+
 ```
 Running migration 001_initial_schema
 Running migration 002_add_vectors
@@ -154,6 +157,7 @@ make api
 ```
 
 You should see:
+
 ```
 INFO:     Application startup complete
 INFO:     Uvicorn running on http://0.0.0.0:5055
@@ -181,6 +185,7 @@ npm run dev
 ```
 
 You should see:
+
 ```
 > next dev
   ▲ Next.js 16.x
@@ -189,7 +194,7 @@ You should see:
 
 ### Access the Frontend
 
-Open your browser to: http://localhost:3000
+Open your browser to: <http://localhost:3000>
 
 ## Verification Checklist
 
@@ -204,7 +209,7 @@ After setup, verify everything is working:
 ## Development Workflows: When to Use What?
 
 | Workflow | Use Case | Speed | Production Parity |
-|----------|----------|-------|-------------------|
+| ---------- | ---------- | ------- | ------------------- |
 | **Local Services** (`make start-all`) | Day-to-day development, fastest iteration | ⚡⚡⚡ Fast | Medium |
 | **Docker Compose** (`make dev`) | Testing containerized setup | ⚡⚡ Medium | High |
 | **Local Docker Build** (`make docker-build-local`) | Testing Dockerfile changes | ⚡ Slow | Very High |
@@ -225,21 +230,25 @@ make stop-all     # stop everything
 ### Individual Terminals (Recommended for Development)
 
 **Terminal 1 - Database:**
+
 ```bash
 make database
 ```
 
 **Terminal 2 - API:**
+
 ```bash
 make api
 ```
 
 **Terminal 3 - Background worker** (required for podcasts, embeddings, source processing):
+
 ```bash
 make worker-start
 ```
 
 **Terminal 4 - Frontend:**
+
 ```bash
 cd frontend && npm run dev
 ```
@@ -261,7 +270,7 @@ mirroring the CI gates so local commits fail for the same reasons PRs
 would. The config at `.pre-commit-config.yaml` wires up:
 
 | Tool | What it checks | CI equivalent |
-|------|----------------|---------------|
+| ------ | ---------------- | --------------- |
 | **ruff** (lint) | Python lint rules (`E`, `F`, `I`) | `ruff check .` |
 | **ruff** (format) | Python formatting (line-length 88) | Not yet gated |
 | **mypy** | Python type correctness | `python -m mypy .` |
@@ -370,6 +379,7 @@ git push origin feature/my-feature -f
 **Problem**: API can't connect to SurrealDB
 
 **Solutions**:
+
 1. Check if SurrealDB is running: `docker ps | grep surrealdb`
 2. Verify URL in `.env`: Should be `ws://localhost:8000/rpc`
 3. Restart SurrealDB: `docker stop surrealdb && docker rm surrealdb`
@@ -380,6 +390,7 @@ git push origin feature/my-feature -f
 **Problem**: Port 5055 or 3000 is already in use
 
 **Solutions**:
+
 ```bash
 # Find process using port
 lsof -i :5055  # Check port 5055
@@ -396,6 +407,7 @@ uvicorn api.main:app --port 5056
 **Problem**: Import errors when running API
 
 **Solutions**:
+
 ```bash
 # Reinstall dependencies
 uv sync
@@ -409,16 +421,18 @@ pip install -e .
 **Problem**: API fails to start with migration errors
 
 **Solutions**:
+
 1. Check SurrealDB is running: `curl http://localhost:8000/`
 2. Check credentials in `.env` match your SurrealDB setup
 3. Check logs for specific migration error: `make api 2>&1 | grep -i migration`
-4. Verify database exists: Check SurrealDB console at http://localhost:8000/
+4. Verify database exists: Check SurrealDB console at <http://localhost:8000/>
 
 ### Migrations not applying
 
 **Problem**: Database schema seems outdated
 
 **Solutions**:
+
 1. Restart API - migrations run on startup: `make api`
 2. Check logs show "Migrations completed successfully"
 3. Verify `/migrations/` folder exists and has files
@@ -436,6 +450,7 @@ ollama pull mistral
 ```
 
 Then configure via the Settings UI:
+
 1. Go to **Settings** → **API Keys** → **Add Credential** → **Ollama**
 2. Enter base URL: `http://localhost:11434`
 3. Click **Save**, then **Test Connection**
@@ -464,7 +479,7 @@ After setup is complete:
 2. **Explore the Architecture** - Check the documentation
 3. **Find an Issue** - Look for "good first issue" on GitHub
 4. **Set Up Pre-commit** - Install git hooks for code quality
-5. **Join Discord** - https://discord.gg/37XJPXfz2w
+5. **Join Discord** - <https://discord.gg/37XJPXfz2w>
 
 ## Getting Help
 

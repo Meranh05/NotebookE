@@ -1,6 +1,6 @@
-# Open Notebook Windows Installation Guide (Native, No Docker)
+# NotebookE Windows Installation Guide (Native, No Docker)
 
-This guide documents how to install and run [Open Notebook](https://github.com/lfnovo/open-notebook) on Windows **natively without Docker or WSL**.
+This guide documents how to install and run [NotebookE](https://github.com/lfnovo/open-notebook) on Windows **natively without Docker or WSL**.
 
 ## Who Is This For?
 
@@ -51,10 +51,10 @@ This guide documents how to install and run [Open Notebook](https://github.com/l
 
 3. **Start the four services**, each in its own terminal, from the `open-notebook` folder.
 
-   > Open Notebook does not ship a launcher script — start the services manually as below (or wrap them in your own `.bat`, see [Optional: one-click launcher](#optional-one-click-launcher)).
+   > NotebookE does not ship a launcher script — start the services manually as below (or wrap them in your own `.bat`, see [Optional: one-click launcher](#optional-one-click-launcher)).
 
    ```batch
-   REM Optional: point Open Notebook at a separate data folder (see Issue 4 below).
+   REM Optional: point NotebookE at a separate data folder (see Issue 4 below).
    REM Set this in each terminal before running, or skip to use ./data.
    set DATA_FOLDER=%USERPROFILE%\Projects\open-notebook-data
 
@@ -72,7 +72,7 @@ This guide documents how to install and run [Open Notebook](https://github.com/l
    cd frontend && npm run dev
    ```
 
-4. **Open the app:** http://127.0.0.1:3000
+4. **Open the app:** <http://127.0.0.1:3000>
 
 ## Directory Structure (Recommended)
 
@@ -94,7 +94,7 @@ YourProjectsFolder\
 
 ## Optional: one-click launcher
 
-Open Notebook does not ship a launcher, but you can save the following as
+NotebookE does not ship a launcher, but you can save the following as
 `start-open-notebook.bat` (anywhere you like) to start all four services with a
 double-click. Adjust `ROOT` and `DATA_ROOT` to match your setup.
 
@@ -114,7 +114,7 @@ start "Worker" cmd /k "uv run --env-file .env python -m surreal_commands.cli.wor
 start "Frontend" cmd /k "cd /d %ROOT%\frontend && npm run dev"
 ```
 
-Then open http://127.0.0.1:3000.
+Then open <http://127.0.0.1:3000>.
 
 ## Critical Windows Fixes
 
@@ -255,8 +255,8 @@ Then restart all services. Your `.env` and data are preserved.
 | Service   | Port | URL                        |
 | --------- | ---- | -------------------------- |
 | SurrealDB | 8000 | ws://127.0.0.1:8000        |
-| API       | 5055 | http://127.0.0.1:5055/docs |
-| Frontend  | 3000 | http://127.0.0.1:3000      |
+| API       | 5055 | <http://127.0.0.1:5055/docs> |
+| Frontend  | 3000 | <http://127.0.0.1:3000>      |
 
 ## Troubleshooting
 
@@ -267,7 +267,7 @@ Then restart all services. Your `.env` and data are preserved.
 
 ### Frontend can't connect to API
 
-- Verify API is running: http://127.0.0.1:5055/docs
+- Verify API is running: <http://127.0.0.1:5055/docs>
 - Check `.env` has `API_URL=http://localhost:5055`
 
 ### Worker not processing commands
@@ -281,5 +281,5 @@ Found another Windows-specific issue? Please share your solution!
 
 ---
 
-*Tested on Windows 11 ARM64 with Open Notebook v1.6.0*
+*Tested on Windows 11 ARM64 with NotebookE v1.6.0*
 *Created: January 2026*

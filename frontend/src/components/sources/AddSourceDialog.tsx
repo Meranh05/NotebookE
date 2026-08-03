@@ -4,7 +4,7 @@ import { useState, useRef, useEffect, useMemo } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { LoaderIcon, CheckCircleIcon, XCircleIcon } from 'lucide-react'
+import { IconCircleCheck, IconCircleX, IconLoader } from '@tabler/icons-react'
 import { toast } from 'sonner'
 import {
   Dialog,
@@ -14,7 +14,12 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
-import { WizardContainer, WizardStep } from '@/components/ui/wizard-container'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 import { SourceTypeStep, parseAndValidateUrls } from './steps/SourceTypeStep'
 import { NotebooksStep } from './steps/NotebooksStep'
 import { ProcessingStep } from './steps/ProcessingStep'
@@ -92,14 +97,7 @@ export function AddSourceDialog({
 }: AddSourceDialogProps) {
   const { t } = useTranslation()
 
-  const WIZARD_STEPS: readonly WizardStep[] = [
-    { number: 1, title: t('sources.addSource'), description: t('sources.processDescription') },
-    { number: 2, title: t('navigation.notebooks'), description: t('notebooks.searchPlaceholder') },
-    { number: 3, title: t('navigation.process'), description: t('sources.processDescription') },
-  ]
-
   // Simplified state management
-  const [currentStep, setCurrentStep] = useState(1)
   const [processing, setProcessing] = useState(false)
   const [processingStatus, setProcessingStatus] = useState<ProcessingState | null>(null)
   const [selectedNotebooks, setSelectedNotebooks] = useState<string[]>(
@@ -206,79 +204,32 @@ export function AddSourceDialog({
   // Check for batch size limit
   const isOverLimit = itemCount > MAX_BATCH_SIZE
 
-  // Step validation - now reactive with watched values
-  const isStepValid = (step: number): boolean => {
-    switch (step) {
-      case 1:
-        if (!selectedType) return false
-        // Check batch size limit
-        if (isOverLimit) return false
-        // Check for URL validation errors
-        if (urlValidationErrors.length > 0) return false
+  // Form validation
+  const isFormValid = useMemo(() => {
+    if (!selectedType) return false
+    if (isOverLimit) return false
+    if (urlValidationErrors.length > 0) return false
 
-        if (selectedType === 'link') {
-          // In batch mode, check that we have at least one valid URL
-          if (isBatchMode) {
-            return parsedUrls.length > 0
-          }
-          return !!watchedUrl && watchedUrl.trim() !== ''
-        }
-        if (selectedType === 'text') {
-          return !!watchedContent && watchedContent.trim() !== '' &&
-                 !!watchedTitle && watchedTitle.trim() !== ''
-        }
-        if (selectedType === 'upload') {
-          if (watchedFile instanceof FileList) {
-            return watchedFile.length > 0 && watchedFile.length <= MAX_BATCH_SIZE
-          }
-          return !!watchedFile
-        }
-        return true
-      case 2:
-      case 3:
-        return true
-      default:
-        return false
+    if (selectedType === 'link') {
+      if (isBatchMode) return parsedUrls.length > 0
+      return !!watchedUrl && watchedUrl.trim() !== ''
     }
-  }
-
-  // Navigation
-  const handleNextStep = (e?: React.MouseEvent) => {
-    e?.preventDefault()
-    e?.stopPropagation()
-
-    // Validate URLs when leaving step 1 in link mode
-    if (currentStep === 1 && selectedType === 'link' && watchedUrl) {
-      const { invalid } = parseAndValidateUrls(watchedUrl)
-      if (invalid.length > 0) {
-        setUrlValidationErrors(invalid)
-        return
+    if (selectedType === 'text') {
+      return !!watchedContent && watchedContent.trim() !== '' &&
+             !!watchedTitle && watchedTitle.trim() !== ''
+    }
+    if (selectedType === 'upload') {
+      if (watchedFile instanceof FileList) {
+        return watchedFile.length > 0 && watchedFile.length <= MAX_BATCH_SIZE
       }
-      setUrlValidationErrors([])
+      return !!watchedFile
     }
-
-    if (currentStep < 3 && isStepValid(currentStep)) {
-      setCurrentStep(currentStep + 1)
-    }
-  }
+    return true
+  }, [selectedType, isOverLimit, urlValidationErrors, isBatchMode, parsedUrls, watchedUrl, watchedContent, watchedTitle, watchedFile])
 
   // Clear URL validation errors when user edits
   const handleClearUrlErrors = () => {
     setUrlValidationErrors([])
-  }
-
-  const handlePrevStep = (e?: React.MouseEvent) => {
-    e?.preventDefault()
-    e?.stopPropagation()
-    if (currentStep > 1) {
-      setCurrentStep(currentStep - 1)
-    }
-  }
-
-  const handleStepClick = (step: number) => {
-    if (step <= currentStep || (step === currentStep + 1 && isStepValid(currentStep))) {
-      setCurrentStep(step)
-    }
   }
 
   // Selection handlers
@@ -430,7 +381,6 @@ export function AddSourceDialog({
     }
 
     reset()
-    setCurrentStep(1)
     setProcessing(false)
     setProcessingStatus(null)
     setSelectedNotebooks(defaultNotebookId ? [defaultNotebookId] : [])
@@ -473,7 +423,7 @@ export function AddSourceDialog({
 
           <div className="space-y-4 py-4">
             <div className="flex items-center gap-3">
-              <LoaderIcon className="h-5 w-5 animate-spin text-primary" />
+              <IconLoader className="h-5 w-5 animate-spin text-primary" />
               <span className="text-sm text-muted-foreground">
                 {processingStatus?.message || t('common.processing')}
               </span>
@@ -492,12 +442,12 @@ export function AddSourceDialog({
                 <div className="flex items-center justify-between text-sm">
                   <div className="flex items-center gap-4">
                     <span className="flex items-center gap-1.5 text-fern">
-                      <CheckCircleIcon className="h-4 w-4" />
+                      <IconCircleCheck className="h-4 w-4" />
                       {batchProgress.completed} {t('common.completed')}
                     </span>
                     {batchProgress.failed > 0 && (
                       <span className="flex items-center gap-1.5 text-destructive">
-                        <XCircleIcon className="h-4 w-4" />
+                        <IconCircleX className="h-4 w-4" />
                         {batchProgress.failed} {t('common.failed')}
                       </span>
                     )}
@@ -530,102 +480,92 @@ export function AddSourceDialog({
     )
   }
 
-  const currentStepValid = isStepValid(currentStep)
-
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[700px] p-0">
-        <DialogHeader className="px-6 pt-6 pb-0">
-          <DialogTitle>{t('sources.addNew')}</DialogTitle>
-          <DialogDescription>
+      <DialogContent className="sm:max-w-[780px] p-0 overflow-hidden rounded-2xl gap-0">
+        {/* Header */}
+        <DialogHeader className="px-6 pt-5 pb-4 border-b border-border">
+          <DialogTitle className="text-lg font-bold tracking-tight">{t('sources.addNew')}</DialogTitle>
+          <DialogDescription className="sr-only">
             {t('sources.processDescription')}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)} className="min-w-0">
-          <WizardContainer
-            currentStep={currentStep}
-            steps={WIZARD_STEPS}
-            onStepClick={handleStepClick}
-            className="border-0"
-          >
-            {currentStep === 1 && (
-              <SourceTypeStep
-                // @ts-expect-error - Type inference issue with zod schema
-                control={control}
-                register={register}
-                setValue={setValue}
-                // @ts-expect-error - Type inference issue with zod schema
-                errors={errors}
-                urlValidationErrors={urlValidationErrors}
-                onClearUrlErrors={handleClearUrlErrors}
-              />
-            )}
-            
-            {currentStep === 2 && (
-              <NotebooksStep
-                notebooks={notebooks}
-                selectedNotebooks={selectedNotebooks}
-                onToggleNotebook={handleNotebookToggle}
-                loading={notebooksLoading}
-              />
-            )}
-            
-            {currentStep === 3 && (
-              <ProcessingStep
-                // @ts-expect-error - Type inference issue with zod schema
-                control={control}
-                transformations={transformations}
-                selectedTransformations={selectedTransformations}
-                onToggleTransformation={handleTransformationToggle}
-                loading={transformationsLoading}
-                settings={settings}
-              />
-            )}
-          </WizardContainer>
+          <div className="px-6 py-5 space-y-6 max-h-[75vh] overflow-y-auto">
+            {/* Source Type & Input */}
+            <SourceTypeStep
+              // @ts-expect-error - Type inference issue with zod schema
+              control={control}
+              register={register}
+              setValue={setValue}
+              // @ts-expect-error - Type inference issue with zod schema
+              errors={errors}
+              urlValidationErrors={urlValidationErrors}
+              onClearUrlErrors={handleClearUrlErrors}
+            />
 
-          {/* Navigation */}
-          <div className="flex justify-between items-center px-6 py-4 border-t border-border">
-            <Button 
-              type="button" 
-              variant="outline" 
+            {/* Divider */}
+            <div className="border-t border-border" />
+
+            {/* Notebooks */}
+            <NotebooksStep
+              notebooks={notebooks}
+              selectedNotebooks={selectedNotebooks}
+              onToggleNotebook={handleNotebookToggle}
+              loading={notebooksLoading}
+            />
+
+            {/* Advanced Settings Accordion */}
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem
+                value="advanced-settings"
+                className="border-2 border-border rounded-2xl px-4 bg-card overflow-hidden"
+              >
+                <AccordionTrigger className="text-sm font-semibold hover:no-underline py-3.5 text-foreground [&[data-state=open]]:text-primary">
+                  <span className="flex items-center gap-2">
+                    <span className="flex items-center justify-center w-6 h-6 rounded-lg bg-muted">
+                      <svg className="w-3.5 h-3.5 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                    </span>
+                    Cài đặt nâng cao (Xử lý nội dung)
+                  </span>
+                </AccordionTrigger>
+                <AccordionContent className="pb-4 pt-1">
+                  <ProcessingStep
+                    // @ts-expect-error - Type inference issue with zod schema
+                    control={control}
+                    transformations={transformations}
+                    selectedTransformations={selectedTransformations}
+                    onToggleTransformation={handleTransformationToggle}
+                    loading={transformationsLoading}
+                    settings={settings}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          </div>
+
+          {/* Footer */}
+          <div className="flex justify-between items-center px-6 py-4 border-t border-border bg-muted/20">
+            <Button
+              type="button"
+              variant="outline"
               onClick={handleClose}
+              className="rounded-xl border-2 border-border hover:bg-muted font-medium h-10 px-5"
             >
               {t('common.cancel')}
             </Button>
 
-            <div className="flex gap-2">
-              {currentStep > 1 && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handlePrevStep}
-                >
-                  {t('common.back')}
-                </Button>
-              )}
-
-              {/* Show Next button on steps 1 and 2, styled as outline/secondary */}
-              {currentStep < 3 && (
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={(e) => handleNextStep(e)}
-                  disabled={!currentStepValid}
-                >
-                  {t('common.next')}
-                </Button>
-              )}
-
-              {/* Show Done button on all steps, styled as primary */}
-              <Button
-                type="submit"
-                disabled={!currentStepValid || createSource.isPending}
-                className="min-w-[120px]"
-              >
-                {createSource.isPending ? t('common.adding') : t('common.done')}
-              </Button>
-            </div>
+            <Button
+              type="submit"
+              disabled={!isFormValid || createSource.isPending}
+              className="min-w-[130px] rounded-xl font-semibold h-10 px-6 bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm disabled:opacity-50 transition-all"
+            >
+              {createSource.isPending ? t('common.adding') : t('sources.addSource')}
+            </Button>
           </div>
         </form>
       </DialogContent>

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { Save, Copy, Loader2, Check } from 'lucide-react'
+import { IconCheck, IconCopy, IconDeviceFloppy, IconLoader2 } from '@tabler/icons-react'
 import { useCreateNote } from '@/lib/hooks/use-notes'
 import { toast } from 'sonner'
 import { useTranslation } from '@/lib/hooks/use-translation'
@@ -82,9 +82,9 @@ export function MessageActions({ content, notebookId }: MessageActionsProps) {
                 disabled={createNote.isPending}
               >
                 {createNote.isPending ? (
-                  <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  <IconLoader2 className="h-3.5 w-3.5 animate-spin" />
                 ) : (
-                  <Save className="h-3.5 w-3.5" />
+                  <IconDeviceFloppy className="h-3.5 w-3.5" />
                 )}
               </Button>
             </TooltipTrigger>
@@ -103,9 +103,9 @@ export function MessageActions({ content, notebookId }: MessageActionsProps) {
               disabled={createNote.isPending}
             >
               {copySuccess ? (
-                <Check className="h-3.5 w-3.5 text-fern" />
+                <IconCheck className="h-3.5 w-3.5 text-fern" />
               ) : (
-                <Copy className="h-3.5 w-3.5" />
+                <IconCopy className="h-3.5 w-3.5" />
               )}
             </Button>
           </TooltipTrigger>
