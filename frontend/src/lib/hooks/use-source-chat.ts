@@ -157,7 +157,7 @@ export function useSourceChat(sourceId: string) {
             try {
               const data = JSON.parse(line.slice(6))
               
-              if (data.type === 'ai_message') {
+              if (data.type === 'chunk' || data.type === 'ai_message') {
                 // Create AI message on first content chunk to avoid empty bubble
                 if (!aiMessage) {
                   aiMessage = {

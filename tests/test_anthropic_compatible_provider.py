@@ -8,8 +8,8 @@ import pytest
 from fastapi import HTTPException
 from pydantic import SecretStr
 
-from open_notebook.domain.credential import Credential
-from open_notebook.exceptions import ConfigurationError
+from notebooke.domain.credential import Credential
+from notebooke.exceptions import ConfigurationError
 
 
 def test_credential_config_preserves_anthropic_compatible_fields():
@@ -70,8 +70,8 @@ async def test_update_rejects_clearing_compatible_base_url():
 async def test_connection_handler_normalizes_url_and_uses_anthropic_headers(
     monkeypatch, base_url, models_url
 ):
-    from open_notebook.ai import connection_tester
-    from open_notebook.utils.url_validation import PinnedHttpTarget
+    from notebooke.ai import connection_tester
+    from notebooke.utils.url_validation import PinnedHttpTarget
 
     requests = []
 
@@ -129,7 +129,7 @@ async def test_connection_handler_normalizes_url_and_uses_anthropic_headers(
 async def test_model_manager_maps_normalized_url_to_anthropic_factory(
     base_url, expected_base_url
 ):
-    from open_notebook.ai.models import Model, ModelManager
+    from notebooke.ai.models import Model, ModelManager
 
     credential = Credential(
         name="Compatible endpoint",
@@ -149,9 +149,9 @@ async def test_model_manager_maps_normalized_url_to_anthropic_factory(
     with (
         patch.object(Model, "get", AsyncMock(return_value=model)),
         patch.object(Model, "get_credential_obj", AsyncMock(return_value=credential)),
-        patch("open_notebook.ai.models.validate_url", AsyncMock()) as validate_url_mock,
+        patch("notebooke.ai.models.validate_url", AsyncMock()) as validate_url_mock,
         patch(
-            "open_notebook.ai.models.AIFactory.create_language",
+            "notebooke.ai.models.AIFactory.create_language",
             return_value=factory_model,
         ) as create_language,
     ):
@@ -169,7 +169,7 @@ async def test_model_manager_maps_normalized_url_to_anthropic_factory(
 
 @pytest.mark.asyncio
 async def test_model_manager_uses_default_database_credential_when_unlinked(monkeypatch):
-    from open_notebook.ai.models import Model, ModelManager
+    from notebooke.ai.models import Model, ModelManager
 
     credential = Credential(
         name="Default compatible endpoint",
@@ -191,7 +191,7 @@ async def test_model_manager_uses_default_database_credential_when_unlinked(monk
         patch.object(Model, "get", AsyncMock(return_value=model)),
         patch.object(Credential, "get_by_provider", AsyncMock(return_value=[credential])),
         patch(
-            "open_notebook.ai.models.AIFactory.create_language",
+            "notebooke.ai.models.AIFactory.create_language",
             return_value=factory_model,
         ) as create_language,
     ):
@@ -210,8 +210,8 @@ async def test_model_manager_uses_default_database_credential_when_unlinked(monk
 async def test_connection_handler_accepts_unsupported_model_listing(
     monkeypatch, status_code
 ):
-    from open_notebook.ai import connection_tester
-    from open_notebook.utils.url_validation import PinnedHttpTarget
+    from notebooke.ai import connection_tester
+    from notebooke.utils.url_validation import PinnedHttpTarget
 
     class FakeAsyncClient:
         def __init__(self, **kwargs):
@@ -248,7 +248,7 @@ async def test_connection_handler_accepts_unsupported_model_listing(
 
 @pytest.mark.asyncio
 async def test_model_manager_rejects_missing_compatible_endpoint():
-    from open_notebook.ai.models import Model, ModelManager
+    from notebooke.ai.models import Model, ModelManager
 
     credential = Credential(
         name="Incomplete endpoint",
@@ -266,7 +266,7 @@ async def test_model_manager_rejects_missing_compatible_endpoint():
     with (
         patch.object(Model, "get", AsyncMock(return_value=model)),
         patch.object(Model, "get_credential_obj", AsyncMock(return_value=credential)),
-        patch("open_notebook.ai.models.AIFactory.create_language") as create_language,
+        patch("notebooke.ai.models.AIFactory.create_language") as create_language,
         pytest.raises(ConfigurationError, match="require a base URL and API key"),
     ):
         await ModelManager().get_model("model:test")

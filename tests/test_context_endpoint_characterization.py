@@ -3,7 +3,7 @@
 These pin down the exact response shape and the string-matching config
 semantics ("not in" skips, "insights" -> short context, "full content" ->
 long context) before the context-building loop is extracted out of the
-router into open_notebook/utils/context_builder.py. They must pass
+router into notebooke/utils/context_builder.py. They must pass
 unchanged before and after the refactor.
 
 DB access is mocked following the style of
@@ -52,10 +52,10 @@ def _note(note_id="note:n1", context=None):
 
 # Patch the domain classes at their definition site so the tests are
 # independent of which module hosts the context-building loop.
-PATCH_NOTEBOOK = "open_notebook.domain.notebook.Notebook.get"
-PATCH_SOURCE = "open_notebook.domain.notebook.Source.get"
-PATCH_NOTE = "open_notebook.domain.notebook.Note.get"
-PATCH_INSIGHTS = "open_notebook.domain.notebook.SourceInsight.get_for_sources"
+PATCH_NOTEBOOK = "notebooke.domain.notebook.Notebook.get"
+PATCH_SOURCE = "notebooke.domain.notebook.Source.get"
+PATCH_NOTE = "notebooke.domain.notebook.Note.get"
+PATCH_INSIGHTS = "notebooke.domain.notebook.SourceInsight.get_for_sources"
 
 
 @pytest.mark.asyncio

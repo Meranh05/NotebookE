@@ -47,6 +47,13 @@ export const podcastsApi = {
     return response.data
   },
 
+  cancelEpisode: async (episodeId: string) => {
+    const response = await apiClient.post<{ episode_id: string; message: string }>(
+      `/podcasts/episodes/${episodeId}/cancel`
+    )
+    return response.data
+  },
+
   listEpisodeProfiles: async () => {
     const response = await apiClient.get<EpisodeProfile[]>('/episode-profiles')
     return response.data

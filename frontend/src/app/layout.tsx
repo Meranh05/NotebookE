@@ -12,6 +12,7 @@ import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { ConnectionGuard } from "@/components/common/ConnectionGuard";
 import { themeScript } from "@/lib/theme-script";
 import { I18nProvider } from "@/components/providers/I18nProvider";
+import { GlobalQuotaListener } from "@/components/common/GlobalQuotaListener";
 
 const inter = Inter({
   subsets: ["latin", "vietnamese"],
@@ -59,6 +60,7 @@ export default function RootLayout({
               <I18nProvider>
                 <ConnectionGuard>
                   {children}
+                  <GlobalQuotaListener />
                   <Toaster />
                 </ConnectionGuard>
               </I18nProvider>

@@ -1,5 +1,5 @@
 """
-Unit tests for the open_notebook.graphs module.
+Unit tests for the notebooke.graphs module.
 
 This test suite focuses on testing graph structures, tools, and validation
 without heavy mocking of the actual processing logic.
@@ -12,14 +12,14 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from langchain_core.runnables import RunnableConfig
 
-from open_notebook.domain.notebook import Source
-from open_notebook.graphs.prompt import PatternChainState, graph
-from open_notebook.graphs.tools import get_current_timestamp
-from open_notebook.graphs.transformation import (
+from notebooke.domain.notebook import Source
+from notebooke.graphs.prompt import PatternChainState, graph
+from notebooke.graphs.tools import get_current_timestamp
+from notebooke.graphs.transformation import (
     TransformationState,
     run_transformation,
 )
-from open_notebook.graphs.transformation import (
+from notebooke.graphs.transformation import (
     graph as transformation_graph,
 )
 
@@ -110,8 +110,8 @@ class TestTransformationGraph:
         """Test TransformationState structure and fields."""
         from unittest.mock import MagicMock
 
-        from open_notebook.domain.notebook import Source
-        from open_notebook.domain.transformation import Transformation
+        from notebooke.domain.notebook import Source
+        from notebooke.domain.transformation import Transformation
 
         mock_source = MagicMock(spec=Source)
         mock_transformation = MagicMock(spec=Transformation)
@@ -133,7 +133,7 @@ class TestTransformationGraph:
         """Test transformation raises assertion with no content."""
         from unittest.mock import MagicMock
 
-        from open_notebook.domain.transformation import Transformation
+        from notebooke.domain.transformation import Transformation
 
         mock_transformation = MagicMock(spec=Transformation)
 
@@ -164,12 +164,12 @@ class TestSaveSourceTitlePreservation:
     """Test save_source node preserves user-set titles (#670)."""
 
     @pytest.mark.asyncio
-    @patch("open_notebook.graphs.source.Source.get")
+    @patch("notebooke.graphs.source.Source.get")
     async def test_custom_title_preserved(self, mock_get):
         """User-set title is NOT overwritten by the extracted title."""
         from content_core.common import ExtractionOutput
 
-        from open_notebook.graphs.source import SourceState, save_source
+        from notebooke.graphs.source import SourceState, save_source
 
         mock_source = MagicMock(spec=Source)
         mock_source.title = "My Custom Research Title"
@@ -191,12 +191,12 @@ class TestSaveSourceTitlePreservation:
         mock_source.save.assert_awaited_once()
 
     @pytest.mark.asyncio
-    @patch("open_notebook.graphs.source.Source.get")
+    @patch("notebooke.graphs.source.Source.get")
     async def test_placeholder_title_replaced(self, mock_get):
         """Placeholder 'Processing...' title IS replaced by extracted title."""
         from content_core.common import ExtractionOutput
 
-        from open_notebook.graphs.source import SourceState, save_source
+        from notebooke.graphs.source import SourceState, save_source
 
         mock_source = MagicMock(spec=Source)
         mock_source.title = "Processing..."
@@ -220,12 +220,12 @@ class TestSaveSourceTitlePreservation:
         mock_source.save.assert_awaited_once()
 
     @pytest.mark.asyncio
-    @patch("open_notebook.graphs.source.Source.get")
+    @patch("notebooke.graphs.source.Source.get")
     async def test_none_title_replaced(self, mock_get):
         """None title IS replaced by extracted title."""
         from content_core.common import ExtractionOutput
 
-        from open_notebook.graphs.source import SourceState, save_source
+        from notebooke.graphs.source import SourceState, save_source
 
         mock_source = MagicMock(spec=Source)
         mock_source.title = None
@@ -247,12 +247,12 @@ class TestSaveSourceTitlePreservation:
         mock_source.save.assert_awaited_once()
 
     @pytest.mark.asyncio
-    @patch("open_notebook.graphs.source.Source.get")
+    @patch("notebooke.graphs.source.Source.get")
     async def test_empty_title_replaced(self, mock_get):
         """Empty string title IS replaced by extracted title."""
         from content_core.common import ExtractionOutput
 
-        from open_notebook.graphs.source import SourceState, save_source
+        from notebooke.graphs.source import SourceState, save_source
 
         mock_source = MagicMock(spec=Source)
         mock_source.title = ""
@@ -283,14 +283,14 @@ class TestContentProcessDeleteSource:
     """content-core 2.x no longer deletes the uploaded file; the graph must."""
 
     @pytest.mark.asyncio
-    @patch("open_notebook.graphs.source.extract_content")
-    @patch("open_notebook.graphs.source.ModelManager")
+    @patch("notebooke.graphs.source.extract_content")
+    @patch("notebooke.graphs.source.ModelManager")
     async def test_uploaded_file_deleted_when_flag_set(
         self, mock_model_manager, mock_extract, tmp_path
     ):
         from content_core.common import ExtractionOutput
 
-        from open_notebook.graphs.source import SourceState, content_process
+        from notebooke.graphs.source import SourceState, content_process
 
         # No STT default configured -> no audio override, no DB access.
         mm_instance = MagicMock()
@@ -324,14 +324,14 @@ class TestContentProcessDeleteSource:
         assert "ja" in config.youtube_languages
 
     @pytest.mark.asyncio
-    @patch("open_notebook.graphs.source.extract_content")
-    @patch("open_notebook.graphs.source.ModelManager")
+    @patch("notebooke.graphs.source.extract_content")
+    @patch("notebooke.graphs.source.ModelManager")
     async def test_uploaded_file_kept_when_flag_not_set(
         self, mock_model_manager, mock_extract, tmp_path
     ):
         from content_core.common import ExtractionOutput
 
-        from open_notebook.graphs.source import SourceState, content_process
+        from notebooke.graphs.source import SourceState, content_process
 
         mm_instance = MagicMock()
         mm_instance.get_defaults = AsyncMock(
@@ -355,14 +355,14 @@ class TestContentProcessDeleteSource:
         assert uploaded.exists()  # file preserved
 
     @pytest.mark.asyncio
-    @patch("open_notebook.graphs.source.extract_content")
-    @patch("open_notebook.graphs.source.ModelManager")
+    @patch("notebooke.graphs.source.extract_content")
+    @patch("notebooke.graphs.source.ModelManager")
     async def test_empty_extraction_raises_valueerror(
         self, mock_model_manager, mock_extract, tmp_path
     ):
         from content_core.common import ExtractionOutput
 
-        from open_notebook.graphs.source import SourceState, content_process
+        from notebooke.graphs.source import SourceState, content_process
 
         mm_instance = MagicMock()
         mm_instance.get_defaults = AsyncMock(
@@ -382,11 +382,11 @@ class TestContentProcessDeleteSource:
             await content_process(cast(SourceState, state))
 
     @pytest.mark.asyncio
-    @patch("open_notebook.graphs.source.ContentSettings")
+    @patch("notebooke.graphs.source.ContentSettings")
     # Runtime present: nothing to fall back from.
-    @patch("open_notebook.graphs.source.engine_runtime_missing", return_value=None)
-    @patch("open_notebook.graphs.source.extract_content")
-    @patch("open_notebook.graphs.source.ModelManager")
+    @patch("notebooke.graphs.source.engine_runtime_missing", return_value=None)
+    @patch("notebooke.graphs.source.extract_content")
+    @patch("notebooke.graphs.source.ModelManager")
     async def test_persisted_engines_wired_into_config(
         self, mock_model_manager, mock_extract, _mock_runtime, mock_settings
     ):
@@ -394,7 +394,7 @@ class TestContentProcessDeleteSource:
         a user-selected engine (e.g. crawl4ai) actually takes effect."""
         from content_core.common import ExtractionOutput
 
-        from open_notebook.graphs.source import SourceState, content_process
+        from notebooke.graphs.source import SourceState, content_process
 
         mm_instance = MagicMock()
         mm_instance.get_defaults = AsyncMock(
@@ -429,9 +429,9 @@ class TestContentProcessDeleteSource:
         assert config.docling_vision is True
 
     @pytest.mark.asyncio
-    @patch("open_notebook.graphs.source.ContentSettings")
-    @patch("open_notebook.graphs.source.extract_content")
-    @patch("open_notebook.graphs.source.ModelManager")
+    @patch("notebooke.graphs.source.ContentSettings")
+    @patch("notebooke.graphs.source.extract_content")
+    @patch("notebooke.graphs.source.ModelManager")
     async def test_unavailable_engine_falls_back_to_auto(
         self, mock_model_manager, mock_extract, mock_settings
     ):
@@ -447,7 +447,7 @@ class TestContentProcessDeleteSource:
         """
         from content_core.common import ExtractionOutput
 
-        from open_notebook.graphs.source import SourceState, content_process
+        from notebooke.graphs.source import SourceState, content_process
 
         mm_instance = MagicMock()
         mm_instance.get_defaults = AsyncMock(
@@ -473,7 +473,7 @@ class TestContentProcessDeleteSource:
         }
 
         with patch(
-            "open_notebook.graphs.source.engine_runtime_missing",
+            "notebooke.graphs.source.engine_runtime_missing",
             side_effect=lambda engine: {
                 "crawl4ai": "OPEN_NOTEBOOK_ENABLE_CRAWL4AI",
                 "docling": "OPEN_NOTEBOOK_ENABLE_DOCLING",
@@ -486,16 +486,16 @@ class TestContentProcessDeleteSource:
         assert config.document_engine == "auto"
 
     @pytest.mark.asyncio
-    @patch("open_notebook.graphs.source.ContentSettings")
-    @patch("open_notebook.graphs.source.extract_content")
-    @patch("open_notebook.graphs.source.ModelManager")
+    @patch("notebooke.graphs.source.ContentSettings")
+    @patch("notebooke.graphs.source.extract_content")
+    @patch("notebooke.graphs.source.ModelManager")
     async def test_runtime_free_engines_never_fall_back(
         self, mock_model_manager, mock_extract, mock_settings
     ):
         """Engines needing no opt-in runtime are passed through untouched."""
         from content_core.common import ExtractionOutput
 
-        from open_notebook.graphs.source import SourceState, content_process
+        from notebooke.graphs.source import SourceState, content_process
 
         mm_instance = MagicMock()
         mm_instance.get_defaults = AsyncMock(
@@ -538,11 +538,11 @@ class TestTransformationModelIdForwarding:
     """
 
     @pytest.mark.asyncio
-    @patch("open_notebook.graphs.source.transform_graph.ainvoke", new_callable=AsyncMock)
+    @patch("notebooke.graphs.source.transform_graph.ainvoke", new_callable=AsyncMock)
     async def test_source_graph_forwards_model_id(self, mock_ainvoke):
-        """open_notebook.graphs.source.transform_content forwards model_id."""
-        from open_notebook.domain.transformation import Transformation
-        from open_notebook.graphs.source import transform_content
+        """notebooke.graphs.source.transform_content forwards model_id."""
+        from notebooke.domain.transformation import Transformation
+        from notebooke.graphs.source import transform_content
 
         mock_ainvoke.return_value = {"output": "result"}
 
@@ -564,11 +564,11 @@ class TestTransformationModelIdForwarding:
         assert config["configurable"]["model_id"] == "model:custom"
 
     @pytest.mark.asyncio
-    @patch("open_notebook.graphs.source.transform_graph.ainvoke", new_callable=AsyncMock)
+    @patch("notebooke.graphs.source.transform_graph.ainvoke", new_callable=AsyncMock)
     async def test_source_graph_forwards_none_model_id(self, mock_ainvoke):
         """When model_id is unset (None), None is forwarded (falls back to default)."""
-        from open_notebook.domain.transformation import Transformation
-        from open_notebook.graphs.source import transform_content
+        from notebooke.domain.transformation import Transformation
+        from notebooke.graphs.source import transform_content
 
         mock_ainvoke.return_value = {"output": "result"}
 
@@ -600,7 +600,7 @@ class TestTransformationModelIdForwarding:
             RunTransformationInput,
             run_transformation_command,
         )
-        from open_notebook.domain.transformation import Transformation
+        from notebooke.domain.transformation import Transformation
 
         mock_source_get.return_value = MagicMock(spec=Source)
 

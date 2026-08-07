@@ -168,7 +168,7 @@ Response ← Pydantic serialization ← Service ← Result
 - **Database**: SurrealDB (multi-model, ACID transactions)
 - **Query Language**: SurrealQL (SQL-like syntax with graph operations)
 - **Async Driver**: Async Rust client for Python
-- **Migrations**: `.surrealql` files in `open_notebook/database/migrations/`, registered in `AsyncMigrationManager` (auto-run on API startup)
+- **Migrations**: `.surrealql` files in `notebooke/database/migrations/`, registered in `AsyncMigrationManager` (auto-run on API startup)
 
 **Core Tables**:
 
@@ -293,7 +293,7 @@ ChatSession
 
 LangGraph is a state machine library that orchestrates multi-step AI workflows. NotebookE uses five core workflows:
 
-### 1. **Source Processing Workflow** (`open_notebook/graphs/source.py`)
+### 1. **Source Processing Workflow** (`notebooke/graphs/source.py`)
 
 **Purpose**: Ingest content (PDF, URL, text) and prepare for search/insights.
 
@@ -334,7 +334,7 @@ Output (Source record with embeddings)
 
 ---
 
-### 2. **Chat Workflow** (`open_notebook/graphs/chat.py`)
+### 2. **Chat Workflow** (`notebooke/graphs/chat.py`)
 
 **Purpose**: Conduct multi-turn conversations with AI model, referencing notebook context.
 
@@ -381,7 +381,7 @@ Output (complete message)
 
 ---
 
-### 3. **Ask Workflow** (`open_notebook/graphs/ask.py`)
+### 3. **Ask Workflow** (`notebooke/graphs/ask.py`)
 
 **Purpose**: Answer user questions by searching sources and synthesizing responses.
 
@@ -421,7 +421,7 @@ Output (final answer)
 
 ---
 
-### 4. **Transformation Workflow** (`open_notebook/graphs/transformation.py`)
+### 4. **Transformation Workflow** (`notebooke/graphs/transformation.py`)
 
 **Purpose**: Apply custom transformations to sources (extract summaries, key points, etc).
 
@@ -452,7 +452,7 @@ Output (insight with type + content)
 
 ---
 
-### 5. **Prompt Workflow** (`open_notebook/graphs/prompt.py`)
+### 5. **Prompt Workflow** (`notebooke/graphs/prompt.py`)
 
 **Purpose**: Generic LLM task execution (e.g., auto-generate note titles, analyze content).
 
@@ -474,7 +474,7 @@ Output (completion)
 
 ### ModelManager: Centralized Factory
 
-Located in `open_notebook/ai/models.py`, ModelManager handles:
+Located in `notebooke/ai/models.py`, ModelManager handles:
 
 1. **Provider Detection**: Check environment variables for available providers
 2. **Model Selection**: Choose best model based on context size and task
@@ -485,7 +485,7 @@ Located in `open_notebook/ai/models.py`, ModelManager handles:
 **Usage**:
 
 ```python
-from open_notebook.ai.provision import provision_langchain_model
+from notebooke.ai.provision import provision_langchain_model
 
 # Get best LLM for context size
 model = await provision_langchain_model(
@@ -547,7 +547,7 @@ result = await graph.ainvoke(
 
 ### 1. **Domain-Driven Design (DDD)**
 
-**Domain Objects** (`open_notebook/domain/`):
+**Domain Objects** (`notebooke/domain/`):
 
 - `Notebook`: Research container with relationships to sources/notes
 - `Source`: Content item (PDF, URL, text) with embeddings
@@ -557,7 +557,7 @@ result = await graph.ainvoke(
 
 **Repository Pattern**:
 
-- Database access layer (`open_notebook/database/repository.py`)
+- Database access layer (`notebooke/database/repository.py`)
 - `repo_query()`: Execute SurrealQL queries
 - `repo_create()`: Insert records
 - `repo_upsert()`: Merge records
@@ -646,7 +646,7 @@ For async background tasks (source processing), use Surreal-Commands job queue:
 ```python
 # Submit job
 command_id = await CommandService.submit_command_job(
-    app="open_notebook",
+    app="notebooke",
     command="process_source",
     input={...}
 )
@@ -747,7 +747,7 @@ status = await response.json()  # returns { status: "running|queued|completed|fa
 **Migrations**:
 
 - Automatic on API startup
-- Located in `open_notebook/database/migrations/`
+- Located in `notebooke/database/migrations/`
 - Numbered sequentially (`1.surrealql`, `2.surrealql`, …) and registered explicitly in `AsyncMigrationManager` (no auto-discovery)
 - Tracked in `_sbl_migrations` table
 - Rollback via `N_down.surrealql` files (manual)
@@ -890,7 +890,7 @@ Async job submission (source processing, podcast generation) prevents request ti
 
 ### Adding a New Workflow
 
-1. Create `open_notebook/graphs/workflow_name.py`
+1. Create `notebooke/graphs/workflow_name.py`
 2. Define StateDict and node functions
 3. Build graph with `.add_node()` / `.add_edge()`
 4. Create service in `api/workflow_service.py`
@@ -899,11 +899,11 @@ Async job submission (source processing, podcast generation) prevents request ti
 
 ### Adding a New Data Model
 
-1. Create model in `open_notebook/domain/model_name.py`
+1. Create model in `notebooke/domain/model_name.py`
 2. Inherit from BaseModel (domain object)
 3. Implement `save()`, `get()`, `delete()` methods (CRUD)
 4. Add repository functions if complex queries needed
-5. Create database migration in `open_notebook/database/migrations/` (and register it in `AsyncMigrationManager`)
+5. Create database migration in `notebooke/database/migrations/` (and register it in `AsyncMigrationManager`)
 6. Add API routes and models in `api/`
 
 ### Adding a New AI Provider

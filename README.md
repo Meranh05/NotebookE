@@ -10,7 +10,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/lfnovo/open-notebook">
+  <a href="https://github.com/lfnovo/notebooke">
     <img src="docs/assets/hero.svg" alt="Logo">
   </a>
 
@@ -20,7 +20,7 @@
     An open source, privacy-focused alternative to Google's Notebook LM!
     <br /><strong>Join our <a href="https://discord.gg/37XJPXfz2w">Discord server</a> for help, to share workflow ideas, and suggest features!</strong>
     <br />
-    <a href="https://www.open-notebook.ai"><strong>Checkout our website »</strong></a>
+    <a href="https://www.notebooke.ai"><strong>Checkout our website »</strong></a>
     <br />
     Follow <a href="https://x.com/lfnovo">@lfnovo on X</a> for updates
     <br />
@@ -36,20 +36,20 @@
 </div>
 
 <p align="center">
-<a href="https://trendshift.io/repositories/14536" target="_blank"><img src="https://trendshift.io/api/badge/repositories/14536" alt="lfnovo%2Fopen-notebook | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+<a href="https://trendshift.io/repositories/14536" target="_blank"><img src="https://trendshift.io/api/badge/repositories/14536" alt="lfnovo%2Fnotebooke | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 </p>
 
 <div align="center">
   <!-- Keep these links. Translations will automatically update with the README. -->
-  <a href="https://zdoc.app/de/lfnovo/open-notebook">Deutsch</a> |
-  <a href="https://zdoc.app/es/lfnovo/open-notebook">Español</a> |
-  <a href="https://zdoc.app/fr/lfnovo/open-notebook">français</a> |
-  <a href="https://zdoc.app/ja/lfnovo/open-notebook">日本語</a> |
-  <a href="https://zdoc.app/ko/lfnovo/open-notebook">한국어</a> |
-  <a href="https://zdoc.app/pt/lfnovo/open-notebook">Português</a> |
-  <a href="https://zdoc.app/ru/lfnovo/open-notebook">Русский</a> |
-  <a href="https://zdoc.app/ru/lfnovo/open-notebook">Tiếng Việt</a> |
-  <a href="https://zdoc.app/zh/lfnovo/open-notebook">中文</a>
+  <a href="https://zdoc.app/de/lfnovo/notebooke">Deutsch</a> |
+  <a href="https://zdoc.app/es/lfnovo/notebooke">Español</a> |
+  <a href="https://zdoc.app/fr/lfnovo/notebooke">français</a> |
+  <a href="https://zdoc.app/ja/lfnovo/notebooke">日本語</a> |
+  <a href="https://zdoc.app/ko/lfnovo/notebooke">한국어</a> |
+  <a href="https://zdoc.app/pt/lfnovo/notebooke">Português</a> |
+  <a href="https://zdoc.app/ru/lfnovo/notebooke">Русский</a> |
+  <a href="https://zdoc.app/ru/lfnovo/notebooke">Tiếng Việt</a> |
+  <a href="https://zdoc.app/zh/lfnovo/notebooke">中文</a>
 </div>
 
 ## A private, multi-model, 100% local, full-featured alternative to Notebook LM
@@ -68,7 +68,7 @@ In a world dominated by Artificial Intelligence, having the ability to think �
 - 💬 **Chat with context** - AI conversations powered by your research
 - 🌐 **Multi-language UI** - English, Portuguese, Chinese (Simplified & Traditional), Japanese, Russian, and Bengali support
 
-Learn more about our project at [https://www.open-notebook.ai](https://www.open-notebook.ai)
+Learn more about our project at [https://www.notebooke.ai](https://www.notebooke.ai)
 
 ---
 
@@ -110,7 +110,7 @@ Learn more about our project at [https://www.open-notebook.ai](https://www.open-
 **Option A:** Download directly
 
 ```bash
-curl -o docker-compose.yml https://raw.githubusercontent.com/lfnovo/open-notebook/main/docker-compose.yml
+curl -o docker-compose.yml https://raw.githubusercontent.com/lfnovo/notebooke/main/docker-compose.yml
 ```
 
 **Option B:** Create the file manually
@@ -123,13 +123,13 @@ services:
     # Credentials default to root:root for a zero-config local setup. Before
     # exposing this instance to a network, set SURREAL_USER / SURREAL_PASSWORD
     # in a .env file (see .env.example) — they are applied here and to the
-    # open_notebook service below, so the two always stay in sync.
+    # notebooke service below, so the two always stay in sync.
     # List (exec) form so each interpolated value stays a single argument —
     # a password containing spaces would otherwise be split into several.
     command: ["start", "--log", "info", "--user", "${SURREAL_USER:-root}", "--pass", "${SURREAL_PASSWORD:-root}", "rocksdb:/mydata/mydatabase.db"]
     user: root  # Required for bind mounts on Linux
     ports:
-      # Bound to localhost only: the open_notebook service reaches this over
+      # Bound to localhost only: the notebooke service reaches this over
       # the internal compose network regardless, so the host port is purely
       # for local debugging (e.g. Surrealist, `surreal sql`). Exposing this
       # on 0.0.0.0 would let anyone who can reach the host connect with the
@@ -142,8 +142,8 @@ services:
     restart: always
     pull_policy: always
 
-  open_notebook:
-    image: lfnovo/open_notebook:v1-latest
+  notebooke:
+    image: lfnovo/notebooke:v1-latest
     ports:
       - "8502:8502"  # Web UI
       - "5055:5055"  # REST API
@@ -158,8 +158,8 @@ services:
       - SURREAL_URL=ws://surrealdb:8000/rpc
       - SURREAL_USER=${SURREAL_USER:-root}
       - SURREAL_PASSWORD=${SURREAL_PASSWORD:-root}
-      - SURREAL_NAMESPACE=open_notebook
-      - SURREAL_DATABASE=open_notebook
+      - SURREAL_NAMESPACE=notebooke
+      - SURREAL_DATABASE=notebooke
     volumes:
       - ./notebook_data:/app/data
     depends_on:
@@ -214,16 +214,16 @@ Done! You're ready to create your first notebook.
 
 ### 📖 Need Help?
 
-- **🤖 AI Installation Assistant**: [CustomGPT to help you install](https://chatgpt.com/g/g-68776e2765b48191bd1bae3f30212631-open-notebook-installation-assistant)
+- **🤖 AI Installation Assistant**: [CustomGPT to help you install](https://chatgpt.com/g/g-68776e2765b48191bd1bae3f30212631-notebooke-installation-assistant)
 - **🆘 Troubleshooting**: [5-minute troubleshooting guide](docs/6-TROUBLESHOOTING/quick-fixes.md)
 - **💬 Community Support**: [Discord Server](https://discord.gg/37XJPXfz2w)
-- **🐛 Report Issues**: [GitHub Issues](https://github.com/lfnovo/open-notebook/issues)
+- **🐛 Report Issues**: [GitHub Issues](https://github.com/lfnovo/notebooke/issues)
 
 ---
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=lfnovo/open-notebook&type=date&legend=top-left)](https://www.star-history.com/#lfnovo/open-notebook&type=date&legend=top-left)
+[![Star History Chart](https://api.star-history.com/svg?repos=lfnovo/notebooke&type=date&legend=top-left)](https://www.star-history.com/#lfnovo/notebooke&type=date&legend=top-left)
 
 ## Provider Support Matrix
 
@@ -333,13 +333,13 @@ Thanks to the [Esperanto](https://github.com/lfnovo/esperanto) library, we suppo
 - **Enhanced Citations**: Improved layout and finer control for source citations
 - **Multiple Chat Sessions**: Manage different conversations within notebooks
 
-Explore [GitHub Discussions](https://github.com/lfnovo/open-notebook/discussions/categories/ideas) for proposed features and product ideas, and [open Issues](https://github.com/lfnovo/open-notebook/issues) for known bugs and approved work.
+Explore [GitHub Discussions](https://github.com/lfnovo/notebooke/discussions/categories/ideas) for proposed features and product ideas, and [open Issues](https://github.com/lfnovo/notebooke/issues) for known bugs and approved work.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## 📖 Need Help?
 
-- **🤖 AI Installation Assistant**: We have a [CustomGPT built to help you install NotebookE](https://chatgpt.com/g/g-68776e2765b48191bd1bae3f30212631-open-notebook-installation-assistant) - it will guide you through each step!
+- **🤖 AI Installation Assistant**: We have a [CustomGPT built to help you install NotebookE](https://chatgpt.com/g/g-68776e2765b48191bd1bae3f30212631-notebooke-installation-assistant) - it will guide you through each step!
 - **New to NotebookE?** Start with our [Getting Started Guide](docs/0-START-HERE/index.md)
 - **Need installation help?** Check our [Installation Guide](docs/1-INSTALLATION/index.md)
 - **Want to see it in action?** Try our [Quick Start Tutorial](docs/0-START-HERE/index.md)
@@ -350,8 +350,8 @@ Explore [GitHub Discussions](https://github.com/lfnovo/open-notebook/discussions
 
 - 💬 **[Discord Server](https://discord.gg/37XJPXfz2w)** - Get help, share ideas, and connect with other users
 - 𝕏 **[Follow @lfnovo on X](https://x.com/lfnovo)** - Project updates and news from the maintainer
-- 💡 **[GitHub Discussions](https://github.com/lfnovo/open-notebook/discussions)** - Ask questions and shape features, product direction, design, and architecture
-- 🐛 **[GitHub Issues](https://github.com/lfnovo/open-notebook/issues)** - Report reproducible bugs and find approved work
+- 💡 **[GitHub Discussions](https://github.com/lfnovo/notebooke/discussions)** - Ask questions and shape features, product direction, design, and architecture
+- 🐛 **[GitHub Issues](https://github.com/lfnovo/notebooke/issues)** - Report reproducible bugs and find approved work
 - ⭐ **Star this repo** - Show your support and help others discover NotebookE
 
 ### Contributing
@@ -378,22 +378,22 @@ NotebookE is MIT licensed. See the [LICENSE](LICENSE) file for details.
 
 - 💬 [Discord Server](https://discord.gg/37XJPXfz2w) - Get help, share ideas, and connect with users
 - 𝕏 [Follow @lfnovo on X](https://x.com/lfnovo) - Project updates and news from the maintainer
-- 💡 [GitHub Discussions](https://github.com/lfnovo/open-notebook/discussions) - Ask questions and shape ideas
-- 🐛 [GitHub Issues](https://github.com/lfnovo/open-notebook/issues) - Report reproducible bugs and find approved work
-- 🌐 [Website](https://www.open-notebook.ai) - Learn more about the project
+- 💡 [GitHub Discussions](https://github.com/lfnovo/notebooke/discussions) - Ask questions and shape ideas
+- 🐛 [GitHub Issues](https://github.com/lfnovo/notebooke/issues) - Report reproducible bugs and find approved work
+- 🌐 [Website](https://www.notebooke.ai) - Learn more about the project
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[forks-shield]: https://img.shields.io/github/forks/lfnovo/open-notebook.svg?style=for-the-badge
-[forks-url]: https://github.com/lfnovo/open-notebook/network/members
-[stars-shield]: https://img.shields.io/github/stars/lfnovo/open-notebook.svg?style=for-the-badge
-[stars-url]: https://github.com/lfnovo/open-notebook/stargazers
-[issues-shield]: https://img.shields.io/github/issues/lfnovo/open-notebook.svg?style=for-the-badge
-[issues-url]: https://github.com/lfnovo/open-notebook/issues
-[license-shield]: https://img.shields.io/github/license/lfnovo/open-notebook.svg?style=for-the-badge
-[license-url]: https://github.com/lfnovo/open-notebook/blob/master/LICENSE.txt
+[forks-shield]: https://img.shields.io/github/forks/lfnovo/notebooke.svg?style=for-the-badge
+[forks-url]: https://github.com/lfnovo/notebooke/network/members
+[stars-shield]: https://img.shields.io/github/stars/lfnovo/notebooke.svg?style=for-the-badge
+[stars-url]: https://github.com/lfnovo/notebooke/stargazers
+[issues-shield]: https://img.shields.io/github/issues/lfnovo/notebooke.svg?style=for-the-badge
+[issues-url]: https://github.com/lfnovo/notebooke/issues
+[license-shield]: https://img.shields.io/github/license/lfnovo/notebooke.svg?style=for-the-badge
+[license-url]: https://github.com/lfnovo/notebooke/blob/master/LICENSE.txt
 [Next.js]: https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white
 [Next-url]: https://nextjs.org/
 [React]: https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black

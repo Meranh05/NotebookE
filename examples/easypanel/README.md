@@ -13,7 +13,7 @@ The template deploys two services:
 
 ## Testing
 
-1. Copy this directory to `templates/open-notebook` in
+1. Copy this directory to `templates/notebooke` in
    `easypanel-io/templates`.
 2. Run the EasyPanel templates playground with `npm run dev`.
 3. Create the template from the generated JSON inside an EasyPanel instance.

@@ -55,9 +55,9 @@ from api.models import (
     RegisterModelsResponse,
     UpdateCredentialRequest,
 )
-from open_notebook.database.repository import ensure_record_id, repo_delete, repo_query
-from open_notebook.domain.credential import Credential
-from open_notebook.exceptions import (
+from notebooke.database.repository import ensure_record_id, repo_delete, repo_query
+from notebooke.domain.credential import Credential
+from notebooke.exceptions import (
     NotFoundError,
     OpenNotebookError,
 )

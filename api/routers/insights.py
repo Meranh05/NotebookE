@@ -2,8 +2,8 @@ from fastapi import APIRouter, HTTPException
 from loguru import logger
 
 from api.models import NoteResponse, SaveAsNoteRequest, SourceInsightResponse
-from open_notebook.domain.notebook import SourceInsight
-from open_notebook.exceptions import (
+from notebooke.domain.notebook import SourceInsight
+from notebooke.exceptions import (
     InvalidInputError,
     NotFoundError,
     OpenNotebookError,

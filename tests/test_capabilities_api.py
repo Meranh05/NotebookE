@@ -76,7 +76,7 @@ class TestCrawl4aiLocalReadiness:
     """Local Crawl4AI needs the package AND a Chromium browser on disk."""
 
     def test_not_ready_when_package_missing(self, monkeypatch):
-        import open_notebook.utils.runtime_capabilities as cap
+        import notebooke.utils.runtime_capabilities as cap
 
         monkeypatch.setattr(
             cap.importlib.util, "find_spec", lambda name, *a, **k: None
@@ -84,7 +84,7 @@ class TestCrawl4aiLocalReadiness:
         assert cap.crawl4ai_local_ready() is False
 
     def test_not_ready_when_browser_missing(self, monkeypatch, tmp_path):
-        import open_notebook.utils.runtime_capabilities as cap
+        import notebooke.utils.runtime_capabilities as cap
 
         monkeypatch.setattr(
             cap.importlib.util, "find_spec", lambda name, *a, **k: object()
@@ -94,7 +94,7 @@ class TestCrawl4aiLocalReadiness:
         assert cap.crawl4ai_local_ready() is False
 
     def test_ready_when_browser_present(self, monkeypatch, tmp_path):
-        import open_notebook.utils.runtime_capabilities as cap
+        import notebooke.utils.runtime_capabilities as cap
 
         monkeypatch.setattr(
             cap.importlib.util, "find_spec", lambda name, *a, **k: object()
@@ -107,7 +107,7 @@ class TestCrawl4aiLocalReadiness:
         self, monkeypatch, tmp_path
     ):
         """No PLAYWRIGHT_BROWSERS_PATH: fall back to the default cache, fail closed if empty."""
-        import open_notebook.utils.runtime_capabilities as cap
+        import notebooke.utils.runtime_capabilities as cap
 
         monkeypatch.setattr(
             cap.importlib.util, "find_spec", lambda name, *a, **k: object()
@@ -117,7 +117,7 @@ class TestCrawl4aiLocalReadiness:
         assert cap.crawl4ai_local_ready() is False
 
     def test_dev_default_cache_with_browser_is_ready(self, monkeypatch, tmp_path):
-        import open_notebook.utils.runtime_capabilities as cap
+        import notebooke.utils.runtime_capabilities as cap
 
         monkeypatch.setattr(
             cap.importlib.util, "find_spec", lambda name, *a, **k: object()

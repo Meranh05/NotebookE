@@ -45,7 +45,7 @@ For deeper dives into specific subsystems:
 - **[Frontend](frontend.md)** - Next.js layers and data flows
 
 Normative rules for coding agents (and humans in a hurry) live in the `AGENTS.md` files at the
-repo root, `open_notebook/`, and `frontend/`.
+repo root, `notebooke/`, and `frontend/`.
 
 ### 🧭 Why Is It Like This?
 

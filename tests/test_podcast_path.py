@@ -14,7 +14,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 
 from commands.podcast_commands import build_episode_output_dir
-from open_notebook.podcasts.models import EpisodeProfile, _resolve_model_config
+from notebooke.podcasts.models import EpisodeProfile, _resolve_model_config
 
 
 class TestBuildEpisodeOutputDir:
@@ -32,7 +32,7 @@ class TestBuildEpisodeOutputDir:
     def test_defaults_to_podcasts_folder(self):
         """No-arg form builds under PODCASTS_FOLDER - the same root the
         write-time validation (to_relative_audio_path) checks against."""
-        from open_notebook.config import PODCASTS_FOLDER
+        from notebooke.config import PODCASTS_FOLDER
 
         dir_name, output_dir = build_episode_output_dir()
         assert str(output_dir) == str(
@@ -96,11 +96,11 @@ class TestResolveModelConfigMaxTokens:
 
         with (
             patch(
-                "open_notebook.ai.models.Model.get",
+                "notebooke.ai.models.Model.get",
                 new=AsyncMock(return_value=fake_model),
             ),
             patch(
-                "open_notebook.ai.key_provider.provision_provider_keys",
+                "notebooke.ai.key_provider.provision_provider_keys",
                 new=AsyncMock(return_value=True),
             ),
         ):
@@ -122,11 +122,11 @@ class TestResolveModelConfigMaxTokens:
 
         with (
             patch(
-                "open_notebook.ai.models.Model.get",
+                "notebooke.ai.models.Model.get",
                 new=AsyncMock(return_value=fake_model),
             ),
             patch(
-                "open_notebook.ai.key_provider.provision_provider_keys",
+                "notebooke.ai.key_provider.provision_provider_keys",
                 new=AsyncMock(return_value=True),
             ),
         ):

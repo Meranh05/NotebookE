@@ -42,7 +42,7 @@ Both password and encryption key support Docker secrets:
 ```yaml
 # docker-compose.yml
 services:
-  open_notebook:
+  notebooke:
     environment:
       - OPEN_NOTEBOOK_PASSWORD_FILE=/run/secrets/app_password
       - OPEN_NOTEBOOK_ENCRYPTION_KEY_FILE=/run/secrets/encryption_key

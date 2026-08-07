@@ -2,7 +2,7 @@
 Tests for the Vertex credentials_path file-existence oracle fix.
 
 credentials_path (Vertex service-account file path) is free text with no
-path validation (open_notebook/ai/key_provider.py sets it directly as
+path validation (notebooke/ai/key_provider.py sets it directly as
 GOOGLE_APPLICATION_CREDENTIALS). Google's auth library raises
 distinguishable exceptions - confirmed by direct reproduction against the
 real library - for "file missing" (FileNotFoundError), "not valid JSON"
@@ -20,8 +20,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from open_notebook.ai.connection_tester import _is_vertex_credentials_file_error
-from open_notebook.ai.connection_tester import (
+from notebooke.ai.connection_tester import _is_vertex_credentials_file_error
+from notebooke.ai.connection_tester import (
     test_individual_model as run_individual_model_test,
 )
 
@@ -84,7 +84,7 @@ class TestTestCredentialClosesOracle:
     ):
         """The core of the fix: two scenarios that used to be
         distinguishable via the response message must now be identical."""
-        from open_notebook.domain.credential import Credential
+        from notebooke.domain.credential import Credential
 
         missing_exc = real_google_auth_exception(str(tmp_path / "missing.json"))
         bad_json = tmp_path / "bad.json"
@@ -98,7 +98,7 @@ class TestTestCredentialClosesOracle:
         from api.credentials_service import test_credential
 
         with patch(
-            "open_notebook.domain.credential.Credential.get",
+            "notebooke.domain.credential.Credential.get",
             new=AsyncMock(return_value=cred),
         ):
             with patch(
@@ -119,7 +119,7 @@ class TestTestCredentialClosesOracle:
     async def test_non_vertex_provider_still_gets_detailed_message(self):
         """Only vertex has this specific file-existence oracle risk - other
         providers should be unaffected by the generic-message guard."""
-        from open_notebook.domain.credential import Credential
+        from notebooke.domain.credential import Credential
 
         cred = MagicMock(spec=Credential)
         cred.provider = "openai"
@@ -129,7 +129,7 @@ class TestTestCredentialClosesOracle:
 
         with (
             patch(
-                "open_notebook.domain.credential.Credential.get",
+                "notebooke.domain.credential.Credential.get",
                 new=AsyncMock(return_value=cred),
             ),
             patch(
@@ -152,7 +152,7 @@ class TestIndividualModelClosesOracle:
         manager_instance.get_model = AsyncMock(side_effect=exc)
 
         with patch(
-            "open_notebook.ai.models.ModelManager", return_value=manager_instance
+            "notebooke.ai.models.ModelManager", return_value=manager_instance
         ):
             success, message = await run_individual_model_test(model)
 
@@ -170,7 +170,7 @@ class TestIndividualModelClosesOracle:
         )
 
         with patch(
-            "open_notebook.ai.models.ModelManager", return_value=manager_instance
+            "notebooke.ai.models.ModelManager", return_value=manager_instance
         ):
             success, message = await run_individual_model_test(model)
 

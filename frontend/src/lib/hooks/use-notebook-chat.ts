@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import { getApiErrorMessage } from '@/lib/utils/error-handler'
@@ -33,6 +33,8 @@ export function useNotebookChat({ notebookId, sources, notes, contextSelections 
   const [charCount, setCharCount] = useState<number>(0)
   // Pending model override for when user changes model before a session exists
   const [pendingModelOverride, setPendingModelOverride] = useState<string | null>(null)
+  
+  const abortControllerRef = useRef<AbortController | null>(null)
 
   // Fetch sessions for this notebook
   const {
@@ -173,7 +175,7 @@ export function useNotebookChat({ notebookId, sources, notes, contextSelections 
     return response.context
   }, [notebookId, sources, notes, contextSelections])
 
-  // Send message (synchronous, no streaming)
+  // Send message with streaming
   const sendMessage = useCallback(async (message: string, modelOverride?: string) => {
     let sessionId = currentSessionId
 
@@ -203,6 +205,13 @@ export function useNotebookChat({ notebookId, sources, notes, contextSelections 
       }
     }
 
+    // Cancel existing stream if any
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+    }
+    
+    abortControllerRef.current = new AbortController()
+
     // Add user message optimistically
     const userMessage: NotebookChatMessage = {
       id: `temp-${Date.now()}`,
@@ -216,26 +225,77 @@ export function useNotebookChat({ notebookId, sources, notes, contextSelections 
     try {
       // Build context and send message
       const context = await buildContext()
-      const response = await chatApi.sendMessage({
+      const stream = await chatApi.streamMessage({
         session_id: sessionId,
         message,
         context,
         model_override: modelOverride ?? (currentSession?.model_override ?? undefined)
-      })
+      }, abortControllerRef.current.signal)
 
-      // Update messages with API response
-      setMessages(response.messages)
+      // Handle the readable stream
+      const reader = stream.getReader()
+      const decoder = new TextDecoder()
+      let aiMessage: NotebookChatMessage | null = null
+
+      while (true) {
+        const { value, done } = await reader.read()
+        if (done) break
+
+        const text = decoder.decode(value)
+        const lines = text.split('\n')
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            try {
+              const data = JSON.parse(line.slice(6))
+              
+              if (data.type === 'chunk' || data.type === 'ai_message') {
+                if (!aiMessage) {
+                  aiMessage = {
+                    id: `ai-${Date.now()}`,
+                    type: 'ai',
+                    content: data.content || '',
+                    timestamp: new Date().toISOString()
+                  }
+                  setMessages(prev => [...prev, aiMessage!])
+                } else {
+                  aiMessage.content += data.content || ''
+                  setMessages(prev =>
+                    prev.map(msg => msg.id === aiMessage!.id
+                      ? { ...msg, content: aiMessage!.content }
+                      : msg
+                    )
+                  )
+                }
+              } else if (data.type === 'error') {
+                throw new Error(data.message || 'Stream error')
+              }
+            } catch (e) {
+              if (e instanceof SyntaxError) {
+                console.error('Error parsing SSE data:', e)
+              } else {
+                throw e
+              }
+            }
+          }
+        }
+      }
 
       // Refetch current session to get updated data
       await refetchCurrentSession()
     } catch (err: unknown) {
+      if ((err as Error).name === 'AbortError') {
+        console.log('Stream aborted')
+        return
+      }
       const error = err as { response?: { data?: { detail?: string } }, message?: string };
       console.error('Error sending message:', error)
       toast.error(getApiErrorMessage(error.response?.data?.detail || error.message, (key) => t(key), 'apiErrors.failedToSendMessage'))
-      // Remove optimistic message on error
+      // Remove optimistic message on error if AI message hasn't been created
       setMessages(prev => prev.filter(msg => !msg.id.startsWith('temp-')))
     } finally {
       setIsSending(false)
+      abortControllerRef.current = null
     }
   }, [
     notebookId,
@@ -247,6 +307,14 @@ export function useNotebookChat({ notebookId, sources, notes, contextSelections 
     queryClient,
     t
   ])
+
+  // Cancel streaming
+  const cancelStreaming = useCallback(() => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort()
+      setIsSending(false)
+    }
+  }, [])
 
   // Switch session
   const switchSession = useCallback((sessionId: string) => {
@@ -303,21 +371,23 @@ export function useNotebookChat({ notebookId, sources, notes, contextSelections 
   return {
     // State
     sessions,
-    currentSession: currentSession || sessions.find(s => s.id === currentSessionId),
+    currentSession: sessions.find(s => s.id === currentSessionId),
     currentSessionId,
     messages,
     isSending,
-    loadingSessions,
     tokenCount,
     charCount,
     pendingModelOverride,
-
+    loadingSessions,
+    
     // Actions
     createSession,
     updateSession,
     deleteSession,
     switchSession,
     sendMessage,
+    cancelStreaming,
+    setPendingModelOverride,
     setModelOverride,
     refetchSessions
   }

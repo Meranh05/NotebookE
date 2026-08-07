@@ -2,7 +2,7 @@
 Tests for the podcast audio path choke point (#1030).
 
 `PodcastEpisode.audio_file` stores a path relative to PODCASTS_FOLDER;
-`resolve_contained_audio_path()` (open_notebook/podcasts/audio_paths.py) is
+`resolve_contained_audio_path()` (notebooke/podcasts/audio_paths.py) is
 the single helper every consumption point (stream, list, get, delete, retry)
 uses to join + resolve + contain it. Absolute paths and `file://` URIs are
 legacy rows migration 21 could not convert - they are treated as invalid,
@@ -15,9 +15,9 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastapi.testclient import TestClient
 
-from open_notebook.config import PODCASTS_FOLDER
-from open_notebook.podcasts.audio_paths import resolve_contained_audio_path
-from open_notebook.podcasts.models import PodcastEpisode
+from notebooke.config import PODCASTS_FOLDER
+from notebooke.podcasts.audio_paths import resolve_contained_audio_path
+from notebooke.podcasts.models import PodcastEpisode
 
 
 def make_episode(audio_file=None, **overrides):
@@ -45,7 +45,7 @@ def client():
 class TestResolveContainedAudioPath:
     def test_relative_path_inside_root_resolves(self, tmp_path, monkeypatch):
         monkeypatch.setattr(
-            "open_notebook.podcasts.audio_paths.PODCASTS_FOLDER", str(tmp_path)
+            "notebooke.podcasts.audio_paths.PODCASTS_FOLDER", str(tmp_path)
         )
         episode_dir = tmp_path / "episodes" / "some-uuid"
         episode_dir.mkdir(parents=True)
@@ -59,7 +59,7 @@ class TestResolveContainedAudioPath:
         root = tmp_path / "podcasts"
         root.mkdir()
         monkeypatch.setattr(
-            "open_notebook.podcasts.audio_paths.PODCASTS_FOLDER", str(root)
+            "notebooke.podcasts.audio_paths.PODCASTS_FOLDER", str(root)
         )
         outside = tmp_path / "outside.mp3"
         outside.write_bytes(b"etc passwd style file")
@@ -73,7 +73,7 @@ class TestResolveContainedAudioPath:
         """Legacy rows the migration could not convert stay invalid - the DB
         contract after #1030 is relative-only."""
         monkeypatch.setattr(
-            "open_notebook.podcasts.audio_paths.PODCASTS_FOLDER", str(tmp_path)
+            "notebooke.podcasts.audio_paths.PODCASTS_FOLDER", str(tmp_path)
         )
         inside = tmp_path / "episodes" / "u" / "a.mp3"
         inside.parent.mkdir(parents=True)
@@ -84,7 +84,7 @@ class TestResolveContainedAudioPath:
 
     def test_file_uri_is_rejected(self, tmp_path, monkeypatch):
         monkeypatch.setattr(
-            "open_notebook.podcasts.audio_paths.PODCASTS_FOLDER", str(tmp_path)
+            "notebooke.podcasts.audio_paths.PODCASTS_FOLDER", str(tmp_path)
         )
         assert (
             resolve_contained_audio_path("file:///data/podcasts/episodes/x/a.mp3")
@@ -100,7 +100,7 @@ class TestResolveContainedAudioPath:
         real_root = tmp_path / "podcasts"
         real_root.mkdir()
         monkeypatch.setattr(
-            "open_notebook.podcasts.audio_paths.PODCASTS_FOLDER", str(real_root)
+            "notebooke.podcasts.audio_paths.PODCASTS_FOLDER", str(real_root)
         )
         sibling = tmp_path / "podcasts_evil"
         sibling.mkdir()
@@ -112,7 +112,7 @@ class TestResolveContainedAudioPath:
         root = tmp_path / "podcasts"
         root.mkdir()
         monkeypatch.setattr(
-            "open_notebook.podcasts.audio_paths.PODCASTS_FOLDER", str(root)
+            "notebooke.podcasts.audio_paths.PODCASTS_FOLDER", str(root)
         )
         outside = tmp_path / "outside.mp3"
         outside.write_bytes(b"secret")
@@ -126,7 +126,7 @@ class TestResolveContainedAudioPath:
 
     def test_root_itself_is_rejected(self, tmp_path, monkeypatch):
         monkeypatch.setattr(
-            "open_notebook.podcasts.audio_paths.PODCASTS_FOLDER", str(tmp_path)
+            "notebooke.podcasts.audio_paths.PODCASTS_FOLDER", str(tmp_path)
         )
         assert resolve_contained_audio_path(".") is None
 

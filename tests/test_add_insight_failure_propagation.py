@@ -16,8 +16,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from open_notebook.domain.notebook import Source
-from open_notebook.exceptions import DatabaseOperationError, InvalidInputError
+from notebooke.domain.notebook import Source
+from notebooke.exceptions import DatabaseOperationError, InvalidInputError
 
 
 def make_source(**overrides):
@@ -31,7 +31,7 @@ class TestAddInsightRaisesOnSubmissionFailure:
     async def test_returns_command_id_on_success(self):
         source = make_source()
         with patch(
-            "open_notebook.domain.notebook.submit_command",
+            "notebooke.domain.notebook.submit_command",
             return_value="command:abc123",
         ):
             result = await source.add_insight("Summary", "some content")
@@ -41,7 +41,7 @@ class TestAddInsightRaisesOnSubmissionFailure:
     async def test_raises_database_operation_error_on_submission_failure(self):
         source = make_source()
         with patch(
-            "open_notebook.domain.notebook.submit_command",
+            "notebooke.domain.notebook.submit_command",
             side_effect=RuntimeError("queue unavailable"),
         ):
             with pytest.raises(DatabaseOperationError):
@@ -61,11 +61,11 @@ class TestAddInsightRaisesOnSubmissionFailure:
 
 
 class TestTransformationGraphPropagatesFailure:
-    """open_notebook/graphs/transformation.py: run_transformation()."""
+    """notebooke/graphs/transformation.py: run_transformation()."""
 
     @pytest.mark.asyncio
     async def test_add_insight_failure_propagates_out_of_run_transformation(self):
-        from open_notebook.graphs.transformation import run_transformation
+        from notebooke.graphs.transformation import run_transformation
 
         source = make_source()
         transformation = MagicMock(title="Summary", prompt="Summarize this")
@@ -83,14 +83,14 @@ class TestTransformationGraphPropagatesFailure:
 
         with (
             patch(
-                "open_notebook.graphs.transformation.DefaultPrompts",
+                "notebooke.graphs.transformation.DefaultPrompts",
                 return_value=MagicMock(transformation_instructions=None),
             ),
             patch(
-                "open_notebook.graphs.transformation.Prompter"
+                "notebooke.graphs.transformation.Prompter"
             ) as mock_prompter_cls,
             patch(
-                "open_notebook.graphs.transformation.provision_langchain_model",
+                "notebooke.graphs.transformation.provision_langchain_model",
                 new=AsyncMock(return_value=fake_chain),
             ),
             patch.object(
@@ -109,7 +109,7 @@ class TestTransformationGraphPropagatesFailure:
 
     @pytest.mark.asyncio
     async def test_successful_add_insight_returns_output_normally(self):
-        from open_notebook.graphs.transformation import run_transformation
+        from notebooke.graphs.transformation import run_transformation
 
         source = make_source()
         transformation = MagicMock(title="Summary", prompt="Summarize this")
@@ -127,14 +127,14 @@ class TestTransformationGraphPropagatesFailure:
 
         with (
             patch(
-                "open_notebook.graphs.transformation.DefaultPrompts",
+                "notebooke.graphs.transformation.DefaultPrompts",
                 return_value=MagicMock(transformation_instructions=None),
             ),
             patch(
-                "open_notebook.graphs.transformation.Prompter"
+                "notebooke.graphs.transformation.Prompter"
             ) as mock_prompter_cls,
             patch(
-                "open_notebook.graphs.transformation.provision_langchain_model",
+                "notebooke.graphs.transformation.provision_langchain_model",
                 new=AsyncMock(return_value=fake_chain),
             ),
             patch.object(
@@ -151,12 +151,12 @@ class TestTransformationGraphPropagatesFailure:
 
 
 class TestSourceGraphTransformContentPropagatesFailure:
-    """open_notebook/graphs/source.py: transform_content() - the other
+    """notebooke/graphs/source.py: transform_content() - the other
     add_insight() caller, invoked during initial source ingestion."""
 
     @pytest.mark.asyncio
     async def test_add_insight_failure_propagates_out_of_transform_content(self):
-        from open_notebook.graphs.source import TransformationState, transform_content
+        from notebooke.graphs.source import TransformationState, transform_content
 
         source = make_source()
         source.full_text = "the source's full text"
@@ -166,7 +166,7 @@ class TestSourceGraphTransformContentPropagatesFailure:
 
         with (
             patch(
-                "open_notebook.graphs.source.transform_graph.ainvoke",
+                "notebooke.graphs.source.transform_graph.ainvoke",
                 new=AsyncMock(return_value={"output": "transformed output"}),
             ),
             patch.object(

@@ -6,16 +6,16 @@ from typing import Optional
 from loguru import logger
 from surreal_commands import CommandInput, CommandOutput, command
 
-from open_notebook.config import PODCASTS_FOLDER
-from open_notebook.database.repository import ensure_record_id, repo_query
-from open_notebook.podcasts.audio_paths import to_relative_audio_path
-from open_notebook.podcasts.models import (
+from notebooke.config import PODCASTS_FOLDER
+from notebooke.database.repository import ensure_record_id, repo_query
+from notebooke.podcasts.audio_paths import to_relative_audio_path
+from notebooke.podcasts.models import (
     EpisodeProfile,
     PodcastEpisode,
     SpeakerProfile,
     _resolve_model_config,
 )
-from open_notebook.utils.model_utils import full_model_dump
+from notebooke.utils.model_utils import full_model_dump
 
 try:
     from podcast_creator import configure, create_podcast
@@ -62,7 +62,7 @@ class PodcastGenerationOutput(CommandOutput):
     error_message: Optional[str] = None
 
 
-@command("generate_podcast", app="open_notebook", retry={"max_attempts": 1})
+@command("generate_podcast", app="notebooke", retry={"max_attempts": 1})
 async def generate_podcast_command(
     input_data: PodcastGenerationInput,
 ) -> PodcastGenerationOutput:
@@ -274,7 +274,7 @@ async def generate_podcast_command(
         # configure("templates", {...}), which compiles the given string
         # directly as Jinja2 template *source* (Prompter(template_text=...)
         # in podcast_creator/config.py) - the exact SSTI shape already fixed
-        # in open_notebook/graphs/transformation.py (GHSA-f35w-wx37-26q7).
+        # in notebooke/graphs/transformation.py (GHSA-f35w-wx37-26q7).
         # We don't call it today (confirmed: no code path here sets the
         # "templates" key, so podcast generation always uses the file-based
         # prompts/podcast/*.jinja templates in this repo). If a "custom
@@ -305,7 +305,7 @@ async def generate_podcast_command(
         result = None
         audio_error: Optional[str] = None
         
-        from open_notebook.ai.models import Model
+        from notebooke.ai.models import Model
         
         while attempt <= max_attempts:
             try:
@@ -381,9 +381,9 @@ async def generate_podcast_command(
         )
         episode.audio_file = audio_file_rel
         episode.transcript = {
-            "transcript": full_model_dump(result["transcript"]) if result else None
+            "transcript": full_model_dump(result.get("transcript")) if result and result.get("transcript") else None
         }
-        episode.outline = full_model_dump(result["outline"]) if result else None
+        episode.outline = full_model_dump(result.get("outline")) if result and result.get("outline") else None
         await episode.save()
 
         if audio_error:

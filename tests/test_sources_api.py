@@ -6,8 +6,8 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 from fastapi.testclient import TestClient
 
-from open_notebook.config import UPLOADS_FOLDER
-from open_notebook.domain.notebook import Source
+from notebooke.config import UPLOADS_FOLDER
+from notebooke.domain.notebook import Source
 
 
 @pytest.fixture
@@ -205,7 +205,7 @@ class TestGetSourceNotFound:
     @pytest.mark.asyncio
     @patch("api.routers.sources.Source.get", new_callable=AsyncMock)
     async def test_get_missing_source_returns_404(self, mock_get, client):
-        from open_notebook.exceptions import NotFoundError
+        from notebooke.exceptions import NotFoundError
 
         mock_get.side_effect = NotFoundError("source with id source:gone not found")
 

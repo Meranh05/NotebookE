@@ -8,7 +8,7 @@ startup (see scripts/docker-entrypoint.sh and
 docs/7-DEVELOPMENT/decisions/ADR-007-optin-runtimes.md), so this endpoint probes
 what is *actually* importable/reachable rather than trusting the enable flags.
 
-The probes themselves live in open_notebook.utils.runtime_capabilities because
+The probes themselves live in notebooke.utils.runtime_capabilities because
 the source-processing graph needs the same signal (it must not pass content-core
 an engine whose runtime is absent).
 
@@ -19,7 +19,7 @@ Endpoints:
 from fastapi import APIRouter
 
 from api.models import CapabilitiesResponse
-from open_notebook.utils.runtime_capabilities import (
+from notebooke.utils.runtime_capabilities import (
     crawl4ai_local_ready,
     crawl4ai_remote_configured,
     docling_available,

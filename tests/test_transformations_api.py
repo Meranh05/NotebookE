@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock, patch
 
 from fastapi.testclient import TestClient
 
-from open_notebook.domain.transformation import Transformation
+from notebooke.domain.transformation import Transformation
 
 
 def _client() -> TestClient:

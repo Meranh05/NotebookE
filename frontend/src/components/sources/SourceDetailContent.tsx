@@ -20,6 +20,7 @@ import { Badge } from '@/components/ui/badge'
 import { Label } from '@/components/ui/label'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Card, CardContent } from '@/components/ui/card'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -694,89 +695,82 @@ function SourceDetailContentInner({
               </p>
 
               {/* Create New Insight */}
-              <div className="mt-5 border-b border-border pb-5">
-                <Label
-                  htmlFor="transformation-select"
-                  className="mb-3 text-sm font-medium flex items-center gap-2"
-                >
+              <div className="mt-6 mb-8 flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-xl border bg-card shadow-sm">
+                <div className="flex items-center gap-2 text-sm font-semibold text-foreground shrink-0">
                   <IconSparkles className="h-4 w-4 text-teal" />
                   {t('sources.generateNewInsight')}
-                </Label>
-                <div className="flex gap-2">
-                  <Select
-                    name="transformation"
-                    value={selectedTransformation}
-                    onValueChange={setSelectedTransformation}
-                    disabled={creatingInsight}
-                  >
-                    <SelectTrigger id="transformation-select" className="flex-1">
-                      <SelectValue placeholder={t('sources.selectTransformation')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {transformations.map((trans) => (
-                        <SelectItem key={trans.id} value={trans.id}>
-                          {trans.title || trans.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <Button
-                    size="sm"
-                    onClick={createInsight}
-                    disabled={!selectedTransformation || creatingInsight}
-                  >
-                    {creatingInsight ? (
-                      <>
-                        <LoadingSpinner className="mr-2 h-3 w-3" />
-                        {t('common.creating')}
-                      </>
-                    ) : (
-                      <>
-                        <IconPlus className="mr-2 h-4 w-4" />
-                        {t('common.create')}
-                      </>
-                    )}
-                  </Button>
                 </div>
+                <Select
+                  name="transformation"
+                  value={selectedTransformation}
+                  onValueChange={setSelectedTransformation}
+                  disabled={creatingInsight}
+                >
+                  <SelectTrigger id="transformation-select" className="w-full sm:max-w-[300px] bg-background">
+                    <SelectValue placeholder={t('sources.selectTransformation')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {transformations.map((trans) => (
+                      <SelectItem key={trans.id} value={trans.id}>
+                        {trans.title || trans.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Button
+                  size="sm"
+                  className="w-full sm:w-auto shadow-sm"
+                  onClick={createInsight}
+                  disabled={!selectedTransformation || creatingInsight}
+                >
+                  {creatingInsight ? (
+                    <LoadingSpinner className="mr-2 h-4 w-4" />
+                  ) : (
+                    <IconPlus className="mr-2 h-4 w-4" />
+                  )}
+                  {t('common.create')}
+                </Button>
               </div>
 
               {/* Insights List */}
               {loadingInsights ? (
-                <div className="flex items-center justify-center py-8">
-                  <LoadingSpinner />
+                <div className="flex items-center justify-center py-12">
+                  <LoadingSpinner className="h-6 w-6 text-teal" />
                 </div>
               ) : insights.length === 0 ? (
-                <div className="text-center py-8 text-muted-foreground">
-                  <IconBulb className="h-12 w-12 mx-auto mb-3 opacity-40" />
-                  <p className="text-sm">{t('sources.noInsightsYet')}</p>
-                  <p className="text-xs mt-1">{t('sources.createFirstInsight')}</p>
+                <div className="text-center py-12 px-4 rounded-xl border border-dashed bg-muted/10 text-muted-foreground shadow-sm">
+                  <IconBulb className="h-10 w-10 mx-auto mb-3 opacity-30 text-teal" />
+                  <p className="text-sm font-medium text-foreground/80">{t('sources.noInsightsYet')}</p>
+                  <p className="text-xs mt-1 opacity-80">{t('sources.createFirstInsight')}</p>
                 </div>
               ) : (
-                <div className="divide-y divide-border">
+                <div className="space-y-4">
                   {insights.map((insight) => (
-                    <div key={insight.id} className="py-4">
-                      <div className="flex items-center gap-2">
-                        <span className="h-1.5 w-1.5 rounded-full bg-teal" aria-hidden="true" />
-                        <span className="text-xs font-medium uppercase tracking-wide text-teal">
+                    <div 
+                      key={insight.id} 
+                      className="group flex flex-col sm:flex-row gap-4 p-4 rounded-xl border bg-card shadow-sm hover:shadow-md hover:border-teal/40 transition-all cursor-pointer hover:-translate-y-0.5" 
+                      onClick={() => setSelectedInsight(insight)}
+                    >
+                      <div className="shrink-0 pt-0.5">
+                        <Badge variant="secondary" className="bg-teal/10 text-teal border-0 font-medium tracking-wide text-[11px] px-2 py-0.5">
                           {insight.insight_type}
-                        </span>
+                        </Badge>
                       </div>
-                      <p className="mt-2 text-sm text-muted-foreground">
-                        {insight.content.slice(0, 180)}{insight.content.length > 180 ? '…' : ''}
+                      <p className="flex-1 text-[14px] text-foreground/90 leading-relaxed line-clamp-3">
+                        {insight.content}
                       </p>
-                      <div className="mt-3 flex justify-end gap-2">
-                        <Button size="sm" variant="outline" onClick={() => setSelectedInsight(insight)}>
-                          {t('sources.viewInsight')}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => setInsightToDelete(insight.id)}
-                          className="text-destructive hover:text-destructive"
-                        >
-                          <IconTrash className="h-4 w-4" />
-                        </Button>
-                      </div>
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setInsightToDelete(insight.id);
+                        }}
+                        className="shrink-0 h-8 w-8 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity hover:text-destructive hover:bg-destructive/10"
+                        title={t('sources.deleteInsight')}
+                      >
+                        <IconTrash className="h-4 w-4" />
+                      </Button>
                     </div>
                   ))}
                 </div>

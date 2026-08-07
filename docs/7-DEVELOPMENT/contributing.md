@@ -6,8 +6,8 @@ Thank you for your interest in contributing to NotebookE! We welcome contributio
 
 NotebookE separates **exploration** from **execution**:
 
-- **Feature requests, ideas, behavior changes, product/design/architecture proposals, and contribution proposals start in [GitHub Discussions](https://github.com/lfnovo/open-notebook/discussions/new?category=ideas).** This is where the community explores the problem and maintainers make the product or design decision.
-- **Reproducible bugs start in [GitHub Issues](https://github.com/lfnovo/open-notebook/issues/new/choose).**
+- **Feature requests, ideas, behavior changes, product/design/architecture proposals, and contribution proposals start in [GitHub Discussions](https://github.com/lfnovo/notebooke/discussions/new?category=ideas).** This is where the community explores the problem and maintainers make the product or design decision.
+- **Reproducible bugs start in [GitHub Issues](https://github.com/lfnovo/notebooke/issues/new/choose).**
 - **Implementation starts from an approved Issue.** Once an idea is sufficiently clear and accepted, a maintainer creates an Issue from the Discussion, scopes it, and assigns it before coding begins.
 
 This means non-trivial contributions follow one of two paths:
@@ -51,7 +51,7 @@ By participating in this project, you are expected to uphold our [Code of Conduc
 ### Reporting Bugs
 
 1. **Search existing issues** - Check if the bug was already reported
-2. **Create a bug report** - Use the [Bug Report template](https://github.com/lfnovo/open-notebook/issues/new?template=bug_report.yml)
+2. **Create a bug report** - Use the [Bug Report template](https://github.com/lfnovo/notebooke/issues/new?template=bug_report.yml)
 3. **Provide details** - Include:
    - Steps to reproduce
    - Expected vs actual behavior
@@ -62,7 +62,7 @@ By participating in this project, you are expected to uphold our [Code of Conduc
 ### Suggesting Features
 
 1. **Search existing Discussions and Issues** - Check whether the problem is already being explored or worked on
-2. **Start an Idea Discussion** - Use the [Ideas form](https://github.com/lfnovo/open-notebook/discussions/new?category=ideas)
+2. **Start an Idea Discussion** - Use the [Ideas form](https://github.com/lfnovo/notebooke/discussions/new?category=ideas)
 3. **Start with the problem and outcome** - Explain what you are trying to do, what is difficult today, and what success would look like
 4. **Add possible directions if useful** - Implementation ideas and references are welcome, but not required
 5. **Join the exploration** - Help answer questions, evaluate trade-offs, or test prototypes
@@ -111,7 +111,7 @@ A large share of contributions — including our own — are written with coding
 1. **You own the PR.** You must have read, understood, and be able to explain every line of the diff. "The agent wrote it" is never an answer in review.
 2. **Discussion before commitment; approved Issue before implementation.** Agents make it cheap to produce large unsolicited PRs — those get closed like any other unassigned PR, regardless of code quality. Small obvious fixes are exempt. For larger work, use a Discussion to shape an idea or an Issue to report a reproducible bug, then wait for an approved work item.
 3. **Tests must have actually run.** Paste real output. An agent *claiming* tests pass is not test evidence.
-4. **Point your agent at the right context.** The repo ships `AGENTS.md` files (root, `open_notebook/`, `frontend/`) with the normative rules, and [change-playbooks.md](change-playbooks.md) with step-by-step recipes — agents that read them produce PRs that pass review faster.
+4. **Point your agent at the right context.** The repo ships `AGENTS.md` files (root, `notebooke/`, `frontend/`) with the normative rules, and [change-playbooks.md](change-playbooks.md) with step-by-step recipes — agents that read them produce PRs that pass review faster.
 5. **Keep it scoped.** Agents tend to "improve" surrounding code along the way. Unrelated refactors belong in separate issues/PRs.
 
 Disclosure of AI assistance is appreciated but optional — responsibility for the result is what matters, and it's yours either way.

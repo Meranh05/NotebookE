@@ -1,7 +1,7 @@
 """
 Providers Router
 
-Exposes the provider registry (open_notebook/ai/provider_registry.py) so
+Exposes the provider registry (notebooke/ai/provider_registry.py) so
 clients can enumerate supported providers and their metadata instead of
 keeping their own copies.
 
@@ -15,7 +15,7 @@ from fastapi import APIRouter
 
 from api.credentials_service import check_env_configured
 from api.models import ProviderInfoResponse
-from open_notebook.ai.provider_registry import PROVIDERS
+from notebooke.ai.provider_registry import PROVIDERS
 
 router = APIRouter(prefix="/providers", tags=["providers"])
 

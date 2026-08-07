@@ -37,7 +37,7 @@ server {
 
     # Single location block - that's it!
     location / {
-        proxy_pass http://open-notebook:8502;
+        proxy_pass http://notebooke:8502;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -61,7 +61,7 @@ server {
 
 ```caddy
 notebook.example.com {
-    reverse_proxy open-notebook:8502 {
+    reverse_proxy notebooke:8502 {
         transport http {
             read_timeout 600s
             write_timeout 600s
@@ -76,10 +76,10 @@ Caddy handles HTTPS automatically. The timeout settings ensure long-running oper
 
 ```yaml
 # Add this to your docker-compose.yml alongside the surrealdb service
-# See full base setup: https://github.com/lfnovo/open-notebook/blob/main/docker-compose.yml
+# See full base setup: https://github.com/lfnovo/notebooke/blob/main/docker-compose.yml
 services:
-  open-notebook:
-    image: lfnovo/open_notebook:v1-latest
+  notebooke:
+    image: lfnovo/notebooke:v1-latest
     pull_policy: always
     environment:
       - API_URL=https://notebook.example.com
@@ -163,14 +163,14 @@ When `API_URL` is not set, the Next.js frontend:
 
 ## Complete Docker Compose Example
 
-> **Note:** This example only shows the open-notebook and nginx services. You also need a `surrealdb` service. See the [full base docker-compose.yml](https://github.com/lfnovo/open-notebook/blob/main/docker-compose.yml) for the complete setup.
+> **Note:** This example only shows the notebooke and nginx services. You also need a `surrealdb` service. See the [full base docker-compose.yml](https://github.com/lfnovo/notebooke/blob/main/docker-compose.yml) for the complete setup.
 
 ```yaml
 services:
-  open-notebook:
-    image: lfnovo/open_notebook:v1-latest
+  notebooke:
+    image: lfnovo/notebooke:v1-latest
     pull_policy: always
-    container_name: open-notebook
+    container_name: notebooke
     environment:
       - API_URL=https://notebook.example.com
       - OPEN_NOTEBOOK_ENCRYPTION_KEY=${OPEN_NOTEBOOK_ENCRYPTION_KEY}
@@ -192,7 +192,7 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./ssl:/etc/nginx/ssl:ro
     depends_on:
-      - open-notebook
+      - notebooke
     restart: unless-stopped
 ```
 
@@ -207,7 +207,7 @@ events {
 
 http {
     upstream notebook {
-        server open-notebook:8502;
+        server notebooke:8502;
     }
 
     # HTTP redirect
@@ -267,7 +267,7 @@ If external scripts or integrations need direct API access, route `/api/*` direc
 ```nginx
 # Direct API access (for external integrations)
 location /api/ {
-    proxy_pass http://open-notebook:5055/api/;
+    proxy_pass http://notebooke:5055/api/;
     proxy_http_version 1.1;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
@@ -277,7 +277,7 @@ location /api/ {
 
 # Frontend (handles all other traffic)
 location / {
-    proxy_pass http://open-notebook:8502;
+    proxy_pass http://notebooke:8502;
     # ... same headers as above
 }
 ```
@@ -314,8 +314,8 @@ API_URL=http://192.168.1.100:5055
 ```yaml
 # Add to your docker-compose.yml (requires surrealdb service, see installation guide)
 services:
-  open-notebook:
-    image: lfnovo/open_notebook:v1-latest
+  notebooke:
+    image: lfnovo/notebooke:v1-latest
     pull_policy: always
     environment:
       - API_URL=http://192.168.1.100:5055
@@ -348,8 +348,8 @@ Host the API and frontend on different subdomains:
 ```yaml
 # Add to your docker-compose.yml (requires surrealdb service, see installation guide)
 services:
-  open-notebook:
-    image: lfnovo/open_notebook:v1-latest
+  notebooke:
+    image: lfnovo/notebooke:v1-latest
     pull_policy: always
     environment:
       - API_URL=https://api.notebook.example.com
@@ -369,7 +369,7 @@ server {
     ssl_certificate_key /etc/nginx/ssl/privkey.pem;
 
     location / {
-        proxy_pass http://open-notebook:8502;
+        proxy_pass http://notebooke:8502;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -390,7 +390,7 @@ server {
     ssl_certificate_key /etc/nginx/ssl/privkey.pem;
 
     location / {
-        proxy_pass http://open-notebook:5055;
+        proxy_pass http://notebooke:5055;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
@@ -413,7 +413,7 @@ For complex deployments with separate frontend and API containers:
 ```yaml
 services:
   frontend:
-    image: lfnovo/open_notebook_frontend:v1-latest
+    image: lfnovo/notebooke_frontend:v1-latest
     pull_policy: always
     environment:
       - API_URL=https://notebook.example.com
@@ -421,7 +421,7 @@ services:
       - "8502:8502"
 
   api:
-    image: lfnovo/open_notebook_api:v1-latest
+    image: lfnovo/notebooke_api:v1-latest
     pull_policy: always
     environment:
       - OPEN_NOTEBOOK_ENCRYPTION_KEY=${OPEN_NOTEBOOK_ENCRYPTION_KEY}
@@ -524,7 +524,7 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 1. **Check API_URL is set**:
 
    ```bash
-   docker exec open-notebook env | grep API_URL
+   docker exec notebooke env | grep API_URL
    ```
 
 2. **Verify reverse proxy reaches container**:
@@ -559,7 +559,7 @@ proxy_set_header Connection 'upgrade';
 ### 502 Bad Gateway
 
 1. Check container is running: `docker ps`
-2. Check container logs: `docker logs open-notebook`
+2. Check container logs: `docker logs notebooke`
 3. Verify nginx can reach container (same network)
 
 ### Timeout Errors
@@ -584,7 +584,7 @@ proxy_send_timeout 600s;
 **Caddy:**
 
 ```caddy
-reverse_proxy open-notebook:8502 {
+reverse_proxy notebooke:8502 {
     transport http {
         read_timeout 600s
         write_timeout 600s
@@ -650,7 +650,7 @@ curl https://your-domain.com/api/config
 **Step 3: Check Docker logs**
 
 ```bash
-docker logs open-notebook
+docker logs notebooke
 
 # Look for:
 # - Frontend startup: "▲ Next.js ready on http://0.0.0.0:8502"
@@ -661,7 +661,7 @@ docker logs open-notebook
 **Step 4: Verify environment variable**
 
 ```bash
-docker exec open-notebook env | grep API_URL
+docker exec notebooke env | grep API_URL
 
 # Should show:
 # API_URL=https://your-domain.com
@@ -691,7 +691,7 @@ Check browser console (F12) - should see: `✅ [Config] Runtime API URL from ser
 ```nginx
 # Only needed for versions ≤ 1.0.10
 location = /config {
-    proxy_pass http://open-notebook:8502;
+    proxy_pass http://notebooke:8502;
     proxy_http_version 1.1;
     proxy_set_header Host $host;
     proxy_set_header X-Forwarded-Proto $scheme;
@@ -767,7 +767,7 @@ When uploading files, your reverse proxy may reject the request due to body size
    apiVersion: networking.k8s.io/v1
    kind: Ingress
    metadata:
-     name: open-notebook
+     name: notebooke
      annotations:
        nginx.ingress.kubernetes.io/proxy-body-size: "100m"
        # Add CORS headers for error responses
@@ -782,7 +782,7 @@ When uploading files, your reverse proxy may reject the request due to body size
        request_body {
            max_size 100MB
        }
-       reverse_proxy open-notebook:8502 {
+       reverse_proxy notebooke:8502 {
            transport http {
                read_timeout 600s
                write_timeout 600s
@@ -829,7 +829,7 @@ Response to preflight request doesn't pass access control check
    ```nginx
    # Make sure this works:
    location /api/ {
-       proxy_pass http://open-notebook:5055/api/;  # Note the trailing slash!
+       proxy_pass http://notebooke:5055/api/;  # Note the trailing slash!
    }
    ```
 
@@ -917,7 +917,7 @@ curl -H "Authorization: Bearer your-password-here" \
    - Test API: `curl https://your-domain.com/api/config`
    - Verify authentication works
    - Check long-running operations (podcast generation)
-9. **Monitor logs** regularly: `docker logs open-notebook`
+9. **Monitor logs** regularly: `docker logs notebooke`
 10. **Don't include `/api` in API_URL** - the system adds this automatically
 
 ---
@@ -929,7 +929,7 @@ If you're running NotebookE **version 1.0.x or earlier**, you may need to use th
 **Check your version:**
 
 ```bash
-docker exec open-notebook cat /app/package.json | grep version
+docker exec notebooke cat /app/package.json | grep version
 ```
 
 **If version < 1.1.0**, you may need:

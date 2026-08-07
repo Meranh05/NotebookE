@@ -10,10 +10,11 @@ from api.podcast_service import (
     PodcastGenerationResponse,
     PodcastService,
 )
-from open_notebook.ai.models import Model
-from open_notebook.exceptions import OpenNotebookError
-from open_notebook.podcasts.audio_paths import resolve_contained_audio_path
-from open_notebook.podcasts.models import PodcastEpisode
+from notebooke.ai.models import Model
+from notebooke.exceptions import OpenNotebookError
+from api.command_service import CommandService
+from notebooke.podcasts.audio_paths import resolve_contained_audio_path
+from notebooke.podcasts.models import PodcastEpisode
 
 router = APIRouter()
 
@@ -119,6 +120,7 @@ class PodcastEpisodeResponse(BaseModel):
     created: Optional[str] = None
     job_status: Optional[str] = None
     error_message: Optional[str] = None
+    command_id: Optional[str] = None
 
 
 @router.post("/podcasts/generate", response_model=PodcastGenerationResponse)
@@ -243,6 +245,7 @@ async def list_podcast_episodes():
                     created=str(episode.created) if episode.created else None,
                     job_status=job_status,
                     error_message=error_message,
+                    command_id=str(episode.command) if episode.command else None,
                 )
             )
 
@@ -307,6 +310,7 @@ async def get_podcast_episode(episode_id: str):
             created=str(episode.created) if episode.created else None,
             job_status=job_status,
             error_message=error_message,
+            command_id=str(episode.command) if episode.command else None,
         )
 
     except HTTPException:
@@ -430,3 +434,42 @@ async def delete_podcast_episode(episode_id: str):
         raise HTTPException(
             status_code=500, detail="Failed to delete episode"
         )
+
+
+@router.post("/podcasts/episodes/{episode_id}/cancel")
+async def cancel_podcast_episode(episode_id: str):
+    """Cancel a running podcast episode job"""
+    try:
+        episode = await PodcastService.get_episode(episode_id)
+
+        if not episode.command:
+            raise HTTPException(
+                status_code=400,
+                detail="Episode does not have an associated background job",
+            )
+            
+        detail = await episode.get_job_detail()
+        if detail["status"] not in ("running", "processing", "pending", "submitted"):
+            raise HTTPException(
+                status_code=400,
+                detail=f"Cannot cancel episode in state '{detail['status']}'",
+            )
+
+        success = await CommandService.cancel_command_job(str(episode.command))
+        if not success:
+            raise HTTPException(
+                status_code=500, detail="Failed to cancel the background job"
+            )
+
+        return {"message": "Episode job cancelled successfully", "episode_id": episode_id}
+
+    except HTTPException:
+        raise
+    except OpenNotebookError:
+        raise
+    except Exception as e:
+        logger.error(f"Error cancelling podcast episode: {str(e)}")
+        raise HTTPException(
+            status_code=500, detail="Failed to cancel episode"
+        )
+

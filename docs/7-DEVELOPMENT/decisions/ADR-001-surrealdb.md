@@ -1,7 +1,7 @@
 # ADR-001: SurrealDB as the database
 
 - **Status**: Accepted
-- **Date**: 2026-07 (retroactive record — decision dates from project inception; long-form rationale maintained in [#372](https://github.com/lfnovo/open-notebook/issues/372))
+- **Date**: 2026-07 (retroactive record — decision dates from project inception; long-form rationale maintained in [#372](https://github.com/lfnovo/notebooke/issues/372))
 - **Related**: #372, #378, #381, [VISION.md](../../../VISION.md) (Platform v-next cluster)
 
 ## Context

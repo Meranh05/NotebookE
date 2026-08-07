@@ -30,10 +30,10 @@ interface ModelSelectorProps {
   disabled?: boolean
 }
 
-export function ModelSelector({ 
-  currentModel, 
+export function ModelSelector({
+  currentModel,
   onModelChange,
-  disabled = false 
+  disabled = false
 }: ModelSelectorProps) {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
@@ -84,8 +84,8 @@ export function ModelSelector({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button 
-          variant="outline" 
+        <Button
+          variant="outline"
           size="sm"
           disabled={disabled}
           className="gap-2"
@@ -117,8 +117,8 @@ export function ModelSelector({
                 <SelectItem value="default">
                   <div className="flex items-center justify-between w-full">
                     <span>
-                      {defaultModel 
-                        ? `${t('common.default')} (${defaultModel.name})` 
+                      {defaultModel
+                        ? `${t('common.default')} (${defaultModel.name})`
                         : t('transformations.systemDefault')}
                     </span>
                     {defaultModel?.provider && (

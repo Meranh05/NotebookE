@@ -86,7 +86,7 @@ class TestInvalidInputErrorsStillReturnTheirOwnSafeMessage:
     fix targets, and must be untouched."""
 
     def test_update_source_invalid_input_still_returns_its_message(self, client):
-        from open_notebook.exceptions import InvalidInputError
+        from notebooke.exceptions import InvalidInputError
 
         mock_source = AsyncMock()
         mock_source.save = AsyncMock(
@@ -128,7 +128,7 @@ class TestPodcastServiceDoesNotLeakExceptionText:
         from fastapi import HTTPException
 
         from api.podcast_service import PodcastService
-        from open_notebook.podcasts.models import PodcastEpisode
+        from notebooke.podcasts.models import PodcastEpisode
 
         with patch.object(
             PodcastEpisode,
@@ -147,7 +147,7 @@ class TestPodcastServiceDoesNotLeakExceptionText:
         from fastapi import HTTPException
 
         from api.podcast_service import PodcastService
-        from open_notebook.podcasts.models import PodcastEpisode
+        from notebooke.podcasts.models import PodcastEpisode
 
         with patch.object(
             PodcastEpisode, "get", new=AsyncMock(side_effect=RuntimeError(SECRET))

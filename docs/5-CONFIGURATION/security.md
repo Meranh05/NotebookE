@@ -86,8 +86,8 @@ environment:
 ```yaml
 # Add to your docker-compose.yml (requires surrealdb service, see installation guide)
 services:
-  open_notebook:
-    image: lfnovo/open_notebook:v1-latest
+  notebooke:
+    image: lfnovo/notebooke:v1-latest
     pull_policy: always
     environment:
       - OPEN_NOTEBOOK_ENCRYPTION_KEY=your-secret-encryption-key
@@ -249,8 +249,8 @@ async function getNotebooks() {
 ```yaml
 # Add to your docker-compose.yml (requires surrealdb service, see installation guide)
 services:
-  open_notebook:
-    image: lfnovo/open_notebook:v1-latest
+  notebooke:
+    image: lfnovo/notebooke:v1-latest
     pull_policy: always
     ports:
       - "127.0.0.1:8502:8502"  # Bind to localhost only
@@ -361,10 +361,10 @@ For deployments requiring advanced security:
 
 ```bash
 # Check env var is set
-docker exec open-notebook env | grep OPEN_NOTEBOOK_PASSWORD
+docker exec notebooke env | grep OPEN_NOTEBOOK_PASSWORD
 
 # Check logs
-docker logs open-notebook | grep -i auth
+docker logs notebooke | grep -i auth
 
 # Test API directly
 curl -H "Authorization: Bearer your_password" \

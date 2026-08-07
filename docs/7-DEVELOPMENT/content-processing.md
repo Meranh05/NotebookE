@@ -1,6 +1,6 @@
 # Content Processing: Chunking, Embedding, Context & Encryption
 
-Design notes for the utilities in `open_notebook/utils/` that turn raw content into searchable, LLM-consumable data. These are cross-cutting: sources, notes and insights all flow through them.
+Design notes for the utilities in `notebooke/utils/` that turn raw content into searchable, LLM-consumable data. These are cross-cutting: sources, notes and insights all flow through them.
 
 ## Chunking (`utils/chunking.py`)
 
@@ -22,7 +22,7 @@ export OPEN_NOTEBOOK_CHUNK_OVERLAP=150
 - Empty/whitespace-only input raises `ValueError` — which background commands treat as a permanent (non-retried) failure by design.
 - The embedding model comes from `model_manager` (see [credentials.md](credentials.md) for how provider config is resolved).
 
-**Who triggers embedding** (see also the domain rules in `open_notebook/AGENTS.md`):
+**Who triggers embedding** (see also the domain rules in `notebooke/AGENTS.md`):
 
 | Content | Trigger |
 |---|---|

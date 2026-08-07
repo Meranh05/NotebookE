@@ -13,7 +13,7 @@ services:
     pull_policy: always
     user: root
     restart: always
-  open_notebook:
+  notebooke:
     build:
       context: .
       dockerfile: Dockerfile

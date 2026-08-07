@@ -5,7 +5,7 @@ or bogus provider would flow through to the domain layer and fail later
 with a less clear error instead of a clean 422 at the API boundary.
 
 Also the sync-enforcement for the provider registry
-(open_notebook/ai/provider_registry.py): the registry is the backend
+(notebooke/ai/provider_registry.py): the registry is the backend
 source of truth, and the one remaining manual copy (the
 SupportedProvider Literal) must match it exactly. The frontend consumes
 GET /api/providers at runtime, so it needs no cross-check.
@@ -18,7 +18,7 @@ from fastapi.testclient import TestClient
 from pydantic import ValidationError
 
 from api.models import CreateCredentialRequest, SupportedProvider
-from open_notebook.ai.provider_registry import PROVIDERS
+from notebooke.ai.provider_registry import PROVIDERS
 
 KNOWN_GOOD_PROVIDERS = [
     "openai",
@@ -79,14 +79,14 @@ class TestProviderRegistryIsTheSourceOfTruth:
                 )
 
     def test_discovery_functions_cover_registry(self):
-        from open_notebook.ai.model_discovery import PROVIDER_DISCOVERY_FUNCTIONS
+        from notebooke.ai.model_discovery import PROVIDER_DISCOVERY_FUNCTIONS
 
         assert set(PROVIDER_DISCOVERY_FUNCTIONS.keys()) == set(PROVIDERS.keys())
 
     def test_registry_rejects_duplicate_provider_names(self):
         """A plain dict comprehension would silently drop the earlier spec
         on a name collision; the registry builder must raise instead."""
-        from open_notebook.ai.provider_registry import (
+        from notebooke.ai.provider_registry import (
             ProviderSpec,
             _build_registry,
         )
@@ -102,7 +102,7 @@ class TestProviderRegistryIsTheSourceOfTruth:
         """Pin the derived provider -> discovery URL mapping so a registry
         edit can't silently drop or misassign a URL (both the model_discovery
         table and the credentials_service url_map are built from these)."""
-        from open_notebook.ai.model_discovery import OPENAI_COMPAT_PROVIDERS
+        from notebooke.ai.model_discovery import OPENAI_COMPAT_PROVIDERS
 
         expected = {
             "openai": "https://api.openai.com/v1/models",
@@ -131,7 +131,7 @@ class TestSupportedProviderMatchesOtherSourcesOfTruth:
         assert set(get_args(SupportedProvider)) == set(KNOWN_GOOD_PROVIDERS)
 
     def test_matches_connection_tester_test_models_keys(self):
-        from open_notebook.ai.connection_tester import TEST_MODELS
+        from notebooke.ai.connection_tester import TEST_MODELS
 
         assert set(get_args(SupportedProvider)) == set(TEST_MODELS.keys())
 

@@ -1,5 +1,5 @@
 """
-Tests for open_notebook.ai.model_discovery.
+Tests for notebooke.ai.model_discovery.
 
 Covers the table-driven OpenAI-compatible discovery path and the
 Anthropic model-listing API discovery (with static fallback).
@@ -9,8 +9,8 @@ All HTTP calls are mocked — no real provider APIs are hit.
 import httpx
 import pytest
 
-from open_notebook.ai import model_discovery
-from open_notebook.ai.model_discovery import (
+from notebooke.ai import model_discovery
+from notebooke.ai.model_discovery import (
     ANTHROPIC_FALLBACK_MODELS,
     OPENAI_COMPAT_PROVIDERS,
     OPENROUTER_AUDIO_MODELS,
@@ -352,7 +352,7 @@ class TestNewEsperantoProviders:
         )
 
     def test_ppq_classification_by_substring(self):
-        from open_notebook.ai.model_discovery import classify_model_type
+        from notebooke.ai.model_discovery import classify_model_type
 
         assert classify_model_type("openai/text-embedding-3-small", "ppq") == "embedding"
         assert classify_model_type("nova-3", "ppq") == "speech_to_text"
@@ -361,7 +361,7 @@ class TestNewEsperantoProviders:
 
     @pytest.mark.asyncio
     async def test_deepgram_discovery_includes_stt(self, monkeypatch):
-        from open_notebook.ai.model_discovery import discover_deepgram_models
+        from notebooke.ai.model_discovery import discover_deepgram_models
 
         monkeypatch.setenv("DEEPGRAM_API_KEY", "dg-test")
         models = await discover_deepgram_models()
@@ -373,7 +373,7 @@ class TestNewEsperantoProviders:
 
     @pytest.mark.asyncio
     async def test_cohere_discovery_missing_key_returns_empty(self, monkeypatch):
-        from open_notebook.ai.model_discovery import discover_cohere_models
+        from notebooke.ai.model_discovery import discover_cohere_models
 
         monkeypatch.delenv("COHERE_API_KEY", raising=False)
         assert await discover_cohere_models() == []
@@ -384,7 +384,7 @@ class TestNewEsperantoProviders:
     ):
         from types import SimpleNamespace
 
-        from open_notebook.ai import model_discovery as md
+        from notebooke.ai import model_discovery as md
 
         monkeypatch.setenv("COHERE_API_KEY", "co-test")
 

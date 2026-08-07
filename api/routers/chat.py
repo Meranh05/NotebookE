@@ -1,8 +1,10 @@
 import asyncio
+import json
 import traceback
-from typing import Any, Dict, List, Optional
+from typing import Any, AsyncGenerator, Dict, List, Optional
 
 from fastapi import APIRouter, HTTPException, Query
+from fastapi.responses import StreamingResponse
 from langchain_core.runnables import RunnableConfig
 from loguru import logger
 from pydantic import BaseModel, Field
@@ -13,16 +15,16 @@ from api.routers._chat_shared import (
     extract_chat_messages,
     get_session_or_404,
 )
-from open_notebook.database.repository import ensure_record_id, repo_query
-from open_notebook.domain.notebook import ChatSession, Notebook
-from open_notebook.exceptions import (
+from notebooke.database.repository import ensure_record_id, repo_query
+from notebooke.domain.notebook import ChatSession, Notebook
+from notebooke.exceptions import (
     NotFoundError,
     OpenNotebookError,
 )
-from open_notebook.graphs.chat import graph as chat_graph
-from open_notebook.utils import token_count
-from open_notebook.utils.context_builder import build_notebook_context
-from open_notebook.utils.graph_utils import get_session_message_count
+from notebooke.graphs.chat import graph as chat_graph
+from notebooke.utils import token_count
+from notebooke.utils.context_builder import build_notebook_context
+from notebooke.utils.graph_utils import get_session_message_count
 
 router = APIRouter()
 
@@ -386,6 +388,114 @@ async def execute_chat(request: ExecuteChatRequest):
             f"  Traceback:\n{traceback.format_exc()}"
         )
         raise HTTPException(status_code=500, detail=f"Error executing chat: {str(e)}")
+
+
+async def stream_chat_response(
+    state_values: Dict[str, Any], full_session_id: str, model_override: Optional[str], notebook_id: Optional[str]
+) -> AsyncGenerator[str, None]:
+    """Stream the chat response as Server-Sent Events."""
+    try:
+        from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
+
+        from notebooke.graphs.chat import LANGGRAPH_CHECKPOINT_FILE
+        from notebooke.graphs.chat import agent_state as chat_state
+        
+        async with AsyncSqliteSaver.from_conn_string(LANGGRAPH_CHECKPOINT_FILE) as memory:
+            async_graph = chat_state.compile(checkpointer=memory)
+            
+            async for message_chunk, metadata in async_graph.astream(
+                input=state_values,
+                config=RunnableConfig(
+                    configurable={
+                        "thread_id": full_session_id,
+                        "model_id": model_override,
+                        "notebook_id": notebook_id,
+                    }
+                ),
+                stream_mode="messages"
+            ):
+                # Stream AI message chunks
+                if metadata.get("langgraph_node") == "agent":
+                    if hasattr(message_chunk, "content") and message_chunk.content:
+                        chunk_event = {"type": "chunk", "content": message_chunk.content}
+                        yield f"data: {json.dumps(chunk_event)}\n\n"
+        
+        # Send completion signal
+        completion_data = {"type": "complete"}
+        yield f"data: {json.dumps(completion_data)}\n\n"
+
+    except Exception as e:
+        from notebooke.utils.error_classifier import classify_error
+        _, user_message = classify_error(e)
+        logger.error(f"Error in chat streaming: {str(e)}")
+        error_data = {"type": "error", "message": user_message}
+        yield f"data: {json.dumps(error_data)}\n\n"
+
+
+@router.post("/chat/execute/stream")
+async def execute_chat_stream(request: ExecuteChatRequest):
+    """Execute a chat request and stream the AI response."""
+    try:
+        # Verify session exists
+        full_session_id, session = await get_session_or_404(request.session_id)
+
+        # Fetch notebook linked to this session
+        notebook_query = await repo_query(
+            "SELECT out FROM refers_to WHERE in = $session_id",
+            {"session_id": ensure_record_id(full_session_id)},
+        )
+        notebook_id = notebook_query[0]["out"] if notebook_query else None
+        notebook = None
+        if notebook_id:
+            notebook = await Notebook.get(notebook_id)
+
+        # Determine model override
+        model_override = (
+            request.model_override
+            if request.model_override is not None
+            else getattr(session, "model_override", None)
+        )
+
+        # Get current state
+        current_state = await asyncio.to_thread(
+            chat_graph.get_state,
+            config=RunnableConfig(configurable={"thread_id": full_session_id}),
+        )
+
+        # Prepare state for execution
+        state_values = current_state.values if current_state else {}
+        state_values["messages"] = state_values.get("messages", [])
+        state_values["context"] = request.context
+        state_values["notebook"] = notebook
+        state_values["model_override"] = model_override
+
+        # Add user message to state
+        from langchain_core.messages import HumanMessage
+        user_message = HumanMessage(content=request.message)
+        state_values["messages"].append(user_message)
+
+        # Update session timestamp
+        await session.save()
+
+        # Return streaming response
+        return StreamingResponse(
+            stream_chat_response(state_values, full_session_id, model_override, notebook_id),
+            media_type="text/event-stream",
+            headers={
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "X-Accel-Buffering": "no",
+            },
+        )
+    except NotFoundError:
+        raise HTTPException(status_code=404, detail="Session not found")
+    except HTTPException:
+        raise
+    except OpenNotebookError:
+        raise
+    except Exception as e:
+        logger.error(f"Error starting chat stream: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Error starting chat stream: {str(e)}")
 
 
 @router.post("/chat/context", response_model=BuildContextResponse)

@@ -66,6 +66,26 @@ apiClient.interceptors.response.use(
         window.location.href = '/login'
       }
     }
+    
+    // Global detection of Quota/Rate Limit errors across the application
+    const isQuotaError = 
+      error.response?.status === 429 || 
+      (error.response?.data?.detail && typeof error.response.data.detail === 'string' && (
+        error.response.data.detail.toLowerCase().includes('quota') ||
+        error.response.data.detail.toLowerCase().includes('rate limit') ||
+        error.response.data.detail.toLowerCase().includes('resource_exhausted')
+      )) ||
+      (error.message && (
+        error.message.toLowerCase().includes('quota') ||
+        error.message.toLowerCase().includes('rate limit')
+      ));
+
+    if (isQuotaError && typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('quota-exceeded', { 
+        detail: { message: typeof error.response?.data?.detail === 'string' ? error.response.data.detail : error.message } 
+      }))
+    }
+
     return Promise.reject(error)
   }
 )

@@ -1,0 +1,1 @@
+UPDATE episode_profile SET num_segments = 3 WHERE name = "business_analysis";

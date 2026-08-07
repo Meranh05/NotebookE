@@ -6,7 +6,7 @@ from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoin
 from starlette.responses import JSONResponse, Response
 from starlette.types import ASGIApp
 
-from open_notebook.utils.encryption import get_secret_from_env
+from notebooke.utils.encryption import get_secret_from_env
 
 
 class PasswordAuthMiddleware(BaseHTTPMiddleware):

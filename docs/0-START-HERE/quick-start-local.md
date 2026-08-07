@@ -28,7 +28,7 @@ Run on a different computer, access from another. Needs network configuration.
 
 ## Step 2: Create Configuration (1 min)
 
-Create a new folder `open-notebook-local` and add this file:
+Create a new folder `notebooke-local` and add this file:
 
 **docker-compose.yml**:
 
@@ -45,8 +45,8 @@ services:
     volumes:
       - ./surreal_data:/mydata
 
-  open_notebook:
-    image: lfnovo/open_notebook:v1-latest
+  notebooke:
+    image: lfnovo/notebooke:v1-latest
     pull_policy: always
     ports:
       - "8502:8502"  # Web UI (React frontend)
@@ -59,8 +59,8 @@ services:
       - SURREAL_URL=ws://surrealdb:8000/rpc
       - SURREAL_USER=root
       - SURREAL_PASSWORD=password
-      - SURREAL_NAMESPACE=open_notebook
-      - SURREAL_DATABASE=open_notebook
+      - SURREAL_NAMESPACE=notebooke
+      - SURREAL_DATABASE=notebooke
 
       # Ollama (required when running Ollama via Docker, as in this compose file)
       - OLLAMA_API_BASE=http://ollama:11434
@@ -96,7 +96,7 @@ services:
 
 ## Step 3: Start Services (1 min)
 
-Open terminal in your `open-notebook-local` folder:
+Open terminal in your `notebooke-local` folder:
 
 ```bash
 docker compose up -d
@@ -112,13 +112,13 @@ Ollama needs at least one language model. Pick one:
 
 ```bash
 # Fastest & smallest (recommended for testing)
-docker exec open-notebook-local-ollama-1 ollama pull mistral
+docker exec notebooke-local-ollama-1 ollama pull mistral
 
 # OR: Better quality but slower
-docker exec open-notebook-local-ollama-1 ollama pull neural-chat
+docker exec notebooke-local-ollama-1 ollama pull neural-chat
 
 # OR: Even better quality, more VRAM needed
-docker exec open-notebook-local-ollama-1 ollama pull llama2
+docker exec notebooke-local-ollama-1 ollama pull llama2
 ```
 
 This downloads the model (will take 1-5 minutes depending on your internet).
@@ -244,7 +244,7 @@ Check if GPU is available:
 
 ```bash
 # Show available GPUs
-docker exec open-notebook-local-ollama-1 ollama ps
+docker exec notebooke-local-ollama-1 ollama ps
 
 # Enable GPU in docker-compose.yml
 ```
@@ -255,10 +255,10 @@ Then restart: `docker compose restart ollama`
 
 ```bash
 # List available models
-docker exec open-notebook-local-ollama-1 ollama list
+docker exec notebooke-local-ollama-1 ollama list
 
 # Pull additional model
-docker exec open-notebook-local-ollama-1 ollama pull neural-chat
+docker exec notebooke-local-ollama-1 ollama pull neural-chat
 ```
 
 ---

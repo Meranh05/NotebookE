@@ -6,7 +6,7 @@ This document outlines security practices for NotebookE development. It is infor
 
 If you discover a security vulnerability, **do not open a public GitHub issue**. Instead:
 
-1. Use [GitHub Security Advisories](https://github.com/lfnovo/open-notebook/security/advisories/new) to report privately
+1. Use [GitHub Security Advisories](https://github.com/lfnovo/notebooke/security/advisories/new) to report privately
 2. Or email the maintainers directly
 
 We follow coordinated vulnerability disclosure and will work with you on a fix before any public announcement.
@@ -191,7 +191,7 @@ These vulnerabilities were reported by CERT-EU and are documented here as learni
 
 | Version | Vulnerability | Severity | Advisory |
 | --------- | -------------- | ---------- | ---------- |
-| <= 1.8.2 | SurrealDB injection via `order_by` parameter | High (8.7) | [GHSA-5wj9-f8q5-8f9c](https://github.com/lfnovo/open-notebook/security/advisories/GHSA-5wj9-f8q5-8f9c) |
-| <= 1.8.3 | RCE via Jinja2 SSTI in transformations | Critical (9.2) | [GHSA-f35w-wx37-26q7](https://github.com/lfnovo/open-notebook/security/advisories/GHSA-f35w-wx37-26q7) |
-| <= 1.8.3 | Arbitrary file write via path traversal | High (7.0) | [GHSA-x4q2-89g5-594v](https://github.com/lfnovo/open-notebook/security/advisories/GHSA-x4q2-89g5-594v) |
-| <= 1.8.3 | Arbitrary file read via LFI | High (8.2) | [GHSA-842v-h4cj-r646](https://github.com/lfnovo/open-notebook/security/advisories/GHSA-842v-h4cj-r646) |
+| <= 1.8.2 | SurrealDB injection via `order_by` parameter | High (8.7) | [GHSA-5wj9-f8q5-8f9c](https://github.com/lfnovo/notebooke/security/advisories/GHSA-5wj9-f8q5-8f9c) |
+| <= 1.8.3 | RCE via Jinja2 SSTI in transformations | Critical (9.2) | [GHSA-f35w-wx37-26q7](https://github.com/lfnovo/notebooke/security/advisories/GHSA-f35w-wx37-26q7) |
+| <= 1.8.3 | Arbitrary file write via path traversal | High (7.0) | [GHSA-x4q2-89g5-594v](https://github.com/lfnovo/notebooke/security/advisories/GHSA-x4q2-89g5-594v) |
+| <= 1.8.3 | Arbitrary file read via LFI | High (8.2) | [GHSA-842v-h4cj-r646](https://github.com/lfnovo/notebooke/security/advisories/GHSA-842v-h4cj-r646) |

@@ -16,8 +16,8 @@ The example above is for when you are running SurrealDB as a separate docker con
 SURREAL_URL="ws://surrealdb:8000/rpc"
 SURREAL_USER="root"
 SURREAL_PASSWORD="root"
-SURREAL_NAMESPACE="open_notebook"
-SURREAL_DATABASE="open_notebook"
+SURREAL_NAMESPACE="notebooke"
+SURREAL_DATABASE="notebooke"
 ```
 
 ### DB running in the host machine and NotebookE running in Docker
@@ -28,8 +28,8 @@ If ON is running in docker and SurrealDB is on your host machine, you need to po
 SURREAL_URL="ws://your-machine-ip:8000/rpc" #or host.docker.internal
 SURREAL_USER="root"
 SURREAL_PASSWORD="root"
-SURREAL_NAMESPACE="open_notebook"
-SURREAL_DATABASE="open_notebook"
+SURREAL_NAMESPACE="notebooke"
+SURREAL_DATABASE="notebooke"
 ```
 
 > **Note:** If SurrealDB runs in Docker with its port published on `127.0.0.1` only (the documented default), it won't be reachable at your machine's IP. Re-publish the port deliberately — see `docker-compose.override.yml.example` in the repo root — behind a firewall or SSH tunnel, with real credentials set.
@@ -42,8 +42,8 @@ If you are running both services locally or if you are using the deprecated [sin
 SURREAL_URL="ws://localhost:8000/rpc"
 SURREAL_USER="root"
 SURREAL_PASSWORD="root"
-SURREAL_NAMESPACE="open_notebook"
-SURREAL_DATABASE="open_notebook"
+SURREAL_NAMESPACE="notebooke"
+SURREAL_DATABASE="notebooke"
 ```
 
 ## Multiple databases

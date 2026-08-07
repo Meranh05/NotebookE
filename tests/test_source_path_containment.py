@@ -17,8 +17,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 from api.routers.sources import _is_source_file_available, _resolve_source_file
-from open_notebook.config import UPLOADS_FOLDER
-from open_notebook.domain.notebook import Asset, Source
+from notebooke.config import UPLOADS_FOLDER
+from notebooke.domain.notebook import Asset, Source
 
 
 def make_source(file_path=None, **overrides):

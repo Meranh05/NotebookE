@@ -21,9 +21,9 @@
 #   5. Configure providers in UI
 #
 # Full documentation:
-# - Ollama setup: https://github.com/lfnovo/open-notebook/blob/main/examples/README.md
-# - TTS setup: https://github.com/lfnovo/open-notebook/blob/main/docs/5-CONFIGURATION/local-tts.md
-# - STT setup: https://github.com/lfnovo/open-notebook/blob/main/docs/5-CONFIGURATION/local-stt.md
+# - Ollama setup: https://github.com/lfnovo/notebooke/blob/main/examples/README.md
+# - TTS setup: https://github.com/lfnovo/notebooke/blob/main/docs/5-CONFIGURATION/local-tts.md
+# - STT setup: https://github.com/lfnovo/notebooke/blob/main/docs/5-CONFIGURATION/local-stt.md
 
 services:
   surrealdb:
@@ -69,8 +69,8 @@ services:
     # For GPU acceleration, use: ghcr.io/speaches-ai/speaches:latest-cuda
     # and add GPU device mapping (see docs)
 
-  open_notebook:
-    image: lfnovo/open_notebook:v1-latest
+  notebooke:
+    image: lfnovo/notebooke:v1-latest
     ports:
       - "8502:8502"
       - "5055:5055"
@@ -82,8 +82,8 @@ services:
       - SURREAL_URL=ws://surrealdb:8000/rpc
       - SURREAL_USER=root
       - SURREAL_PASSWORD=root
-      - SURREAL_NAMESPACE=open_notebook
-      - SURREAL_DATABASE=open_notebook
+      - SURREAL_NAMESPACE=notebooke
+      - SURREAL_DATABASE=notebooke
 
       # Ollama connection (optional, can also configure via UI)
       - OLLAMA_API_BASE=http://ollama:11434
@@ -105,13 +105,13 @@ volumes:
 # ==========================================
 #
 # Ollama Models (LLM):
-#   docker exec open_notebook-ollama-1 ollama pull mistral
-#   docker exec open_notebook-ollama-1 ollama pull llama3.1
-#   docker exec open_notebook-ollama-1 ollama pull qwen2.5
+#   docker exec notebooke-ollama-1 ollama pull mistral
+#   docker exec notebooke-ollama-1 ollama pull llama3.1
+#   docker exec notebooke-ollama-1 ollama pull qwen2.5
 #
 # Ollama Models (Embeddings):
-#   docker exec open_notebook-ollama-1 ollama pull nomic-embed-text
-#   docker exec open_notebook-ollama-1 ollama pull mxbai-embed-large
+#   docker exec notebooke-ollama-1 ollama pull nomic-embed-text
+#   docker exec notebooke-ollama-1 ollama pull mxbai-embed-large
 #
 # Speaches (TTS):
 #   docker compose exec speaches uv tool run speaches-cli model download speaches-ai/Kokoro-82M-v1.0-ONNX

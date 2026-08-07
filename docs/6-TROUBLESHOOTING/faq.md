@@ -246,7 +246,7 @@ ESPERANTO_LLM_TIMEOUT=180  # 3 minutes for model inference
 
 1. Check the troubleshooting guides in this section
 2. Search existing GitHub issues
-3. Ask in [GitHub Discussions](https://github.com/lfnovo/open-notebook/discussions/categories/q-a) or the Discord community
+3. Ask in [GitHub Discussions](https://github.com/lfnovo/notebooke/discussions/categories/q-a) or the Discord community
 4. If you found a reproducible bug, create a GitHub Issue with detailed information
 
 ### How do I report a bug?
@@ -259,7 +259,7 @@ Include:
 - System information
 - Configuration details (without API keys)
 
-Submit to: [GitHub Issues](https://github.com/lfnovo/open-notebook/issues)
+Submit to: [GitHub Issues](https://github.com/lfnovo/notebooke/issues)
 
 ### Where can I get help?
 

@@ -15,20 +15,20 @@ from loguru import logger
 from pydantic import SecretStr
 
 from api.models import CredentialResponse, validate_url_key_provider_required_fields
-from open_notebook.ai.connection_tester import normalize_anthropic_compatible_base_url
-from open_notebook.ai.model_discovery import (
+from notebooke.ai.connection_tester import normalize_anthropic_compatible_base_url
+from notebooke.ai.model_discovery import (
     ANTHROPIC_FALLBACK_MODELS,
     OPENROUTER_AUDIO_MODELS,
     classify_model_type,
     fetch_anthropic_model_ids,
 )
-from open_notebook.ai.provider_registry import PROVIDERS
-from open_notebook.domain.credential import Credential
-from open_notebook.utils.encryption import get_secret_from_env
-from open_notebook.utils.url_validation import (
+from notebooke.ai.provider_registry import PROVIDERS
+from notebooke.domain.credential import Credential
+from notebooke.utils.encryption import get_secret_from_env
+from notebooke.utils.url_validation import (
     prepare_pinned_http_target,
 )
-from open_notebook.utils.url_validation import (
+from notebooke.utils.url_validation import (
     validate_url as validate_url,  # re-export for routers
 )
 
@@ -37,7 +37,7 @@ from open_notebook.utils.url_validation import (
 # =============================================================================
 
 # Provider environment variable configuration, derived from the provider
-# registry (open_notebook/ai/provider_registry.py — the source of truth).
+# registry (notebooke/ai/provider_registry.py — the source of truth).
 # - "required": ALL listed env vars must be set for the provider to be considered configured.
 # - "required_any": at least ONE of the listed env vars must be set.
 # - "optional": additional env vars used during migration but not required.
@@ -250,7 +250,7 @@ async def test_credential(credential_id: str) -> dict:
         cred = await Credential.get(credential_id)
         config = cred.to_esperanto_config()
 
-        from open_notebook.ai.connection_tester import (
+        from notebooke.ai.connection_tester import (
             _is_vertex_credentials_file_error,
             _test_anthropic_compatible_connection,
             _test_azure_connection,
@@ -315,7 +315,7 @@ async def test_credential(credential_id: str) -> dict:
         # Standard provider: use Esperanto to create and test
         from esperanto.factory import AIFactory
 
-        from open_notebook.ai.connection_tester import TEST_MODELS
+        from notebooke.ai.connection_tester import TEST_MODELS
 
         if provider not in TEST_MODELS:
             return {
@@ -719,8 +719,8 @@ async def register_models(credential_id: str, models_data: list) -> dict:
     """
     cred = await Credential.get(credential_id)
 
-    from open_notebook.ai.models import Model
-    from open_notebook.database.repository import repo_query
+    from notebooke.ai.models import Model
+    from notebooke.database.repository import repo_query
 
     # Batch fetch existing models for this provider
     existing_models = await repo_query(
@@ -762,7 +762,7 @@ async def migrate_from_provider_config() -> dict:
     require_encryption_key()
     logger.info("Encryption key verified")
 
-    from open_notebook.domain.provider_config import ProviderConfig
+    from notebooke.domain.provider_config import ProviderConfig
 
     config = await ProviderConfig.get_instance()
     logger.info(
@@ -813,8 +813,8 @@ async def migrate_from_provider_config() -> dict:
                 )
 
                 # Link existing models for this provider to the new credential
-                from open_notebook.ai.models import Model
-                from open_notebook.database.repository import repo_query
+                from notebooke.ai.models import Model
+                from notebooke.database.repository import repo_query
 
                 provider_models = await repo_query(
                     "SELECT * FROM model WHERE string::lowercase(provider) = $provider AND credential IS NONE",
@@ -874,8 +874,8 @@ async def migrate_from_env() -> dict:
     require_encryption_key()
     logger.info("Encryption key verified")
 
-    from open_notebook.ai.models import Model
-    from open_notebook.database.repository import repo_query
+    from notebooke.ai.models import Model
+    from notebooke.database.repository import repo_query
 
     migrated = []
     skipped = []

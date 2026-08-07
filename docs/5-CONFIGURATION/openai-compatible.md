@@ -132,7 +132,7 @@ Then use base URL: `http://localhost:1234/v1`
 ```yaml
 # docker-compose.yml
 services:
-  open-notebook:
+  notebooke:
     # ...
 
   lm-studio:
@@ -171,8 +171,8 @@ services:
       - ./models:/app/models
     command: --api --listen
 
-  open-notebook:
-    image: lfnovo/open_notebook:v1-latest
+  notebooke:
+    image: lfnovo/notebooke:v1-latest
     pull_policy: always
     depends_on:
       - text-gen
@@ -219,8 +219,8 @@ services:
               count: 1
               capabilities: [gpu]
 
-  open-notebook:
-    image: lfnovo/open_notebook:v1-latest
+  notebooke:
+    image: lfnovo/notebooke:v1-latest
     pull_policy: always
     depends_on:
       - vllm
@@ -271,7 +271,7 @@ curl http://localhost:1234/v1/chat/completions \
 ### Test from Inside Docker
 
 ```bash
-docker exec -it open-notebook curl http://host.docker.internal:1234/v1/models
+docker exec -it notebooke curl http://host.docker.internal:1234/v1/models
 ```
 
 ---

@@ -14,11 +14,11 @@ changeLog:
     description: First release
 links:
   - label: Website
-    url: https://www.open-notebook.ai
+    url: https://www.notebooke.ai
   - label: Documentation
-    url: https://github.com/lfnovo/open-notebook/tree/main/docs
+    url: https://github.com/lfnovo/notebooke/tree/main/docs
   - label: Github
-    url: https://github.com/lfnovo/open-notebook
+    url: https://github.com/lfnovo/notebooke
 contributors:
   - name: nyxst4ck
     url: https://github.com/nyxst4ck
@@ -33,11 +33,11 @@ schema:
     appServiceName:
       type: string
       title: App Service Name
-      default: open-notebook
+      default: notebooke
     appServiceImage:
       type: string
       title: App Service Image
-      default: lfnovo/open_notebook:1.10.0
+      default: lfnovo/notebooke:1.10.0
     databaseServiceName:
       type: string
       title: Database Service Name

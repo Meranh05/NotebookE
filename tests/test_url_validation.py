@@ -12,7 +12,7 @@ where users commonly run local services (Ollama, LM Studio, etc.).
 
 validate_url() is async (the hostname-resolution branch runs
 socket.getaddrinfo() via asyncio.to_thread so it doesn't block the event
-loop - see open_notebook/utils/url_validation.py), so every test here is
+loop - see notebooke/utils/url_validation.py), so every test here is
 async too.
 """
 
@@ -22,7 +22,7 @@ from unittest.mock import patch
 import pytest
 
 from api.credentials_service import validate_url
-from open_notebook.utils.url_validation import prepare_pinned_http_target
+from notebooke.utils.url_validation import prepare_pinned_http_target
 
 pytestmark = pytest.mark.asyncio
 
@@ -188,7 +188,7 @@ class TestPinnedHttpTarget:
             (socket.AF_INET, socket.SOCK_STREAM, 6, "", ("192.168.1.50", 0)),
         ]
         with patch(
-            "open_notebook.utils.url_validation.socket.getaddrinfo",
+            "notebooke.utils.url_validation.socket.getaddrinfo",
             return_value=fake_addrs,
         ):
             target = await prepare_pinned_http_target(
@@ -204,7 +204,7 @@ class TestPinnedHttpTarget:
             (socket.AF_INET, socket.SOCK_STREAM, 6, "", ("93.184.216.34", 0)),
         ]
         with patch(
-            "open_notebook.utils.url_validation.socket.getaddrinfo",
+            "notebooke.utils.url_validation.socket.getaddrinfo",
             return_value=fake_addrs,
         ):
             target = await prepare_pinned_http_target(
@@ -221,7 +221,7 @@ class TestPinnedHttpTarget:
             (socket.AF_INET, socket.SOCK_STREAM, 6, "", ("93.184.216.34", 0)),
         ]
         with patch(
-            "open_notebook.utils.url_validation.socket.getaddrinfo",
+            "notebooke.utils.url_validation.socket.getaddrinfo",
             return_value=fake_addrs,
         ):
             target = await prepare_pinned_http_target(
@@ -237,7 +237,7 @@ class TestPinnedHttpTarget:
             (socket.AF_INET, socket.SOCK_STREAM, 6, "", ("169.254.169.254", 0)),
         ]
         with patch(
-            "open_notebook.utils.url_validation.socket.getaddrinfo",
+            "notebooke.utils.url_validation.socket.getaddrinfo",
             return_value=fake_addrs,
         ):
             with pytest.raises(ValueError, match="link-local"):
@@ -264,7 +264,7 @@ class TestPinnedHttpTargetSelfHostedUse:
             (socket.AF_INET, socket.SOCK_STREAM, 6, "", ("127.0.0.1", 0)),
         ]
         with patch(
-            "open_notebook.utils.url_validation.socket.getaddrinfo",
+            "notebooke.utils.url_validation.socket.getaddrinfo",
             return_value=fake_addrs,
         ):
             target = await prepare_pinned_http_target(
@@ -282,7 +282,7 @@ class TestPinnedHttpTargetSelfHostedUse:
             (socket.AF_INET, socket.SOCK_STREAM, 6, "", ("192.168.65.2", 0)),
         ]
         with patch(
-            "open_notebook.utils.url_validation.socket.getaddrinfo",
+            "notebooke.utils.url_validation.socket.getaddrinfo",
             return_value=fake_addrs,
         ):
             target = await prepare_pinned_http_target(
@@ -306,7 +306,7 @@ class TestPinnedHttpTargetSelfHostedUse:
             (socket.AF_INET, socket.SOCK_STREAM, 6, "", ("10.0.1.20", 0)),
         ]
         with patch(
-            "open_notebook.utils.url_validation.socket.getaddrinfo",
+            "notebooke.utils.url_validation.socket.getaddrinfo",
             return_value=fake_addrs,
         ):
             target = await prepare_pinned_http_target(
@@ -330,7 +330,7 @@ class TestPinnedHttpTargetSelfHostedUse:
             (socket.AF_INET, socket.SOCK_STREAM, 6, "", ("100.101.102.103", 0)),
         ]
         with patch(
-            "open_notebook.utils.url_validation.socket.getaddrinfo",
+            "notebooke.utils.url_validation.socket.getaddrinfo",
             return_value=fake_addrs,
         ):
             target = await prepare_pinned_http_target(
@@ -346,7 +346,7 @@ class TestPinnedHttpTargetSelfHostedUse:
             (socket.AF_INET6, socket.SOCK_STREAM, 6, "", ("2606:4700::1111", 0, 0, 0)),
         ]
         with patch(
-            "open_notebook.utils.url_validation.socket.getaddrinfo",
+            "notebooke.utils.url_validation.socket.getaddrinfo",
             return_value=fake_addrs,
         ):
             target = await prepare_pinned_http_target(
@@ -363,7 +363,7 @@ class TestPinnedHttpTargetSelfHostedUse:
             (socket.AF_INET, socket.SOCK_STREAM, 6, "", ("93.184.216.34", 0)),
         ]
         with patch(
-            "open_notebook.utils.url_validation.socket.getaddrinfo",
+            "notebooke.utils.url_validation.socket.getaddrinfo",
             return_value=fake_addrs,
         ):
             target = await prepare_pinned_http_target(

@@ -16,7 +16,7 @@ class TestModelCreation:
     """Test suite for Model Creation endpoint."""
 
     @pytest.mark.asyncio
-    @patch("open_notebook.database.repository.repo_query")
+    @patch("notebooke.database.repository.repo_query")
     @patch("api.routers.models.Model.save")
     async def test_create_duplicate_model_same_case(
         self, mock_save, mock_repo_query, client
@@ -45,7 +45,7 @@ class TestModelCreation:
         )
 
     @pytest.mark.asyncio
-    @patch("open_notebook.database.repository.repo_query")
+    @patch("notebooke.database.repository.repo_query")
     @patch("api.routers.models.Model.save")
     async def test_create_duplicate_model_different_case(
         self, mock_save, mock_repo_query, client
@@ -74,12 +74,12 @@ class TestModelCreation:
         )
 
     @pytest.mark.asyncio
-    @patch("open_notebook.database.repository.repo_query")
+    @patch("notebooke.database.repository.repo_query")
     async def test_create_same_model_name_different_provider(
         self, mock_repo_query, client
     ):
         """Test that creating a model with same name but different provider is allowed."""
-        from open_notebook.ai.models import Model
+        from notebooke.ai.models import Model
 
         # Mock repo_query to return empty (no duplicate found for different provider)
         mock_repo_query.return_value = []
@@ -96,10 +96,10 @@ class TestModelCreation:
             assert response.status_code == 200
 
     @pytest.mark.asyncio
-    @patch("open_notebook.database.repository.repo_query")
+    @patch("notebooke.database.repository.repo_query")
     async def test_create_same_model_name_different_type(self, mock_repo_query, client):
         """Test that creating a model with same name but different type is allowed."""
-        from open_notebook.ai.models import Model
+        from notebooke.ai.models import Model
 
         # Mock repo_query to return empty (no duplicate found for different type)
         mock_repo_query.return_value = []
@@ -523,7 +523,7 @@ class TestAutoAssignDefaults:
             "api.routers.models.DefaultModels.get_instance",
             new=AsyncMock(return_value=defaults),
         ), patch(
-            "open_notebook.database.repository.repo_query",
+            "notebooke.database.repository.repo_query",
             new=AsyncMock(return_value=self._models()),
         ):
             return client.post("/api/models/auto-assign")
@@ -587,7 +587,7 @@ class TestGetDefaultModelFallback:
         "model_type", ["transformation", "tools", "large_context"]
     )
     async def test_text_optional_slots_fall_back_to_chat(self, model_type):
-        from open_notebook.ai.models import model_manager
+        from notebooke.ai.models import model_manager
 
         defaults = self._defaults()
         with patch.object(
@@ -604,7 +604,7 @@ class TestGetDefaultModelFallback:
 
     @pytest.mark.asyncio
     async def test_audio_slots_do_not_fall_back(self):
-        from open_notebook.ai.models import model_manager
+        from notebooke.ai.models import model_manager
 
         defaults = self._defaults()
         with patch.object(

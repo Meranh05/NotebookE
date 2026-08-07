@@ -22,7 +22,7 @@ All contribution guidelines have been consolidated into the new development docu
 ## The Contribution Workflow
 
 **TL;DR**: Feature requests, product/design/architecture proposals, and other non-trivial ideas
-start in [GitHub Discussions](https://github.com/lfnovo/open-notebook/discussions/new?category=ideas).
+start in [GitHub Discussions](https://github.com/lfnovo/notebooke/discussions/new?category=ideas).
 Reproducible bugs start in Issues. Coding starts from an approved and assigned Issue. Small obvious
 fixes (typos, docs, tiny bugs) can still go straight to a PR.
 

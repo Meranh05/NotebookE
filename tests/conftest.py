@@ -2,7 +2,7 @@
 Pytest configuration file.
 
 This file ensures that the project root is in the Python path,
-allowing tests to import from the api and open_notebook modules.
+allowing tests to import from the api and notebooke modules.
 """
 
 import os

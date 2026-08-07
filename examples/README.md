@@ -78,7 +78,7 @@ templates playground.
 
 1. Copy to your project folder as `docker-compose.yml`
 2. Run: `docker compose up -d`
-3. Pull a model: `docker exec open_notebook-ollama-1 ollama pull mistral`
+3. Pull a model: `docker exec notebooke-ollama-1 ollama pull mistral`
 4. Configure in UI: Settings → API Keys → Add Ollama (URL: `http://ollama:11434`)
 
 **Recommended models:**
@@ -169,7 +169,7 @@ See [Reverse Proxy Guide](../docs/5-CONFIGURATION/reverse-proxy.md)
 
 ### Add Password Protection
 
-Add to `open_notebook` service environment:
+Add to `notebooke` service environment:
 
 ```yaml
 - OPEN_NOTEBOOK_PASSWORD=your-secure-password
@@ -188,4 +188,4 @@ Add to `open_notebook` service environment:
 ## 🆘 Need Help?
 
 - **Discord**: [Join our community](https://discord.gg/37XJPXfz2w)
-- **Issues**: [GitHub Issues](https://github.com/lfnovo/open-notebook/issues)
+- **Issues**: [GitHub Issues](https://github.com/lfnovo/notebooke/issues)

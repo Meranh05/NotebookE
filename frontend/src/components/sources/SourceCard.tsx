@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, memo } from 'react'
+import React, { useState, useEffect, memo, useMemo } from 'react'
 import { SourceListResponse } from '@/lib/types/api'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -207,6 +207,16 @@ function SourceCardImpl({
   const isFailed: boolean = currentStatus === 'failed'
   const isCompleted: boolean = currentStatus === 'completed'
 
+  const displayErrorMessage = useMemo(() => {
+    if (!statusData?.message) return null;
+    const msg = statusData.message;
+    const isQuotaError = (msg.includes('429') && (msg.includes('RESOURCE_EXHAUSTED') || msg.includes('Quota exceeded') || msg.includes('rate limit'))) || msg.includes('exhausted their Quota');
+    if (isQuotaError) {
+      return 'Quá trình xử lý thất bại do hết hạn mức sử dụng (Quota / Rate Limit). Vui lòng cấu hình lại API Key.';
+    }
+    return msg;
+  }, [statusData?.message]);
+
   return (
     <Card
       className={cn(
@@ -253,9 +263,12 @@ function SourceCardImpl({
             </div>
 
             {/* Processing message for active statuses */}
-            {statusData?.message && (isProcessing || isFailed) && (
-              <p className="text-xs text-muted-foreground mb-2 italic">
-                {statusData.message}
+            {displayErrorMessage && (isProcessing || isFailed) && (
+              <p className={cn(
+                "text-xs mb-2 italic",
+                isFailed ? "text-destructive font-medium" : "text-muted-foreground"
+              )}>
+                {displayErrorMessage}
               </p>
             )}
 

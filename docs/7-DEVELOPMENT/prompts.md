@@ -11,7 +11,7 @@ from ai_prompter import Prompter
 prompt = Prompter(prompt_template="ask/entry", parser=parser).render(data=state)
 ```
 
-Mechanical rules (path syntax, `data=` key matching, parser injection, no inheritance, cache → restart) are in [`open_notebook/AGENTS.md`](../../open_notebook/AGENTS.md). This page covers the *patterns*.
+Mechanical rules (path syntax, `data=` key matching, parser injection, no inheritance, cache → restart) are in [`notebooke/AGENTS.md`](../../notebooke/AGENTS.md). This page covers the *patterns*.
 
 ## Pattern: multi-stage chain (ask workflow)
 

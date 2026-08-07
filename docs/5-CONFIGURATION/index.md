@@ -83,8 +83,8 @@ This is the database used by the app.
 SURREAL_URL=ws://surrealdb:8000/rpc
 SURREAL_USER=root
 SURREAL_PASSWORD=root  # Change in production!
-SURREAL_NAMESPACE=open_notebook
-SURREAL_DATABASE=open_notebook
+SURREAL_NAMESPACE=notebooke
+SURREAL_DATABASE=notebooke
 ```
 
 > The only thing that is critical to not miss is the hostname in the `SURREAL_URL`. Check what URL to use based on your deployment, [here](database.md).
@@ -258,7 +258,7 @@ OPEN_NOTEBOOK_ENCRYPTION_KEY=my-secret-key
 The recommended way to configure AI providers:
 
 ```
-1. Open NotebookE in your browser
+1. NotebookEE in your browser
 2. Go to Settings → API Keys
 3. Click "Add Credential"
 4. Select provider, enter API key

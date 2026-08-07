@@ -17,8 +17,8 @@ from typing import Any, Iterable, List, Optional, Tuple
 from fastapi import HTTPException
 from pydantic import BaseModel, Field
 
-from open_notebook.database.repository import ensure_record_id, repo_query
-from open_notebook.domain.notebook import ChatSession, Source
+from notebooke.database.repository import ensure_record_id, repo_query
+from notebooke.domain.notebook import ChatSession, Source
 
 
 # Shared response models

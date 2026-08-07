@@ -13,12 +13,12 @@ from typing import (
 from loguru import logger
 from surreal_commands import CommandInput, CommandOutput, command, submit_command
 
-from open_notebook.ai.models import model_manager
-from open_notebook.database.repository import ensure_record_id, repo_insert, repo_query
-from open_notebook.domain.notebook import Note, Source, SourceInsight
-from open_notebook.exceptions import ConfigurationError
-from open_notebook.utils.chunking import ContentType, chunk_text, detect_content_type
-from open_notebook.utils.embedding import generate_embedding, generate_embeddings
+from notebooke.ai.models import model_manager
+from notebooke.database.repository import ensure_record_id, repo_insert, repo_query
+from notebooke.domain.notebook import Note, Source, SourceInsight
+from notebooke.exceptions import ConfigurationError
+from notebooke.utils.chunking import ContentType, chunk_text, detect_content_type
+from notebooke.utils.embedding import generate_embedding, generate_embeddings
 
 # NOTE: `stop_on` below can never trigger in practice — each command catches
 # ValueError internally and returns success=False instead of raising, so the
@@ -216,7 +216,7 @@ class EmbedSourceOutput(CommandOutput):
     error_message: Optional[str] = None
 
 
-@command("embed_note", app="open_notebook", retry=EMBED_RETRY_CONFIG)
+@command("embed_note", app="notebooke", retry=EMBED_RETRY_CONFIG)
 async def embed_note_command(input_data: EmbedNoteInput) -> EmbedNoteOutput:
     """
     Generate and store embedding for a single note.
@@ -258,7 +258,7 @@ async def embed_note_command(input_data: EmbedNoteInput) -> EmbedNoteOutput:
     )
 
 
-@command("embed_insight", app="open_notebook", retry=EMBED_RETRY_CONFIG)
+@command("embed_insight", app="notebooke", retry=EMBED_RETRY_CONFIG)
 async def embed_insight_command(input_data: EmbedInsightInput) -> EmbedInsightOutput:
     """
     Generate and store embedding for a single source insight.
@@ -300,7 +300,7 @@ async def embed_insight_command(input_data: EmbedInsightInput) -> EmbedInsightOu
     )
 
 
-@command("embed_source", app="open_notebook", retry=EMBED_RETRY_CONFIG)
+@command("embed_source", app="notebooke", retry=EMBED_RETRY_CONFIG)
 async def embed_source_command(input_data: EmbedSourceInput) -> EmbedSourceOutput:
     """
     Generate and store embeddings for a source document.
@@ -403,7 +403,7 @@ async def embed_source_command(input_data: EmbedSourceInput) -> EmbedSourceOutpu
     )
 
 
-@command("create_insight", app="open_notebook", retry=EMBED_RETRY_CONFIG)
+@command("create_insight", app="notebooke", retry=EMBED_RETRY_CONFIG)
 async def create_insight_command(
     input_data: CreateInsightInput,
 ) -> CreateInsightOutput:
@@ -457,7 +457,7 @@ async def create_insight_command(
 
         # 2. Submit embedding command (fire-and-forget)
         submit_command(
-            "open_notebook",
+            "notebooke",
             "embed_insight",
             {"insight_id": insight_id},
         )
@@ -586,7 +586,7 @@ def _submit_embedding_jobs(
     for idx, item_id in enumerate(item_ids, 1):
         try:
             submit_command(
-                "open_notebook",
+                "notebooke",
                 command_name,
                 {id_field: item_id},
             )
@@ -602,7 +602,7 @@ def _submit_embedding_jobs(
     return submitted, failed
 
 
-@command("rebuild_embeddings", app="open_notebook", retry=None)
+@command("rebuild_embeddings", app="notebooke", retry=None)
 async def rebuild_embeddings_command(
     input_data: RebuildEmbeddingsInput,
 ) -> RebuildEmbeddingsOutput:

@@ -14,8 +14,8 @@ from unittest.mock import AsyncMock, patch
 import pytest
 
 from api.routers.podcasts import get_podcast_episode, list_podcast_episodes
-from open_notebook.ai.models import Model
-from open_notebook.podcasts.models import PodcastEpisode
+from notebooke.ai.models import Model
+from notebooke.podcasts.models import PodcastEpisode
 
 MODEL_INFO = {
     "model:outline": {"provider": "openai", "name": "gpt-4o"},
@@ -85,7 +85,7 @@ class TestGetDisplayInfoForIdsUnit:
     @pytest.mark.asyncio
     async def test_empty_input_returns_empty_without_querying(self):
         with patch(
-            "open_notebook.ai.models.repo_query", new=AsyncMock()
+            "notebooke.ai.models.repo_query", new=AsyncMock()
         ) as mock_query:
             result = await Model.get_display_info_for_ids([])
         assert result == {}
@@ -98,7 +98,7 @@ class TestGetDisplayInfoForIdsUnit:
             {"id": "model:voice", "name": "eleven_turbo", "provider": "elevenlabs"},
         ]
         with patch(
-            "open_notebook.ai.models.repo_query",
+            "notebooke.ai.models.repo_query",
             new=AsyncMock(return_value=fake_rows),
         ) as mock_query:
             result = await Model.get_display_info_for_ids(
@@ -114,7 +114,7 @@ class TestGetDisplayInfoForIdsUnit:
     @pytest.mark.asyncio
     async def test_duplicate_and_falsy_ids_are_deduped_and_filtered(self):
         with patch(
-            "open_notebook.ai.models.repo_query", new=AsyncMock(return_value=[])
+            "notebooke.ai.models.repo_query", new=AsyncMock(return_value=[])
         ) as mock_query:
             await Model.get_display_info_for_ids(
                 ["model:outline", "model:outline", None, ""]  # type: ignore[list-item]
@@ -126,7 +126,7 @@ class TestGetDisplayInfoForIdsUnit:
     @pytest.mark.asyncio
     async def test_query_failure_returns_empty_dict_rather_than_raising(self):
         with patch(
-            "open_notebook.ai.models.repo_query",
+            "notebooke.ai.models.repo_query",
             new=AsyncMock(side_effect=RuntimeError("db down")),
         ):
             result = await Model.get_display_info_for_ids(["model:outline"])
@@ -135,7 +135,7 @@ class TestGetDisplayInfoForIdsUnit:
     @pytest.mark.asyncio
     async def test_unresolvable_ids_are_absent_from_result(self):
         with patch(
-            "open_notebook.ai.models.repo_query",
+            "notebooke.ai.models.repo_query",
             new=AsyncMock(
                 return_value=[
                     {"id": "model:outline", "name": "gpt-4o", "provider": "openai"}

@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-from open_notebook.podcasts.audio_paths import (
+from notebooke.podcasts.audio_paths import (
     podcasts_root,
     to_relative_audio_path,
 )
@@ -22,7 +22,7 @@ from open_notebook.podcasts.audio_paths import (
 class TestToRelativeAudioPath:
     def test_absolute_path_under_root_becomes_relative(self, tmp_path, monkeypatch):
         monkeypatch.setattr(
-            "open_notebook.podcasts.audio_paths.PODCASTS_FOLDER", str(tmp_path)
+            "notebooke.podcasts.audio_paths.PODCASTS_FOLDER", str(tmp_path)
         )
         audio = tmp_path / "episodes" / "uuid-1" / "audio" / "uuid-1.mp3"
 
@@ -30,7 +30,7 @@ class TestToRelativeAudioPath:
 
     def test_accepts_path_objects(self, tmp_path, monkeypatch):
         monkeypatch.setattr(
-            "open_notebook.podcasts.audio_paths.PODCASTS_FOLDER", str(tmp_path)
+            "notebooke.podcasts.audio_paths.PODCASTS_FOLDER", str(tmp_path)
         )
         audio = tmp_path / "episodes" / "uuid-2" / "a.mp3"
 
@@ -38,7 +38,7 @@ class TestToRelativeAudioPath:
 
     def test_file_uri_under_root_becomes_relative(self, tmp_path, monkeypatch):
         monkeypatch.setattr(
-            "open_notebook.podcasts.audio_paths.PODCASTS_FOLDER", str(tmp_path)
+            "notebooke.podcasts.audio_paths.PODCASTS_FOLDER", str(tmp_path)
         )
         uri = f"file://{tmp_path}/episodes/uuid-3/a.mp3"
 
@@ -53,7 +53,7 @@ class TestToRelativeAudioPath:
         root.mkdir(parents=True)
         monkeypatch.chdir(tmp_path)
         monkeypatch.setattr(
-            "open_notebook.podcasts.audio_paths.PODCASTS_FOLDER", "./data/podcasts"
+            "notebooke.podcasts.audio_paths.PODCASTS_FOLDER", "./data/podcasts"
         )
 
         rel = to_relative_audio_path("data/podcasts/episodes/uuid-4/a.mp3")
@@ -64,7 +64,7 @@ class TestToRelativeAudioPath:
         root = tmp_path / "podcasts"
         root.mkdir()
         monkeypatch.setattr(
-            "open_notebook.podcasts.audio_paths.PODCASTS_FOLDER", str(root)
+            "notebooke.podcasts.audio_paths.PODCASTS_FOLDER", str(root)
         )
 
         with pytest.raises(ValueError, match="outside the podcasts folder"):
@@ -74,7 +74,7 @@ class TestToRelativeAudioPath:
         root = tmp_path / "podcasts"
         root.mkdir()
         monkeypatch.setattr(
-            "open_notebook.podcasts.audio_paths.PODCASTS_FOLDER", str(root)
+            "notebooke.podcasts.audio_paths.PODCASTS_FOLDER", str(root)
         )
 
         with pytest.raises(ValueError, match="outside the podcasts folder"):
@@ -82,16 +82,16 @@ class TestToRelativeAudioPath:
 
     def test_root_itself_raises_value_error(self, tmp_path, monkeypatch):
         monkeypatch.setattr(
-            "open_notebook.podcasts.audio_paths.PODCASTS_FOLDER", str(tmp_path)
+            "notebooke.podcasts.audio_paths.PODCASTS_FOLDER", str(tmp_path)
         )
         with pytest.raises(ValueError, match="outside the podcasts folder"):
             to_relative_audio_path(str(tmp_path))
 
     def test_roundtrips_with_read_helper(self, tmp_path, monkeypatch):
-        from open_notebook.podcasts.audio_paths import resolve_contained_audio_path
+        from notebooke.podcasts.audio_paths import resolve_contained_audio_path
 
         monkeypatch.setattr(
-            "open_notebook.podcasts.audio_paths.PODCASTS_FOLDER", str(tmp_path)
+            "notebooke.podcasts.audio_paths.PODCASTS_FOLDER", str(tmp_path)
         )
         audio = tmp_path / "episodes" / "uuid-5" / "a.mp3"
         audio.parent.mkdir(parents=True)
@@ -108,14 +108,14 @@ class TestMigration21Registration:
     """Migration files exist and are registered in AsyncMigrationManager
     (migrations are hard-coded, not auto-discovered)."""
 
-    MIGRATIONS_DIR = Path("open_notebook/database/migrations")
+    MIGRATIONS_DIR = Path("notebooke/database/migrations")
 
     def test_migration_files_exist(self):
         assert (self.MIGRATIONS_DIR / "21.surrealql").is_file()
         assert (self.MIGRATIONS_DIR / "21_down.surrealql").is_file()
 
     def test_manager_registers_migration_21(self):
-        from open_notebook.database.async_migrate import AsyncMigrationManager
+        from notebooke.database.async_migrate import AsyncMigrationManager
 
         manager = AsyncMigrationManager()
         assert len(manager.up_migrations) >= 21

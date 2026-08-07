@@ -5,14 +5,14 @@ from langchain_core.runnables import RunnableConfig
 from loguru import logger
 from surreal_commands import CommandInput, CommandOutput, command
 
-from open_notebook.database.repository import ensure_record_id
-from open_notebook.domain.notebook import Source
-from open_notebook.domain.transformation import Transformation
-from open_notebook.exceptions import ConfigurationError
+from notebooke.database.repository import ensure_record_id
+from notebooke.domain.notebook import Source
+from notebooke.domain.transformation import Transformation
+from notebooke.exceptions import ConfigurationError
 
 try:
-    from open_notebook.graphs.source import source_graph
-    from open_notebook.graphs.transformation import graph as transform_graph
+    from notebooke.graphs.source import source_graph
+    from notebooke.graphs.transformation import graph as transform_graph
 except ImportError as e:
     logger.error(f"Failed to import graphs: {e}")
     raise ValueError("graphs not available")
@@ -37,7 +37,7 @@ class SourceProcessingOutput(CommandOutput):
 
 @command(
     "process_source",
-    app="open_notebook",
+    app="notebooke",
     retry={
         "max_attempts": 15,  # Handle deep queues (workaround for SurrealDB v2 transaction conflicts)
         "wait_strategy": "exponential_jitter",
@@ -170,7 +170,7 @@ class RunTransformationOutput(CommandOutput):
 
 @command(
     "run_transformation",
-    app="open_notebook",
+    app="notebooke",
     retry={
         "max_attempts": 5,
         "wait_strategy": "exponential_jitter",

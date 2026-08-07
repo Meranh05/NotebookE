@@ -136,6 +136,30 @@ export function useDeletePodcastEpisode() {
   })
 }
 
+export function useCancelPodcastEpisode() {
+  const queryClient = useQueryClient()
+  const { toast } = useToast()
+  const { t } = useTranslation()
+
+  return useMutation({
+    mutationFn: (episodeId: string) => podcastsApi.cancelEpisode(episodeId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.podcastEpisodes })
+      toast({
+        title: t('podcasts.episodeCancelled'),
+        description: t('podcasts.episodeCancelledDesc'),
+      })
+    },
+    onError: (error: unknown) => {
+      toast({
+        title: t('podcasts.failedToCancelEpisode'),
+        description: getApiErrorKey(error, t('common.error')),
+        variant: 'destructive',
+      })
+    },
+  })
+}
+
 export function useEpisodeProfiles() {
   const query = useQuery({
     queryKey: QUERY_KEYS.episodeProfiles,

@@ -29,9 +29,9 @@ The [Model Context Protocol](https://modelcontextprotocol.io) is an open standar
    ```json
    {
      "mcpServers": {
-       "open-notebook": {
+       "notebooke": {
          "command": "uvx",
-         "args": ["open-notebook-mcp"],
+         "args": ["notebooke-mcp"],
          "env": {
            "OPEN_NOTEBOOK_URL": "http://localhost:5055",
            "OPEN_NOTEBOOK_PASSWORD": "your_password_here"
@@ -46,9 +46,9 @@ The [Model Context Protocol](https://modelcontextprotocol.io) is an open standar
    ```json
    {
      "mcpServers": {
-       "open-notebook": {
+       "notebooke": {
          "command": "uvx",
-         "args": ["open-notebook-mcp"],
+         "args": ["notebooke-mcp"],
          "env": {
            "OPEN_NOTEBOOK_URL": "http://localhost:5055",
            "OPEN_NOTEBOOK_PASSWORD": "your_password_here"
@@ -67,9 +67,9 @@ Add to your VS Code settings or `.vscode/mcp.json`:
 ```json
 {
   "servers": {
-    "open-notebook": {
+    "notebooke": {
       "command": "uvx",
-      "args": ["open-notebook-mcp"],
+      "args": ["notebooke-mcp"],
       "env": {
         "OPEN_NOTEBOOK_URL": "http://localhost:5055",
         "OPEN_NOTEBOOK_PASSWORD": "your_password_here"
@@ -169,7 +169,7 @@ The NotebookE MCP server exposes these capabilities:
 
 The NotebookE MCP server is developed and maintained by the Epochal team:
 
-**🔗 GitHub**: [Epochal-dev/open-notebook-mcp](https://github.com/Epochal-dev/open-notebook-mcp)
+**🔗 GitHub**: [Epochal-dev/notebooke-mcp](https://github.com/Epochal-dev/notebooke-mcp)
 
 Contributions, issues, and feature requests are welcome!
 
@@ -177,9 +177,9 @@ Contributions, issues, and feature requests are welcome!
 
 The NotebookE MCP server is published to the official MCP Registry:
 
-- **Registry**: Search for "open-notebook" at [registry.modelcontextprotocol.io](https://registry.modelcontextprotocol.io)
-- **PyPI**: [pypi.org/project/open-notebook-mcp](https://pypi.org/project/open-notebook-mcp)
-- **GitHub**: [Epochal-dev/open-notebook-mcp](https://github.com/Epochal-dev/open-notebook-mcp)
+- **Registry**: Search for "notebooke" at [registry.modelcontextprotocol.io](https://registry.modelcontextprotocol.io)
+- **PyPI**: [pypi.org/project/notebooke-mcp](https://pypi.org/project/notebooke-mcp)
+- **GitHub**: [Epochal-dev/notebooke-mcp](https://github.com/Epochal-dev/notebooke-mcp)
 
 ## Troubleshooting
 

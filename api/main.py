@@ -6,7 +6,7 @@ load_dotenv()
 # Keep the internal SurrealDB websocket out of any configured HTTP proxy
 # (issue #1160). Must run after load_dotenv() (so a proxy set in .env is
 # already visible) and before the DB is touched.
-from open_notebook.utils.proxy import ensure_internal_no_proxy
+from notebooke.utils.proxy import ensure_internal_no_proxy
 
 ensure_internal_no_proxy()
 
@@ -46,8 +46,8 @@ from api.routers import (
     transformations,
 )
 from api.routers import commands as commands_router
-from open_notebook.database.async_migrate import AsyncMigrationManager
-from open_notebook.exceptions import (
+from notebooke.database.async_migrate import AsyncMigrationManager
+from notebooke.exceptions import (
     AuthenticationError,
     ConfigurationError,
     ExternalServiceError,
@@ -58,7 +58,7 @@ from open_notebook.exceptions import (
     RateLimitError,
     UnsupportedTypeException,
 )
-from open_notebook.utils.encryption import get_secret_from_env
+from notebooke.utils.encryption import get_secret_from_env
 
 
 def _parse_cors_origins(raw: str) -> list[str]:
@@ -371,7 +371,7 @@ async def unsupported_type_error_handler(
 
 
 @app.exception_handler(OpenNotebookError)
-async def open_notebook_error_handler(request: Request, exc: OpenNotebookError):
+async def notebooke_error_handler(request: Request, exc: OpenNotebookError):
     return JSONResponse(
         status_code=500,
         content={"detail": str(exc)},

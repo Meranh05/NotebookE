@@ -16,14 +16,14 @@ from api.routers._chat_shared import (
     get_source_or_404,
     get_verified_source_session,
 )
-from open_notebook.database.repository import ensure_record_id, repo_query
-from open_notebook.domain.notebook import ChatSession
-from open_notebook.exceptions import (
+from notebooke.database.repository import ensure_record_id, repo_query
+from notebooke.domain.notebook import ChatSession
+from notebooke.exceptions import (
     NotFoundError,
     OpenNotebookError,
 )
-from open_notebook.graphs.source_chat import source_chat_graph as source_chat_graph
-from open_notebook.utils.graph_utils import get_session_message_count
+from notebooke.graphs.source_chat import source_chat_graph as source_chat_graph
+from notebooke.utils.graph_utils import get_session_message_count
 
 router = APIRouter()
 
@@ -355,39 +355,38 @@ async def stream_source_chat_response(
         user_event = {"type": "user_message", "content": message, "timestamp": None}
         yield f"data: {json.dumps(user_event)}\n\n"
 
-        # Run the synchronous LangGraph invoke in a thread so it doesn't block the
-        # event loop. While blocked, even the already-yielded SSE events can't
-        # flush and every other request stalls until the LLM finishes. Mirrors the
-        # get_state() calls above.
-        # The lambda pins down which `invoke` overload is used; asyncio.to_thread
-        # can't resolve overloaded callables on its own. The ignore is a langgraph
-        # typing limitation: it accepts a partial state dict at runtime, but the
-        # signature requires the full state type.
-        result = await asyncio.to_thread(
-            lambda: source_chat_graph.invoke(
-                input=state_values,  # type: ignore[arg-type]
+        from langgraph.checkpoint.sqlite.aio import AsyncSqliteSaver
+
+        from notebooke.graphs.source_chat import (
+            LANGGRAPH_CHECKPOINT_FILE,
+            source_chat_state,
+        )
+        
+        async with AsyncSqliteSaver.from_conn_string(LANGGRAPH_CHECKPOINT_FILE) as memory:
+            async_graph = source_chat_state.compile(checkpointer=memory)
+            
+            async for message_chunk, metadata in async_graph.astream(
+                input=state_values,
                 config=RunnableConfig(
                     configurable={"thread_id": session_id, "model_id": model_override}
                 ),
-            )
+                stream_mode="messages"
+            ):
+                # Stream AI message chunks
+                if metadata.get("langgraph_node") == "source_chat_agent":
+                    if hasattr(message_chunk, "content") and message_chunk.content:
+                        chunk_event = {"type": "chunk", "content": message_chunk.content}
+                        yield f"data: {json.dumps(chunk_event)}\n\n"
+
+        # Stream context indicators if available (we need to fetch final state for this since astream messages doesn't return state variables)
+        final_state = await asyncio.to_thread(
+            source_chat_graph.get_state,
+            config=RunnableConfig(configurable={"thread_id": session_id}),
         )
-
-        # Stream the complete AI response
-        if "messages" in result:
-            for msg in result["messages"]:
-                if hasattr(msg, "type") and msg.type == "ai":
-                    ai_event = {
-                        "type": "ai_message",
-                        "content": msg.content if hasattr(msg, "content") else str(msg),
-                        "timestamp": None,
-                    }
-                    yield f"data: {json.dumps(ai_event)}\n\n"
-
-        # Stream context indicators
-        if "context_indicators" in result:
+        if final_state and final_state.values and "context_indicators" in final_state.values:
             context_event = {
                 "type": "context_indicators",
-                "data": result["context_indicators"],
+                "data": final_state.values["context_indicators"],
             }
             yield f"data: {json.dumps(context_event)}\n\n"
 
@@ -396,7 +395,7 @@ async def stream_source_chat_response(
         yield f"data: {json.dumps(completion_event)}\n\n"
 
     except Exception as e:
-        from open_notebook.utils.error_classifier import classify_error
+        from notebooke.utils.error_classifier import classify_error
 
         _, error_message = classify_error(e)
         logger.error(f"Error in source chat streaming: {str(e)}")

@@ -1,6 +1,6 @@
 """
 Tests for Note.save()'s embed_note submission resilience
-(open_notebook/domain/notebook.py) and its one caller that needs the
+(notebooke/domain/notebook.py) and its one caller that needs the
 opposite behavior (api/routers/embedding.py).
 
 Note.save()'s embed_note submission is now wrapped in try/except: the note
@@ -22,7 +22,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastapi.testclient import TestClient
 
-from open_notebook.domain.notebook import Note
+from notebooke.domain.notebook import Note
 
 
 @pytest.fixture
@@ -38,11 +38,11 @@ class TestNoteSaveEmbedResilience:
         note = Note(title="Test", content="some content")
         with (
             patch(
-                "open_notebook.domain.base.ObjectModel.save",
+                "notebooke.domain.base.ObjectModel.save",
                 new=AsyncMock(),
             ),
             patch(
-                "open_notebook.domain.notebook.submit_command",
+                "notebooke.domain.notebook.submit_command",
                 side_effect=RuntimeError("job queue is down"),
             ),
         ):
@@ -58,11 +58,11 @@ class TestNoteSaveEmbedResilience:
         note = Note(title="Test", content="some content")
         with (
             patch(
-                "open_notebook.domain.base.ObjectModel.save",
+                "notebooke.domain.base.ObjectModel.save",
                 new=AsyncMock(),
             ) as mock_super_save,
             patch(
-                "open_notebook.domain.notebook.submit_command",
+                "notebooke.domain.notebook.submit_command",
                 side_effect=RuntimeError("job queue is down"),
             ),
         ):
@@ -75,9 +75,9 @@ class TestNoteSaveEmbedResilience:
     async def test_save_returns_command_id_on_success(self):
         note = Note(title="Test", content="some content")
         with (
-            patch("open_notebook.domain.base.ObjectModel.save", new=AsyncMock()),
+            patch("notebooke.domain.base.ObjectModel.save", new=AsyncMock()),
             patch(
-                "open_notebook.domain.notebook.submit_command",
+                "notebooke.domain.notebook.submit_command",
                 return_value="command:xyz789",
             ),
         ):
@@ -90,9 +90,9 @@ class TestNoteSaveEmbedResilience:
     async def test_save_returns_none_when_no_content(self):
         note = Note(title="Test", content=None)
         with (
-            patch("open_notebook.domain.base.ObjectModel.save", new=AsyncMock()),
+            patch("notebooke.domain.base.ObjectModel.save", new=AsyncMock()),
             patch(
-                "open_notebook.domain.notebook.submit_command"
+                "notebooke.domain.notebook.submit_command"
             ) as mock_submit,
         ):
             object.__setattr__(note, "id", "note:abc123")
@@ -113,7 +113,7 @@ class TestEmbeddingEndpointNoteBranch:
             patch("api.routers.embedding.Note.get", new=AsyncMock(return_value=note)),
             patch.object(Note, "save", new=AsyncMock(return_value=None)),
             patch(
-                "open_notebook.ai.models.model_manager.get_embedding_model",
+                "notebooke.ai.models.model_manager.get_embedding_model",
                 new=AsyncMock(return_value=object()),
             ),
         ):
@@ -135,7 +135,7 @@ class TestEmbeddingEndpointNoteBranch:
                 Note, "save", new=AsyncMock(return_value="command:abc123")
             ),
             patch(
-                "open_notebook.ai.models.model_manager.get_embedding_model",
+                "notebooke.ai.models.model_manager.get_embedding_model",
                 new=AsyncMock(return_value=object()),
             ),
         ):
@@ -159,7 +159,7 @@ class TestEmbeddingEndpointNoteBranch:
             patch("api.routers.embedding.Note.get", new=AsyncMock(return_value=note)),
             patch.object(Note, "save", new=AsyncMock(return_value=None)),
             patch(
-                "open_notebook.ai.models.model_manager.get_embedding_model",
+                "notebooke.ai.models.model_manager.get_embedding_model",
                 new=AsyncMock(return_value=object()),
             ),
         ):

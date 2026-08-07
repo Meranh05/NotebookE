@@ -4,13 +4,13 @@ services:
     # Credentials default to root:root for a zero-config local setup. Before
     # exposing this instance to a network, set SURREAL_USER / SURREAL_PASSWORD
     # in a .env file (see .env.example) — they are applied here and to the
-    # open_notebook service below, so the two always stay in sync.
+    # notebooke service below, so the two always stay in sync.
     # List (exec) form so each interpolated value stays a single argument —
     # a password containing spaces would otherwise be split into several.
     command: ["start", "--log", "info", "--user", "${SURREAL_USER:-root}", "--pass", "${SURREAL_PASSWORD:-root}", "rocksdb:/mydata/mydatabase.db"]
     user: root  # Required for bind mounts on Linux
     ports:
-      # Bound to localhost only: the open_notebook service reaches this over
+      # Bound to localhost only: the notebooke service reaches this over
       # the internal compose network regardless, so the host port is purely
       # for local debugging (e.g. Surrealist, `surreal sql`). Exposing this
       # on 0.0.0.0 would let anyone who can reach the host connect with the
@@ -23,8 +23,8 @@ services:
     restart: always
     pull_policy: always
 
-  open_notebook:
-    image: lfnovo/open_notebook:v1-latest
+  notebooke:
+    image: lfnovo/notebooke:v1-latest
     ports:
       - "8502:8502"  # Web UI
       - "5055:5055"  # REST API
@@ -39,8 +39,8 @@ services:
       - SURREAL_URL=ws://surrealdb:8000/rpc
       - SURREAL_USER=${SURREAL_USER:-root}
       - SURREAL_PASSWORD=${SURREAL_PASSWORD:-root}
-      - SURREAL_NAMESPACE=open_notebook
-      - SURREAL_DATABASE=open_notebook
+      - SURREAL_NAMESPACE=notebooke
+      - SURREAL_DATABASE=notebooke
 
       # OPTIONAL: heavy extraction runtimes, installed on first startup when
       # enabled (downloads are cached on the ./notebook_data volume, so only the

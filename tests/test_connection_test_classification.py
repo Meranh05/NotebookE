@@ -1,5 +1,5 @@
 """
-Tests for connection-test error classification (open_notebook/ai/connection_tester.py).
+Tests for connection-test error classification (notebooke/ai/connection_tester.py).
 
 Two semantics share one auth/network classifier:
 - The *provider* test asks only "do these credentials reach a working
@@ -12,7 +12,7 @@ Two semantics share one auth/network classifier:
 
 import pytest
 
-from open_notebook.ai.connection_tester import (
+from notebooke.ai.connection_tester import (
     _connection_failure_reason,
     _is_rate_limit,
     _normalize_error_message,

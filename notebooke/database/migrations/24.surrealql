@@ -1,0 +1,7 @@
+
+UPDATE transformation SET title = "Phân tích tài liệu", description = "Phân tích một bài báo khoa học/kỹ thuật", prompt = prompt + "\n- VUI LÒNG TRẢ LỜI HOÀN TOÀN BẰNG TIẾNG VIỆT." WHERE name = "Analyze Paper";
+UPDATE transformation SET title = "Ý chính cốt lõi", description = "Trích xuất những hiểu biết quan trọng và các hành động cụ thể", prompt = prompt + "\n- VUI LÒNG TRẢ LỜI HOÀN TOÀN BẰNG TIẾNG VIỆT." WHERE name = "Key Insights";
+UPDATE transformation SET title = "Tóm tắt chuyên sâu", description = "Tạo một bản tóm tắt sâu sắc, phong phú về nội dung", prompt = prompt + "\n- VUI LÒNG TRẢ LỜI HOÀN TOÀN BẰNG TIẾNG VIỆT." WHERE name = "Dense Summary";
+UPDATE transformation SET title = "Câu hỏi phản ngẫm", description = "Tạo các câu hỏi phản ngẫm từ tài liệu để giúp khám phá sâu hơn", prompt = prompt + "\n- VUI LÒNG TRẢ LỜI HOÀN TOÀN BẰNG TIẾNG VIỆT." WHERE name = "Reflections";
+UPDATE transformation SET title = "Mục lục", description = "Mô tả các chủ đề khác nhau của tài liệu", prompt = prompt + "\n- VUI LÒNG TRẢ LỜI HOÀN TOÀN BẰNG TIẾNG VIỆT." WHERE name = "Table of Contents";
+UPDATE transformation SET title = "Tóm tắt cơ bản", description = "Tạo một bản tóm tắt ngắn gọn về nội dung", prompt = prompt + "\n- VUI LÒNG TRẢ LỜI HOÀN TOÀN BẰNG TIẾNG VIỆT." WHERE name = "Simple Summary";

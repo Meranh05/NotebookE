@@ -49,7 +49,7 @@ ENV UV_HTTP_TIMEOUT=120
 
 # Copy dependency files and minimal package structure first for better layer caching
 COPY pyproject.toml uv.lock ./
-COPY open_notebook/__init__.py ./open_notebook/__init__.py
+COPY notebooke/__init__.py ./notebooke/__init__.py
 
 # Install dependencies (this layer is cached unless dependencies change)
 RUN uv sync --frozen --no-dev
@@ -101,7 +101,7 @@ COPY --from=frontend-builder /app/frontend/start-server.js /app/frontend/start-s
 # Ensure uv uses the existing venv without attempting network operations
 ENV UV_NO_SYNC=1
 ENV VIRTUAL_ENV=/app/.venv
-# Point the app at the pre-baked tiktoken encoding (see open_notebook/config.py)
+# Point the app at the pre-baked tiktoken encoding (see notebooke/config.py)
 ENV TIKTOKEN_CACHE_DIR=/app/tiktoken-cache
 # Bind the API to all interfaces (IPv4). Set API_HOST=:: for IPv6 dual-stack environments
 ENV API_HOST=0.0.0.0

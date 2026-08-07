@@ -3,9 +3,9 @@ from loguru import logger
 
 from api.command_service import CommandService
 from api.models import EmbedRequest, EmbedResponse
-from open_notebook.ai.models import model_manager
-from open_notebook.domain.notebook import Note, Source
-from open_notebook.exceptions import (
+from notebooke.ai.models import model_manager
+from notebooke.domain.notebook import Note, Source
+from notebooke.exceptions import (
     NotFoundError,
     OpenNotebookError,
 )
@@ -51,7 +51,7 @@ async def embed_content(embed_request: EmbedRequest):
                     command_input = {"note_id": item_id}
 
                 command_id = await CommandService.submit_command_job(
-                    "open_notebook",
+                    "notebooke",
                     command_name,
                     command_input,
                 )

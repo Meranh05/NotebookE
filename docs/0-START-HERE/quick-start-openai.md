@@ -16,7 +16,7 @@ Get NotebookE running with OpenAI's GPT models. Fast, powerful, and simple.
 
 ## Step 1: Create Configuration (1 min)
 
-Create a new folder `open-notebook` and add this file:
+Create a new folder `notebooke` and add this file:
 
 **docker-compose.yml**:
 
@@ -32,8 +32,8 @@ services:
     volumes:
       - ./surreal_data:/mydata
 
-  open_notebook:
-    image: lfnovo/open_notebook:v1-latest
+  notebooke:
+    image: lfnovo/notebooke:v1-latest
     pull_policy: always
     ports:
       - "8502:8502"  # Web UI
@@ -46,8 +46,8 @@ services:
       - SURREAL_URL=ws://surrealdb:8000/rpc
       - SURREAL_USER=root
       - SURREAL_PASSWORD=password
-      - SURREAL_NAMESPACE=open_notebook
-      - SURREAL_DATABASE=open_notebook
+      - SURREAL_NAMESPACE=notebooke
+      - SURREAL_DATABASE=notebooke
     volumes:
       - ./notebook_data:/app/data
     depends_on:
@@ -64,7 +64,7 @@ services:
 
 ## Step 2: Start Services (1 min)
 
-Open terminal in your `open-notebook` folder:
+Open terminal in your `notebooke` folder:
 
 ```bash
 docker compose up -d

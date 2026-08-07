@@ -5,7 +5,7 @@ Provides endpoints to check authentication status.
 
 from fastapi import APIRouter
 
-from open_notebook.utils.encryption import get_secret_from_env
+from notebooke.utils.encryption import get_secret_from_env
 
 router = APIRouter(prefix="/auth", tags=["auth"])
 

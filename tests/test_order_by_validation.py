@@ -1,15 +1,15 @@
 """
 Regression tests for ObjectModel._validate_order_by() and its use by
-Credential.get_all() (open_notebook/domain/credential.py), which builds its
+Credential.get_all() (notebooke/domain/credential.py), which builds its
 own query instead of delegating to the base get_all() and previously
 interpolated order_by into the SurrealQL unvalidated.
 """
 
 import pytest
 
-from open_notebook.domain.base import ObjectModel
-from open_notebook.domain.credential import Credential
-from open_notebook.exceptions import InvalidInputError
+from notebooke.domain.base import ObjectModel
+from notebooke.domain.credential import Credential
+from notebooke.exceptions import InvalidInputError
 
 
 class TestValidateOrderBy:

@@ -243,7 +243,7 @@ docker compose down && docker compose up -d
 curl http://localhost:8969/v1/models
 
 # From inside NotebookE container
-docker exec -it open-notebook curl http://host.docker.internal:8969/v1/models
+docker exec -it notebooke curl http://host.docker.internal:8969/v1/models
 ```
 
 ### Model Not Found

@@ -16,10 +16,10 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastapi.testclient import TestClient
 
-from open_notebook.domain.notebook import Source, SourceInsight
+from notebooke.domain.notebook import Source, SourceInsight
 
 MIGRATIONS_DIR = (
-    Path(__file__).parent.parent / "open_notebook" / "database" / "migrations"
+    Path(__file__).parent.parent / "notebooke" / "database" / "migrations"
 )
 
 
@@ -65,7 +65,7 @@ class TestInsightTimestampStamping:
 
     def test_migration_is_registered_in_manager(self):
         """Migrations are hard-coded in AsyncMigrationManager, not discovered."""
-        from open_notebook.database.async_migrate import AsyncMigrationManager
+        from notebooke.database.async_migrate import AsyncMigrationManager
 
         manager = AsyncMigrationManager()
         # up and down lists must stay in sync and include migration 19

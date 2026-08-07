@@ -5,7 +5,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastapi.testclient import TestClient
 
-from open_notebook.domain.notebook import Source
+from notebooke.domain.notebook import Source
 
 
 @pytest.fixture

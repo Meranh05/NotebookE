@@ -23,7 +23,7 @@ from commands.podcast_commands import (
     PodcastGenerationInput,
     generate_podcast_command,
 )
-from open_notebook.podcasts.models import EpisodeProfile, SpeakerProfile
+from notebooke.podcasts.models import EpisodeProfile, SpeakerProfile
 
 
 def make_episode_profile(speaker_config="speaker_profile:from_episode"):
@@ -132,7 +132,7 @@ class TestSpeakerProfileResolve:
     @pytest.mark.asyncio
     async def test_resolve_by_record_id_queries_by_id(self):
         with patch(
-            "open_notebook.podcasts.models.repo_query", new_callable=AsyncMock
+            "notebooke.podcasts.models.repo_query", new_callable=AsyncMock
         ) as mock_query:
             mock_query.return_value = [
                 {
@@ -160,7 +160,7 @@ class TestSpeakerProfileResolve:
     @pytest.mark.asyncio
     async def test_resolve_by_record_id_returns_none_when_missing(self):
         with patch(
-            "open_notebook.podcasts.models.repo_query", new_callable=AsyncMock
+            "notebooke.podcasts.models.repo_query", new_callable=AsyncMock
         ) as mock_query:
             mock_query.return_value = []
             profile = await SpeakerProfile.resolve("speaker_profile:gone")
@@ -230,7 +230,7 @@ class TestMigration20:
 
         sql = (
             Path(__file__).parent.parent
-            / "open_notebook"
+            / "notebooke"
             / "database"
             / "migrations"
             / "20.surrealql"
@@ -251,7 +251,7 @@ class TestMigration20:
 
         sql = (
             Path(__file__).parent.parent
-            / "open_notebook"
+            / "notebooke"
             / "database"
             / "migrations"
             / "20_down.surrealql"
@@ -266,7 +266,7 @@ class TestMigration20:
         )
 
     def test_migration_is_registered_in_manager(self):
-        from open_notebook.database.async_migrate import AsyncMigrationManager
+        from notebooke.database.async_migrate import AsyncMigrationManager
 
         manager = AsyncMigrationManager()
         assert len(manager.up_migrations) >= 20
@@ -350,7 +350,7 @@ class TestOrphanedProfileDoesNotPoisonConfig:
                 new=AsyncMock(return_value=speaker_profile),
             ),
             patch(
-                "open_notebook.podcasts.models._resolve_model_config",
+                "notebooke.podcasts.models._resolve_model_config",
                 new=AsyncMock(return_value=resolved),
             ),
             patch(
@@ -377,7 +377,7 @@ class TestOrphanedProfileDoesNotPoisonConfig:
             # at write time (#1030), so the fake output path must live under
             # the (patched) podcasts root.
             patch(
-                "open_notebook.podcasts.audio_paths.PODCASTS_FOLDER",
+                "notebooke.podcasts.audio_paths.PODCASTS_FOLDER",
                 str(tmp_path),
             ),
             patch(
@@ -385,7 +385,7 @@ class TestOrphanedProfileDoesNotPoisonConfig:
                 new=lambda *args: ("ep-dir", tmp_path / "ep-dir"),
             ),
             patch(
-                "open_notebook.podcasts.models.PodcastEpisode.save",
+                "notebooke.podcasts.models.PodcastEpisode.save",
                 new=AsyncMock(),
             ),
         ):

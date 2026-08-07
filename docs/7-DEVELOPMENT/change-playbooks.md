@@ -21,8 +21,8 @@ Step-by-step guides for common types of changes in the NotebookE codebase. Each 
 
 | Step | File(s) | What to Do |
 | ------ | --------- | ------------ |
-| 1 | `open_notebook/domain/<model>.py` | Add field with type hint and default value. Follow existing patterns in the class. |
-| 2 | `open_notebook/database/migrations/N.surrealql` | Create migration. Use next number in sequence. `DEFINE FIELD` for new fields, `UPDATE` for backfilling existing records. Register it in `AsyncMigrationManager` (`async_migrate.py`) — migrations are not auto-discovered. |
+| 1 | `notebooke/domain/<model>.py` | Add field with type hint and default value. Follow existing patterns in the class. |
+| 2 | `notebooke/database/migrations/N.surrealql` | Create migration. Use next number in sequence. `DEFINE FIELD` for new fields, `UPDATE` for backfilling existing records. Register it in `AsyncMigrationManager` (`async_migrate.py`) — migrations are not auto-discovered. |
 | 3 | `api/models.py` | Add field to `*Create`, `*Update` (Optional), and `*Response` schemas. |
 | 4 | `frontend/src/lib/types/api.ts` | Add field to the corresponding TypeScript interface (`*Response`, `Create*Request`, `Update*Request`). |
 | 5 | Frontend component (if user-facing) | Display or edit the field in the relevant component. |
@@ -64,7 +64,7 @@ Step-by-step guides for common types of changes in the NotebookE codebase. Each 
 | Step | File(s) | What to Do |
 | ------ | --------- | ------------ |
 | 1 | `prompts/<workflow_name>/*.jinja` | Create Jinja2 prompt templates. Use `Prompter` from ai-prompter. |
-| 2 | `open_notebook/graphs/<workflow_name>.py` | Define `StateDict` (TypedDict), node functions, build graph with `StateGraph`. Use `provision_langchain_model()` for model selection. Wrap LLM calls with `classify_error()`. |
+| 2 | `notebooke/graphs/<workflow_name>.py` | Define `StateDict` (TypedDict), node functions, build graph with `StateGraph`. Use `provision_langchain_model()` for model selection. Wrap LLM calls with `classify_error()`. |
 | 3 | `api/<resource>_service.py` | Invoke graph: `await graph.ainvoke(state, config)`. |
 | 4 | `api/routers/<resource>.py` | Expose endpoint to trigger the workflow. |
 | 5 | `commands/<workflow>_commands.py` | If the workflow should run async: create command with `CommandInput`/`CommandOutput`. Register in command service. |
@@ -87,7 +87,7 @@ Step-by-step guides for common types of changes in the NotebookE codebase. Each 
 | Step | What to Do |
 | ------ | ------------ |
 | 1 | **Identify the layer.** Read the issue and determine: frontend, API router, service, domain model, database, or graph. |
-| 2 | **Read the relevant AGENTS.md** (root, `open_notebook/`, or `frontend/`) and the matching page in `docs/7-DEVELOPMENT/`. They document the rules and gotchas. |
+| 2 | **Read the relevant AGENTS.md** (root, `notebooke/`, or `frontend/`) and the matching page in `docs/7-DEVELOPMENT/`. They document the rules and gotchas. |
 | 3 | **Reproduce.** Use the API docs (`/docs`), browser, or a test to confirm the bug. |
 | 4 | **Fix.** Make the minimal change needed. Don't refactor surrounding code. |
 | 5 | **Add a test** that reproduces the bug and verifies the fix. |
@@ -115,8 +115,8 @@ Step-by-step guides for common types of changes in the NotebookE codebase. Each 
 
 | Step | File(s) | What to Do |
 | ------ | --------- | ------------ |
-| 1 | `open_notebook/database/migrations/N.surrealql` (+ `N_down.surrealql`) | Write SurrealQL. Use next number in sequence. Check existing migrations for patterns. |
-| 2 | `open_notebook/database/async_migrate.py` | Register the new files in `AsyncMigrationManager.__init__` — migrations are hard-coded, not auto-discovered. |
+| 1 | `notebooke/database/migrations/N.surrealql` (+ `N_down.surrealql`) | Write SurrealQL. Use next number in sequence. Check existing migrations for patterns. |
+| 2 | `notebooke/database/async_migrate.py` | Register the new files in `AsyncMigrationManager.__init__` — migrations are hard-coded, not auto-discovered. |
 | 3 | Domain model (if schema change) | Update field definitions to match. |
 | 4 | API schemas (if new/changed fields) | Update Pydantic models. |
 | 5 | **Verify:** Restart API and check logs | Migrations auto-run on startup. Look for errors in Loguru output. |
@@ -197,11 +197,11 @@ Step-by-step guides for common types of changes in the NotebookE codebase. Each 
 
 | Layer | Location | Schema/Types | Tests |
 | ------- | ---------- | ------------- | ------- |
-| Domain models | `open_notebook/domain/` | Pydantic fields | `tests/` |
-| Database | `open_notebook/database/repository.py` | SurrealQL | `tests/` |
-| Migrations | `open_notebook/database/migrations/*.surrealql` | SurrealQL | Auto-run on startup |
-| AI/LLM | `open_notebook/ai/` | Esperanto types | `tests/` |
-| Graphs | `open_notebook/graphs/` | TypedDict state | `tests/` |
+| Domain models | `notebooke/domain/` | Pydantic fields | `tests/` |
+| Database | `notebooke/database/repository.py` | SurrealQL | `tests/` |
+| Migrations | `notebooke/database/migrations/*.surrealql` | SurrealQL | Auto-run on startup |
+| AI/LLM | `notebooke/ai/` | Esperanto types | `tests/` |
+| Graphs | `notebooke/graphs/` | TypedDict state | `tests/` |
 | Prompts | `prompts/**/*.jinja` | Jinja2 context | — |
 | Commands | `commands/` | CommandInput/Output | `tests/` |
 | API routers | `api/routers/` | `api/models.py` | `tests/` |

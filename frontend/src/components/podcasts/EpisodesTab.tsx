@@ -3,7 +3,7 @@
 import { useCallback, useState } from 'react'
 import { IconAlertCircle, IconLoader2, IconRefresh } from '@tabler/icons-react'
 
-import { useDeletePodcastEpisode, usePodcastEpisodes, useRetryPodcastEpisode } from '@/lib/hooks/use-podcasts'
+import { useDeletePodcastEpisode, usePodcastEpisodes, useRetryPodcastEpisode, useCancelPodcastEpisode } from '@/lib/hooks/use-podcasts'
 import { EpisodeCard } from '@/components/podcasts/EpisodeCard'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Badge } from '@/components/ui/badge'
@@ -63,6 +63,7 @@ export function EpisodesTab() {
   } = usePodcastEpisodes()
   const deleteEpisode = useDeletePodcastEpisode()
   const retryEpisode = useRetryPodcastEpisode()
+  const cancelEpisode = useCancelPodcastEpisode()
 
   const handleRefresh = useCallback(() => {
     void refetch()
@@ -76,6 +77,11 @@ export function EpisodesTab() {
   const handleRetry = useCallback(
     async (episodeId: string) => { await retryEpisode.mutateAsync(episodeId) },
     [retryEpisode]
+  )
+
+  const handleCancel = useCallback(
+    async (episodeId: string) => { await cancelEpisode.mutateAsync(episodeId) },
+    [cancelEpisode]
   )
 
   const emptyState = !isLoading && episodes.length === 0
@@ -166,6 +172,8 @@ export function EpisodesTab() {
                   deleting={deleteEpisode.isPending}
                   onRetry={handleRetry}
                   retrying={retryEpisode.isPending}
+                  onCancel={handleCancel}
+                  cancelling={cancelEpisode.isPending}
                 />
               ))}
             </div>

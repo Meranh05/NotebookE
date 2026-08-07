@@ -41,7 +41,7 @@ OLLAMA_HOST=0.0.0.0:11434 ollama serve
 
 ## Step 2: Create Configuration (1 min)
 
-Create a new folder `open-notebook-external-ollama` and add these files:
+Create a new folder `notebooke-external-ollama` and add these files:
 
 **docker-compose.yml**:
 
@@ -58,8 +58,8 @@ services:
     volumes:
       - ./surreal_data:/mydata
 
-  open_notebook:
-    image: lfnovo/open_notebook:v1-latest
+  notebooke:
+    image: lfnovo/notebooke:v1-latest
     pull_policy: always
     ports:
       - "8502:8502"  # Web UI (React frontend)
@@ -72,8 +72,8 @@ services:
       - SURREAL_URL=ws://surrealdb:8000/rpc
       - SURREAL_USER=root
       - SURREAL_PASSWORD=password
-      - SURREAL_NAMESPACE=open_notebook
-      - SURREAL_DATABASE=open_notebook
+      - SURREAL_NAMESPACE=notebooke
+      - SURREAL_DATABASE=notebooke
     volumes:
       - ./notebook_data:/app/data
     depends_on:
@@ -100,7 +100,7 @@ When NotebookE runs inside Docker, it cannot reach `localhost:11434` on your hos
 
 ## Step 4: Start NotebookE (1 min)
 
-Open terminal in your `open-notebook-external-ollama` folder:
+Open terminal in your `notebooke-external-ollama` folder:
 
 ```bash
 docker compose up -d
@@ -171,7 +171,7 @@ http://localhost:8502
 3. For Windows/macOS, ensure `host.docker.internal` is reachable from inside the container:
 
    ```bash
-   docker exec <open_notebook_container> curl http://host.docker.internal:11434/api/version
+   docker exec <notebooke_container> curl http://host.docker.internal:11434/api/version
    ```
 
 ### Ollama not starting

@@ -2,7 +2,7 @@
 
 How podcast generation is modeled and executed: the two-tier profile system, the model-registry references, and the deliberate no-auto-retry policy.
 
-## Two-tier profile system (`open_notebook/podcasts/models.py`)
+## Two-tier profile system (`notebooke/podcasts/models.py`)
 
 - **SpeakerProfile** — voice configuration: a `voice_model` (`record<model>` reference for TTS) plus 1–4 speakers (name, voice_id, backstory, personality). Individual speakers can override the profile's `voice_model`.
 - **EpisodeProfile** — generation settings: `outline_llm` / `transcript_llm` (`record<model>` references), `language` (BCP 47, e.g. `pt-BR`), segment count (3–20), briefing template. It references a SpeakerProfile by name.
@@ -12,7 +12,7 @@ How podcast generation is modeled and executed: the two-tier profile system, the
 
 Profile fields reference `Model` records instead of raw provider/model strings. At generation time `_resolve_model_config(model_id)` loads the Model, resolves its linked credential (or falls back to `provision_provider_keys()`), and returns `(provider, model_name, config)` for podcast-creator.
 
-The legacy string fields (`tts_provider`, `outline_provider`, …) that predated the registry were dropped by SQL migration 22 (#1107). The migration best-effort maps any still-unresolved profile to an existing `model` record (provider + name + type) before dropping the columns; profiles with no matching record stay unresolved — the UI already flags them as needing model selection and the user re-picks once. The old startup data migration (`open_notebook/podcasts/migration.py`) is gone.
+The legacy string fields (`tts_provider`, `outline_provider`, …) that predated the registry were dropped by SQL migration 22 (#1107). The migration best-effort maps any still-unresolved profile to an existing `model` record (provider + name + type) before dropping the columns; profiles with no matching record stay unresolved — the UI already flags them as needing model selection and the user re-picks once. The old startup data migration (`notebooke/podcasts/migration.py`) is gone.
 
 ## Profile snapshots
 

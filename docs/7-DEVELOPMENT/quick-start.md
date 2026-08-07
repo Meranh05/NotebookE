@@ -13,11 +13,11 @@ Get NotebookE running locally in 5 minutes.
 
 ```bash
 # Fork the repository on GitHub first, then clone your fork
-git clone https://github.com/YOUR_USERNAME/open-notebook.git
-cd open-notebook
+git clone https://github.com/YOUR_USERNAME/notebooke.git
+cd notebooke
 
 # Add upstream remote for updates
-git remote add upstream https://github.com/lfnovo/open-notebook.git
+git remote add upstream https://github.com/lfnovo/notebooke.git
 ```
 
 ## 2. Install Dependencies (2 min)
@@ -59,7 +59,7 @@ cd frontend && npm run dev
 
 ## Next Steps
 
-- **First Issue?** Pick a [good first issue](https://github.com/lfnovo/open-notebook/issues?q=label%3A%22good+first+issue%22)
+- **First Issue?** Pick a [good first issue](https://github.com/lfnovo/notebooke/issues?q=label%3A%22good+first+issue%22)
 - **Understand the code?** Read [Architecture Overview](architecture.md)
 - **Make changes?** Follow [Contributing Guide](contributing.md)
 - **Setup details?** See [Development Setup](development-setup.md)

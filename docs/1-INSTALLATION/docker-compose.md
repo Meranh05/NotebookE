@@ -2,7 +2,7 @@
 
 Multi-container setup with separate services. **Best for most users.**
 
-> **Alternative Registry:** All images are available on both Docker Hub (`lfnovo/open_notebook`) and GitHub Container Registry (`ghcr.io/lfnovo/open-notebook`). Use GHCR if Docker Hub is blocked or you prefer GitHub-native workflows.
+> **Alternative Registry:** All images are available on both Docker Hub (`lfnovo/notebooke`) and GitHub Container Registry (`ghcr.io/lfnovo/notebooke`). Use GHCR if Docker Hub is blocked or you prefer GitHub-native workflows.
 
 ## Prerequisites
 
@@ -15,12 +15,12 @@ Multi-container setup with separate services. **Best for most users.**
 **Option A: Download from repository**
 
 ```bash
-curl -o docker-compose.yml https://raw.githubusercontent.com/lfnovo/open-notebook/main/docker-compose.yml
+curl -o docker-compose.yml https://raw.githubusercontent.com/lfnovo/notebooke/main/docker-compose.yml
 ```
 
 **Option B: Use the official file from the repo**
 
-The official `docker-compose.yml` is in the root of our repository: [View on GitHub](https://github.com/lfnovo/open-notebook/blob/main/docker-compose.yml)
+The official `docker-compose.yml` is in the root of our repository: [View on GitHub](https://github.com/lfnovo/notebooke/blob/main/docker-compose.yml)
 
 Copy that file to your project folder.
 
@@ -35,13 +35,13 @@ services:
     # Credentials default to root:root for a zero-config local setup. Before
     # exposing this instance to a network, set SURREAL_USER / SURREAL_PASSWORD
     # in a .env file (see .env.example) — they are applied here and to the
-    # open_notebook service below, so the two always stay in sync.
+    # notebooke service below, so the two always stay in sync.
     # List (exec) form so each interpolated value stays a single argument —
     # a password containing spaces would otherwise be split into several.
     command: ["start", "--log", "info", "--user", "${SURREAL_USER:-root}", "--pass", "${SURREAL_PASSWORD:-root}", "rocksdb:/mydata/mydatabase.db"]
     user: root  # Required for bind mounts on Linux
     ports:
-      # Bound to localhost only: the open_notebook service reaches this over
+      # Bound to localhost only: the notebooke service reaches this over
       # the internal compose network regardless, so the host port is purely
       # for local debugging (e.g. Surrealist, `surreal sql`). Exposing this
       # on 0.0.0.0 would let anyone who can reach the host connect with the
@@ -54,8 +54,8 @@ services:
     restart: always
     pull_policy: always
 
-  open_notebook:
-    image: lfnovo/open_notebook:v1-latest
+  notebooke:
+    image: lfnovo/notebooke:v1-latest
     ports:
       - "8502:8502"  # Web UI
       - "5055:5055"  # REST API
@@ -70,8 +70,8 @@ services:
       - SURREAL_URL=ws://surrealdb:8000/rpc
       - SURREAL_USER=${SURREAL_USER:-root}
       - SURREAL_PASSWORD=${SURREAL_PASSWORD:-root}
-      - SURREAL_NAMESPACE=open_notebook
-      - SURREAL_DATABASE=open_notebook
+      - SURREAL_NAMESPACE=notebooke
+      - SURREAL_DATABASE=notebooke
     volumes:
       - ./notebook_data:/app/data
     depends_on:
@@ -83,13 +83,13 @@ services:
 **Edit the file:**
 
 - Replace `change-me-to-a-secret-string` with your own secret (any string works, e.g., `my-super-secret-key-123`)
-- (Optional) To use database credentials other than the default `root:root`, create a `.env` file next to `docker-compose.yml` with `SURREAL_USER=...` and `SURREAL_PASSWORD=...` — both services pick them up automatically ([.env.example](https://github.com/lfnovo/open-notebook/blob/main/.env.example) shows the full format)
+- (Optional) To use database credentials other than the default `root:root`, create a `.env` file next to `docker-compose.yml` with `SURREAL_USER=...` and `SURREAL_PASSWORD=...` — both services pick them up automatically ([.env.example](https://github.com/lfnovo/notebooke/blob/main/.env.example) shows the full format)
 
 ---
 
 ## Step 2: Start Services (2 min)
 
-Open terminal in the `open-notebook` folder:
+Open terminal in the `notebooke` folder:
 
 ```bash
 docker compose up -d
@@ -99,7 +99,7 @@ Wait 15-20 seconds for all services to start:
 
 ```
 ✅ surrealdb running on :8000
-✅ open_notebook running on :8502 (UI) and :5055 (API)
+✅ notebooke running on :8502 (UI) and :5055 (API)
 ```
 
 Check status:
@@ -170,7 +170,7 @@ Instead of manually editing, use our ready-made example:
 
 ```bash
 # Download the Ollama example
-curl -o docker-compose.yml https://raw.githubusercontent.com/lfnovo/open-notebook/main/examples/docker-compose-ollama.yml
+curl -o docker-compose.yml https://raw.githubusercontent.com/lfnovo/notebooke/main/examples/docker-compose-ollama.yml
 
 # Or copy from repo
 cp examples/docker-compose-ollama.yml docker-compose.yml
@@ -197,7 +197,7 @@ Then restart and pull a model:
 
 ```bash
 docker compose restart
-docker exec open-notebook-local-ollama-1 ollama pull mistral
+docker exec notebooke-local-ollama-1 ollama pull mistral
 ```
 
 Configure Ollama in the Settings UI:
@@ -218,8 +218,8 @@ Configure Ollama in the Settings UI:
 | `SURREAL_URL` | Database connection | `ws://surrealdb:8000/rpc` |
 | `SURREAL_USER` | Database user | `root` |
 | `SURREAL_PASSWORD` | Database password | `root` |
-| `SURREAL_NAMESPACE` | Database namespace | `open_notebook` |
-| `SURREAL_DATABASE` | Database name | `open_notebook` |
+| `SURREAL_NAMESPACE` | Database namespace | `notebooke` |
+| `SURREAL_DATABASE` | Database name | `notebooke` |
 | `API_URL` | API external URL | `http://localhost:5055` |
 | `OPEN_NOTEBOOK_EMBEDDING_BATCH_SIZE` | Override embedding batch size for stricter/local providers (recommended: `8` for CPU-only local setups) | `50` |
 
@@ -391,5 +391,5 @@ For production use, see:
 ## Getting Help
 
 - **Discord**: [Community support](https://discord.gg/37XJPXfz2w)
-- **Issues**: [GitHub Issues](https://github.com/lfnovo/open-notebook/issues)
+- **Issues**: [GitHub Issues](https://github.com/lfnovo/notebooke/issues)
 - **Docs**: [Full documentation](../index.md)

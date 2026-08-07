@@ -1,1 +1,1 @@
-@../open_notebook/AGENTS.md
+@../notebooke/AGENTS.md

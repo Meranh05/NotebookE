@@ -16,7 +16,7 @@ Security review of the API key management implementation for NotebookE. The impl
 
 | Item | Status | Notes |
 | ------ | -------- | ------- |
-| Fernet encryption implemented | PASS | `open_notebook/utils/encryption.py` uses AES-128-CBC + HMAC-SHA256 |
+| Fernet encryption implemented | PASS | `notebooke/utils/encryption.py` uses AES-128-CBC + HMAC-SHA256 |
 | Keys encrypted before DB storage | PASS | `encrypt_value()` applied on save |
 | Keys decrypted only when needed | PASS | `decrypt_value()` called when reading |
 | Encryption key required | PASS | No default key; ValueError if not configured |
@@ -63,11 +63,11 @@ Security review of the API key management implementation for NotebookE. The impl
 
 | Component | Path | Status |
 | ----------- | ------ | -------- |
-| Encryption | `open_notebook/utils/encryption.py` | PASS |
-| Credential model | `open_notebook/domain/credential.py` | PASS |
+| Encryption | `notebooke/utils/encryption.py` | PASS |
+| Credential model | `notebooke/domain/credential.py` | PASS |
 | Credentials router | `api/routers/credentials.py` | PASS |
-| Key provider | `open_notebook/ai/key_provider.py` | PASS |
-| Connection tester | `open_notebook/ai/connection_tester.py` | PASS |
+| Key provider | `notebooke/ai/key_provider.py` | PASS |
+| Connection tester | `notebooke/ai/connection_tester.py` | PASS |
 | Auth middleware | `api/auth.py` | PASS |
 | Frontend forms | `frontend/src/components/settings/*.tsx` | PASS |
 | Environment example | `.env.example` | PASS |

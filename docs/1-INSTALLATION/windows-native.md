@@ -1,6 +1,6 @@
 # NotebookE Windows Installation Guide (Native, No Docker)
 
-This guide documents how to install and run [NotebookE](https://github.com/lfnovo/open-notebook) on Windows **natively without Docker or WSL**.
+This guide documents how to install and run [NotebookE](https://github.com/lfnovo/notebooke) on Windows **natively without Docker or WSL**.
 
 ## Who Is This For?
 
@@ -31,8 +31,8 @@ This guide documents how to install and run [NotebookE](https://github.com/lfnov
 
    ```bash
    cd %USERPROFILE%\Projects  # or your preferred location
-   git clone https://github.com/lfnovo/open-notebook.git
-   cd open-notebook
+   git clone https://github.com/lfnovo/notebooke.git
+   cd notebooke
    uv sync
    cd frontend && npm install && cd ..
    ```
@@ -49,14 +49,14 @@ This guide documents how to install and run [NotebookE](https://github.com/lfnov
      SURREAL_URL="ws://127.0.0.1:8000/rpc"
      ```
 
-3. **Start the four services**, each in its own terminal, from the `open-notebook` folder.
+3. **Start the four services**, each in its own terminal, from the `notebooke` folder.
 
    > NotebookE does not ship a launcher script — start the services manually as below (or wrap them in your own `.bat`, see [Optional: one-click launcher](#optional-one-click-launcher)).
 
    ```batch
    REM Optional: point NotebookE at a separate data folder (see Issue 4 below).
    REM Set this in each terminal before running, or skip to use ./data.
-   set DATA_FOLDER=%USERPROFILE%\Projects\open-notebook-data
+   set DATA_FOLDER=%USERPROFILE%\Projects\notebooke-data
 
    REM Terminal 1 — SurrealDB
    surreal start --user root --pass root --bind 127.0.0.1:8000 rocksdb:%DATA_FOLDER%\surrealdb
@@ -78,16 +78,16 @@ This guide documents how to install and run [NotebookE](https://github.com/lfnov
 
 ```
 YourProjectsFolder\
-├── open-notebook\           # Source code (git clone)
+├── notebooke\           # Source code (git clone)
 │   ├── .venv\               # Python virtual environment (created by uv)
 │   ├── frontend\            # Next.js frontend
 │   ├── commands\            # Worker command modules
 │   └── .env                 # Your configuration
-├── open-notebook-data\      # Data storage (SEPARATE from code!)
+├── notebooke-data\      # Data storage (SEPARATE from code!)
 │   ├── surrealdb\           # Database files
 │   ├── uploads\             # Uploaded documents
 │   └── sqlite-db\           # LangGraph checkpoints
-└── start-open-notebook.bat  # Optional launcher you create yourself (see below)
+└── start-notebooke.bat  # Optional launcher you create yourself (see below)
 ```
 
 **Why separate data folder?** Prevents accidental data loss when updating/reinstalling code.
@@ -95,14 +95,14 @@ YourProjectsFolder\
 ## Optional: one-click launcher
 
 NotebookE does not ship a launcher, but you can save the following as
-`start-open-notebook.bat` (anywhere you like) to start all four services with a
+`start-notebooke.bat` (anywhere you like) to start all four services with a
 double-click. Adjust `ROOT` and `DATA_ROOT` to match your setup.
 
 ```batch
 @echo off
 REM --- adjust these two paths ---
-set ROOT=%USERPROFILE%\Projects\open-notebook
-set DATA_ROOT=%USERPROFILE%\Projects\open-notebook-data
+set ROOT=%USERPROFILE%\Projects\notebooke
+set DATA_ROOT=%USERPROFILE%\Projects\notebooke-data
 
 set DATA_FOLDER=%DATA_ROOT%
 set PYTHONPATH=%ROOT%
@@ -192,12 +192,12 @@ warning: Failed to parse environment file .env at position X
 **Solution:** Keep `DATA_FOLDER` **commented out** in `.env`. Set it via batch file:
 
 ```batch
-set DATA_FOLDER=C:\path\to\open-notebook-data
+set DATA_FOLDER=C:\path\to\notebooke-data
 ```
 
 ## Configuration Files
 
-### Modifying `open_notebook/config.py`
+### Modifying `notebooke/config.py`
 
 The default `config.py` uses a hardcoded data path. Modify it to read from environment:
 
@@ -217,8 +217,8 @@ DATA_FOLDER = os.environ.get("DATA_FOLDER", "./data")
 SURREAL_URL="ws://127.0.0.1:8000/rpc"
 SURREAL_USER="root"
 SURREAL_PASSWORD="root"
-SURREAL_NAMESPACE="open_notebook"
-SURREAL_DATABASE="open_notebook"
+SURREAL_NAMESPACE="notebooke"
+SURREAL_DATABASE="notebooke"
 
 # API Keys (uncomment and fill in)
 OPENAI_API_KEY=your-key-here
@@ -242,7 +242,7 @@ Once running, add models in Settings. Common model names:
 When a new version is released:
 
 ```batch
-cd open-notebook
+cd notebooke
 git pull
 uv sync
 cd frontend && npm install && cd ..

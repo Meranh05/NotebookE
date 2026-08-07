@@ -4,7 +4,7 @@ profiles (#1107).
 
 The migration maps still-unresolved profiles to `model` records (best effort,
 no auto-create) and then drops the 6 legacy fields. The startup data
-migration (open_notebook/podcasts/migration.py) that used to retry this
+migration (notebooke/podcasts/migration.py) that used to retry this
 mapping on every boot is gone - its job now lives in the migration.
 """
 
@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-MIGRATIONS_DIR = Path("open_notebook/database/migrations")
+MIGRATIONS_DIR = Path("notebooke/database/migrations")
 
 EPISODE_LEGACY_FIELDS = (
     "outline_provider",
@@ -32,7 +32,7 @@ class TestMigration22Registration:
         assert (MIGRATIONS_DIR / "22_down.surrealql").is_file()
 
     def test_manager_registers_migration_22(self):
-        from open_notebook.database.async_migrate import AsyncMigrationManager
+        from notebooke.database.async_migrate import AsyncMigrationManager
 
         manager = AsyncMigrationManager()
         assert len(manager.up_migrations) >= 22
@@ -95,7 +95,7 @@ class TestMigration22Content:
 
 class TestLegacyFieldsGone:
     def test_pydantic_models_dropped_legacy_fields(self):
-        from open_notebook.podcasts.models import EpisodeProfile, SpeakerProfile
+        from notebooke.podcasts.models import EpisodeProfile, SpeakerProfile
 
         for field in EPISODE_LEGACY_FIELDS:
             assert field not in EpisodeProfile.model_fields
@@ -106,7 +106,7 @@ class TestLegacyFieldsGone:
 
     def test_startup_data_migration_module_is_gone(self):
         with pytest.raises(ImportError):
-            import open_notebook.podcasts.migration  # noqa: F401
+            import notebooke.podcasts.migration  # noqa: F401
 
     def test_api_lifespan_no_longer_calls_podcast_migration(self):
         source = Path("api/main.py").read_text()

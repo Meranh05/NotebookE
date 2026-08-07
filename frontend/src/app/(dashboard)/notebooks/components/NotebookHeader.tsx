@@ -54,7 +54,7 @@ export function NotebookHeader({ notebook }: NotebookHeaderProps) {
         <div className="flex flex-col gap-2 w-full">
           <div className="flex items-start lg:items-center justify-between flex-col lg:flex-row gap-4 lg:gap-6 w-full">
             {/* Title Section (Fixed proportion) */}
-            <div className="flex items-center gap-3 w-full lg:w-[35%] min-w-0 flex-shrink-0">
+            <div className="flex items-center gap-3 w-full lg:w-[25%] min-w-0 flex-shrink-0">
               <InlineEdit
                 id="notebook-name"
                 name="notebook-name"

@@ -12,10 +12,10 @@ from api.models import (
     TransformationResponse,
     TransformationUpdate,
 )
-from open_notebook.ai.models import Model
-from open_notebook.domain.transformation import DefaultPrompts, Transformation
-from open_notebook.exceptions import InvalidInputError, OpenNotebookError
-from open_notebook.graphs.transformation import graph as transformation_graph
+from notebooke.ai.models import Model
+from notebooke.domain.transformation import DefaultPrompts, Transformation
+from notebooke.exceptions import InvalidInputError, OpenNotebookError
+from notebooke.graphs.transformation import graph as transformation_graph
 
 router = APIRouter()
 

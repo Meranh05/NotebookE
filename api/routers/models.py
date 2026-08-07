@@ -13,17 +13,17 @@ from api.models import (
     ModelResponse,
     ProviderAvailabilityResponse,
 )
-from open_notebook.ai.connection_tester import test_individual_model
-from open_notebook.ai.key_provider import provision_provider_keys
-from open_notebook.ai.model_discovery import (
+from notebooke.ai.connection_tester import test_individual_model
+from notebooke.ai.key_provider import provision_provider_keys
+from notebooke.ai.model_discovery import (
     discover_provider_models,
     get_provider_model_count,
     sync_all_providers,
     sync_provider_models,
 )
-from open_notebook.ai.models import DefaultModels, Model
-from open_notebook.domain.credential import Credential
-from open_notebook.exceptions import (
+from notebooke.ai.models import DefaultModels, Model
+from notebooke.domain.credential import Credential
+from notebooke.exceptions import (
     InvalidInputError,
     NotFoundError,
     OpenNotebookError,
@@ -215,7 +215,7 @@ async def create_model(model_data: ModelCreate):
             )
 
         # Check for duplicate model name under the same provider and type (case-insensitive)
-        from open_notebook.database.repository import repo_query
+        from notebooke.database.repository import repo_query
 
         existing = await repo_query(
             "SELECT * FROM model WHERE string::lowercase(provider) = $provider AND string::lowercase(name) = $name AND string::lowercase(type) = $type LIMIT 1",
@@ -674,7 +674,7 @@ async def get_models_by_provider(provider: str):
     Returns models from the database that belong to the specified provider.
     """
     try:
-        from open_notebook.database.repository import repo_query
+        from notebooke.database.repository import repo_query
 
         models = await repo_query(
             "SELECT * FROM model WHERE provider = $provider ORDER BY type, name",
@@ -764,7 +764,7 @@ async def auto_assign_defaults():
         - missing: List of slots with no available models
     """
     try:
-        from open_notebook.database.repository import repo_query
+        from notebooke.database.repository import repo_query
 
         # Get current defaults
         defaults = await DefaultModels.get_instance()

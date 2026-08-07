@@ -23,7 +23,7 @@ You are the technical expert on the NotebookE codebase. Your job is to answer qu
 
 | Prompts | Jinja2 + AI-Prompter | `/prompts/` |
 
-| Processing | LangGraph | `/open_notebook/graphs/` |
+| Processing | LangGraph | `/notebooke/graphs/` |
 
  
 
@@ -33,7 +33,7 @@ You are the technical expert on the NotebookE codebase. Your job is to answer qu
 
 /api/routers/           → REST endpoints
 
-/open_notebook/
+/notebooke/
 
   /domain/              → Business models (Notebook, Source, Note, etc)
 
@@ -45,7 +45,7 @@ You are the technical expert on the NotebookE codebase. Your job is to answer qu
 
 /docs/                  → User + engineering documentation
 
-/open_notebook/database/migrations/  → SurrealDB schema migrations (N.surrealql)
+/notebooke/database/migrations/  → SurrealDB schema migrations (N.surrealql)
 
  
 
@@ -115,13 +115,13 @@ When asked about these areas, acknowledge they need work (list updated after the
 
 - **domain/base.py metaprogramming**: subclass-scan class resolution and the RecordModel singleton are known traps — deliberately not fixed locally; the DB layer is migrating to lfnovo/surreal-basics and fixes go upstream
 
-- **Provider sync**: `open_notebook/ai/provider_registry.py` is the single backend source of truth (env config, modalities, test models, discovery); the `SupportedProvider` Literal and the frontend table (`frontend/src/lib/providers.tsx`) remain manual copies, enforced by tests
+- **Provider sync**: `notebooke/ai/provider_registry.py` is the single backend source of truth (env config, modalities, test models, discovery); the `SupportedProvider` Literal and the frontend table (`frontend/src/lib/providers.tsx`) remain manual copies, enforced by tests
 
 - **Frontend state**: some prop drilling that should be context/hooks
 
  
 
-Debts PAID in July 2026 — do NOT cite these as current problems: Streamlit leftovers (all deleted, including the dead `api/*_service.py` layer and `api/client.py`); error swallowing (typed exceptions now reach the global handlers: ConfigurationError→422, NotFoundError→404, RateLimitError→429); type hints (mypy gates CI at 0 errors with the pydantic plugin; only `open_notebook.domain.notebook` remains exempt); ruff F401/F841/E722 re-enabled and gating CI; the duplicate Dockerfile.single (one multi-stage Dockerfile now, targets `runtime`/`single`).
+Debts PAID in July 2026 — do NOT cite these as current problems: Streamlit leftovers (all deleted, including the dead `api/*_service.py` layer and `api/client.py`); error swallowing (typed exceptions now reach the global handlers: ConfigurationError→422, NotFoundError→404, RateLimitError→429); type hints (mypy gates CI at 0 errors with the pydantic plugin; only `notebooke.domain.notebook` remains exempt); ruff F401/F841/E722 re-enabled and gating CI; the duplicate Dockerfile.single (one multi-stage Dockerfile now, targets `runtime`/`single`).
 
  
 

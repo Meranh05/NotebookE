@@ -1,6 +1,6 @@
 """
 Tests for the podcast episode listing N+1 fix (api/routers/podcasts.py +
-open_notebook/podcasts/models.py).
+notebooke/podcasts/models.py).
 
 list_podcast_episodes() used to call episode.get_job_detail() once per
 episode - each a separate round trip against the surreal_commands `command`
@@ -13,7 +13,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 
 from api.routers.podcasts import list_podcast_episodes
-from open_notebook.podcasts.models import PodcastEpisode
+from notebooke.podcasts.models import PodcastEpisode
 
 
 def make_episode(command=None, audio_file=None, **overrides):
@@ -35,7 +35,7 @@ class TestGetJobDetailsForCommandsUnit:
     @pytest.mark.asyncio
     async def test_empty_input_returns_empty_without_querying(self):
         with patch(
-            "open_notebook.podcasts.models.repo_query", new=AsyncMock()
+            "notebooke.podcasts.models.repo_query", new=AsyncMock()
         ) as mock_query:
             result = await PodcastEpisode.get_job_details_for_commands([])
         assert result == {}
@@ -48,7 +48,7 @@ class TestGetJobDetailsForCommandsUnit:
             {"id": "command:b", "status": "failed", "error_message": "boom"},
         ]
         with patch(
-            "open_notebook.podcasts.models.repo_query",
+            "notebooke.podcasts.models.repo_query",
             new=AsyncMock(return_value=fake_rows),
         ) as mock_query:
             result = await PodcastEpisode.get_job_details_for_commands(
@@ -64,7 +64,7 @@ class TestGetJobDetailsForCommandsUnit:
     @pytest.mark.asyncio
     async def test_query_failure_returns_empty_dict_rather_than_raising(self):
         with patch(
-            "open_notebook.podcasts.models.repo_query",
+            "notebooke.podcasts.models.repo_query",
             new=AsyncMock(side_effect=RuntimeError("db down")),
         ):
             result = await PodcastEpisode.get_job_details_for_commands(["command:a"])
@@ -73,7 +73,7 @@ class TestGetJobDetailsForCommandsUnit:
     @pytest.mark.asyncio
     async def test_falsy_command_ids_are_filtered_out(self):
         with patch(
-            "open_notebook.podcasts.models.repo_query", new=AsyncMock(return_value=[])
+            "notebooke.podcasts.models.repo_query", new=AsyncMock(return_value=[])
         ) as mock_query:
             # None intentionally violates the signature: the method must filter
             # out falsy ids it can receive from unvalidated DB rows.

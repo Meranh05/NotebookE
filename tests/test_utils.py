@@ -1,5 +1,5 @@
 """
-Unit tests for the open_notebook.utils module.
+Unit tests for the notebooke.utils module.
 
 This test suite focuses on testing utility functions that perform actual logic
 without heavy mocking - string processing, validation, and algorithms.
@@ -10,12 +10,12 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
-from open_notebook.domain.notebook import Source
-from open_notebook.graphs.source_chat import (
+from notebooke.domain.notebook import Source
+from notebooke.graphs.source_chat import (
     _format_source_context,
     _source_content_is_available,
 )
-from open_notebook.utils import (
+from notebooke.utils import (
     clean_thinking_content,
     compare_versions,
     get_installed_version,
@@ -24,7 +24,7 @@ from open_notebook.utils import (
     remove_non_printable,
     token_count,
 )
-from open_notebook.utils.context_builder import (
+from notebooke.utils.context_builder import (
     SOURCE_TRUNCATION_NOTICE,
     _truncate_source_to_token_budget,
     build_source_context,
@@ -248,7 +248,7 @@ class TestVersionUtilities:
 
     def test_get_version_from_github_invalid_url(self):
         """Test GitHub version fetch with invalid URL."""
-        from open_notebook.utils.version_utils import get_version_from_github
+        from notebooke.utils.version_utils import get_version_from_github
 
         with pytest.raises(ValueError, match="Not a GitHub URL"):
             get_version_from_github("https://example.com/repo")
@@ -284,7 +284,7 @@ class TestBuildSourceContext:
         source = _mock_source([_insight("source_insight:1")])
 
         with patch(
-            "open_notebook.utils.context_builder.Source.get",
+            "notebooke.utils.context_builder.Source.get",
             new=AsyncMock(return_value=source),
         ) as mock_get:
             result = await build_source_context("123")
@@ -331,7 +331,7 @@ class TestBuildSourceContext:
         )
 
         with patch(
-            "open_notebook.utils.context_builder.Source.get",
+            "notebooke.utils.context_builder.Source.get",
             new=AsyncMock(return_value=source),
         ):
             result = await build_source_context("source:123", max_tokens=600)
@@ -350,7 +350,7 @@ class TestBuildSourceContext:
 
         with (
             patch(
-                "open_notebook.utils.context_builder.Source.get",
+                "notebooke.utils.context_builder.Source.get",
                 new=AsyncMock(return_value=source),
             ),
             patch.object(Source, "get_insights", new=mock_get_insights),
@@ -372,7 +372,7 @@ class TestBuildSourceContext:
         source.get_context.return_value["full_text"] = full_text
 
         with patch(
-            "open_notebook.utils.context_builder.Source.get",
+            "notebooke.utils.context_builder.Source.get",
             new=AsyncMock(return_value=source),
         ):
             first = await build_source_context("source:123", max_tokens=120)
@@ -428,7 +428,7 @@ class TestBuildSourceContext:
         source.get_context.return_value["full_text"] = full_text
 
         with patch(
-            "open_notebook.utils.context_builder.Source.get",
+            "notebooke.utils.context_builder.Source.get",
             new=AsyncMock(return_value=source),
         ):
             result = await build_source_context("source:123", max_tokens=500)
@@ -446,7 +446,7 @@ class TestBuildSourceContext:
         source.get_context.return_value["full_text"] = "evidence " * 1000
 
         with patch(
-            "open_notebook.utils.context_builder.Source.get",
+            "notebooke.utils.context_builder.Source.get",
             new=AsyncMock(return_value=source),
         ):
             result = await build_source_context("source:123", max_tokens=1)
@@ -606,7 +606,7 @@ class TestBuildSourceContext:
         encoding = CountingEncoding()
         with (
             patch(
-                "open_notebook.utils.context_builder.Source.get",
+                "notebooke.utils.context_builder.Source.get",
                 new=AsyncMock(return_value=source),
             ),
             patch("tiktoken.get_encoding", return_value=encoding),
@@ -663,7 +663,7 @@ class TestBuildSourceContext:
         with (
             patch("tiktoken.get_encoding", side_effect=OSError("offline")),
             patch(
-                "open_notebook.utils.context_builder.token_count",
+                "notebooke.utils.context_builder.token_count",
                 side_effect=fallback_count,
             ) as mock_token_count,
         ):
@@ -711,7 +711,7 @@ class TestBuildSourceContext:
         source.get_context.return_value["full_text"] = None
 
         with patch(
-            "open_notebook.utils.context_builder.Source.get",
+            "notebooke.utils.context_builder.Source.get",
             new=AsyncMock(return_value=source),
         ):
             result = await build_source_context("source:123", max_tokens=500)
@@ -725,10 +725,10 @@ class TestBuildSourceContext:
     @pytest.mark.asyncio
     async def test_missing_source_yields_empty_context(self):
         """A missing source produces an empty context, not an error."""
-        from open_notebook.exceptions import NotFoundError
+        from notebooke.exceptions import NotFoundError
 
         with patch(
-            "open_notebook.utils.context_builder.Source.get",
+            "notebooke.utils.context_builder.Source.get",
             new=AsyncMock(side_effect=NotFoundError("nope")),
         ):
             result = await build_source_context("source:missing")

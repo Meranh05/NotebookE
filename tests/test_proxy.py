@@ -4,7 +4,7 @@ import os
 
 import pytest
 
-from open_notebook.utils.proxy import (
+from notebooke.utils.proxy import (
     INTERNAL_NO_PROXY_HOSTS,
     ensure_internal_no_proxy,
 )

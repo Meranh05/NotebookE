@@ -104,94 +104,94 @@ export function ChatPanel({
 
   return (
     <>
-    <Card className="flex flex-col h-full flex-1 overflow-hidden border-border/60 bg-card/60 backdrop-blur-sm shadow-sm p-0 gap-0">
-      <CardHeader className="px-4 py-2.5 flex-shrink-0 border-b border-border/40 !pb-2.5">
-        <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.13em] text-muted-foreground">
-            <span aria-hidden className="h-3.5 w-[3px] rounded-full bg-teal" />
-            {title || (contextType === 'source' ? t('chat.chatWith', { name: t('navigation.sources') }) : t('chat.chatWith', { name: t('common.notebook') }))}
-          </CardTitle>
-          {onSelectSession && onCreateSession && onDeleteSession && (
-            <Dialog open={sessionManagerOpen} onOpenChange={setSessionManagerOpen}>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="gap-2 text-muted-foreground h-8 -mr-2"
-                onClick={() => setSessionManagerOpen(true)}
-                disabled={loadingSessions}
-              >
-                <IconClock className="h-4 w-4" />
-                <span className="text-xs">{t('chat.sessions')}</span>
-              </Button>
-              <DialogContent className="sm:max-w-[420px] p-0 overflow-hidden">
-                <DialogTitle className="sr-only">{t('chat.sessionsTitle')}</DialogTitle>
-                <SessionManager
-                  sessions={sessions}
-                  currentSessionId={currentSessionId ?? null}
-                  onCreateSession={(title) => onCreateSession?.(title)}
-                  onSelectSession={(sessionId) => {
-                    onSelectSession(sessionId)
-                    setSessionManagerOpen(false)
-                  }}
-                  onUpdateSession={(sessionId, title) => onUpdateSession?.(sessionId, title)}
-                  onDeleteSession={(sessionId) => onDeleteSession?.(sessionId)}
-                  loadingSessions={loadingSessions}
-                />
-              </DialogContent>
-            </Dialog>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent className="flex-1 flex flex-col min-h-0 p-0">
-        <ScrollArea className="chat-scroll-area flex-1 min-h-0 px-4" ref={scrollAreaRef}>
-          <div className="space-y-4 pt-2 pb-4">
-            {messages.length === 0 ? (
-              <div className="text-center text-muted-foreground py-8">
-                <div className="h-16 w-16 mx-auto mb-6 bg-white dark:bg-black rounded-full border-2 border-border shadow-md flex items-center justify-center">
-                  <Image src="/logo.png" alt="AI" width={44} height={44} className="dark:invert" />
-                </div>
-                <p className="text-sm">
-                  {t('chat.startConversation', { type: contextType === 'source' ? t('navigation.sources') : t('common.notebook') })}
-                </p>
-                <p className="text-xs mt-2">{t('chat.askQuestions')}</p>
-              </div>
-            ) : (
-              messages.map((message) => (
-                <ChatMessage
-                  key={message.id}
-                  message={message}
-                  notebookId={notebookId}
-                  onReferenceClick={handleReferenceClick}
-                />
-              ))
+      <Card className="flex flex-col h-full flex-1 overflow-hidden border-border/60 bg-card/60 backdrop-blur-sm shadow-sm p-0 gap-0">
+        <CardHeader className="px-4 py-2.5 flex-shrink-0 border-b border-border/40 !pb-2.5">
+          <div className="flex items-center justify-between">
+            <CardTitle className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.13em] text-muted-foreground">
+              <span aria-hidden className="h-3.5 w-[3px] rounded-full bg-teal" />
+              {title || (contextType === 'source' ? t('chat.chatWith', { name: t('navigation.sources') }) : t('chat.chatWith', { name: t('common.notebook') }))}
+            </CardTitle>
+            {onSelectSession && onCreateSession && onDeleteSession && (
+              <Dialog open={sessionManagerOpen} onOpenChange={setSessionManagerOpen}>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-2 text-muted-foreground h-8 -mr-2"
+                  onClick={() => setSessionManagerOpen(true)}
+                  disabled={loadingSessions}
+                >
+                  <IconClock className="h-4 w-4" />
+                  <span className="text-xs">{t('chat.sessions')}</span>
+                </Button>
+                <DialogContent className="sm:max-w-[420px] p-0 overflow-hidden">
+                  <DialogTitle className="sr-only">{t('chat.sessionsTitle')}</DialogTitle>
+                  <SessionManager
+                    sessions={sessions}
+                    currentSessionId={currentSessionId ?? null}
+                    onCreateSession={(title) => onCreateSession?.(title)}
+                    onSelectSession={(sessionId) => {
+                      onSelectSession(sessionId)
+                      setSessionManagerOpen(false)
+                    }}
+                    onUpdateSession={(sessionId, title) => onUpdateSession?.(sessionId, title)}
+                    onDeleteSession={(sessionId) => onDeleteSession?.(sessionId)}
+                    loadingSessions={loadingSessions}
+                  />
+                </DialogContent>
+              </Dialog>
             )}
-            {isStreaming && (
-              <div className="flex gap-3 justify-start">
-                <div className="flex-shrink-0">
-                  <div className="h-8 w-8 rounded-full bg-white dark:bg-black border border-border shadow-sm flex items-center justify-center">
-                    <Image src="/logo.png" alt="AI" width={22} height={22} className="dark:invert" />
+          </div>
+        </CardHeader>
+        <CardContent className="flex-1 flex flex-col min-h-0 p-0">
+          <ScrollArea className="chat-scroll-area flex-1 min-h-0 px-4" ref={scrollAreaRef}>
+            <div className="space-y-4 pt-2 pb-4">
+              {messages.length === 0 ? (
+                <div className="text-center text-muted-foreground py-8">
+                  <div className="h-16 w-16 mx-auto mb-6 bg-white dark:bg-black rounded-full border-2 border-border shadow-md flex items-center justify-center">
+                    <Image src="/logo.png" alt="AI" width={44} height={44} className="dark:invert" />
+                  </div>
+                  <p className="text-sm">
+                    {t('chat.startConversation', { type: contextType === 'source' ? t('navigation.sources') : t('common.notebook') })}
+                  </p>
+                  <p className="text-xs mt-2">{t('chat.askQuestions')}</p>
+                </div>
+              ) : (
+                messages.map((message) => (
+                  <ChatMessage
+                    key={message.id}
+                    message={message}
+                    notebookId={notebookId}
+                    onReferenceClick={handleReferenceClick}
+                  />
+                ))
+              )}
+              {isStreaming && (
+                <div className="flex gap-3 justify-start">
+                  <div className="flex-shrink-0">
+                    <div className="h-8 w-8 rounded-full bg-white dark:bg-black border border-border shadow-sm flex items-center justify-center">
+                      <Image src="/logo.png" alt="AI" width={22} height={22} className="dark:invert" />
+                    </div>
+                  </div>
+                  <div className="rounded-lg px-4 py-2 bg-card border">
+                    <IconLoader2 className="h-4 w-4 animate-spin" />
                   </div>
                 </div>
-                <div className="rounded-lg px-4 py-2 bg-card border">
-                  <IconLoader2 className="h-4 w-4 animate-spin" />
-                </div>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
-        </ScrollArea>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+          </ScrollArea>
 
-        {/* Input Area */}
-        <ChatComposer
-          onSendMessage={onSendMessage}
-          isStreaming={isStreaming}
-          modelOverride={modelOverride}
-          onModelChange={onModelChange}
-          contextIndicators={contextIndicators}
-          notebookContextStats={notebookContextStats}
-        />
-      </CardContent>
-    </Card>
+          {/* Input Area */}
+          <ChatComposer
+            onSendMessage={onSendMessage}
+            isStreaming={isStreaming}
+            modelOverride={modelOverride}
+            onModelChange={onModelChange}
+            contextIndicators={contextIndicators}
+            notebookContextStats={notebookContextStats}
+          />
+        </CardContent>
+      </Card>
 
     </>
   )
@@ -359,9 +359,8 @@ const ChatMessage = memo(function ChatMessage({
 }: ChatMessageProps) {
   return (
     <div
-      className={`flex gap-3 w-full min-w-0 ${
-        message.type === 'human' ? 'justify-end' : 'justify-start'
-      }`}
+      className={`flex gap-3 w-full min-w-0 ${message.type === 'human' ? 'justify-end' : 'justify-start'
+        }`}
     >
       {message.type === 'ai' && (
         <div className="flex-shrink-0 mt-1">
@@ -372,11 +371,10 @@ const ChatMessage = memo(function ChatMessage({
       )}
       <div className={`flex flex-col gap-1.5 max-w-[95%] min-w-0 overflow-hidden ${message.type === 'human' ? 'items-end' : 'items-start'}`}>
         <div
-          className={`px-4 py-2.5 shadow-sm min-w-0 max-w-full overflow-hidden ${
-            message.type === 'human'
+          className={`px-4 py-2.5 shadow-sm min-w-0 max-w-full overflow-hidden ${message.type === 'human'
               ? 'bg-primary text-primary-foreground rounded-2xl rounded-tr-sm'
               : 'bg-muted/40 border border-border/50 rounded-2xl rounded-tl-sm'
-          }`}
+            }`}
         >
           {message.type === 'ai' ? (
             <AIMessageContent

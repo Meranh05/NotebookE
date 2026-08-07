@@ -32,7 +32,7 @@ export function useVersionCheck() {
           closeButton: true,
           action: {
             label: t('advanced.viewOnGithub'),
-            onClick: () => window.open('https://github.com/lfnovo/open-notebook', '_blank', 'noopener,noreferrer'),
+            onClick: () => window.open('https://github.com/lfnovo/notebooke', '_blank', 'noopener,noreferrer'),
           },
           onDismiss: () => sessionStorage.setItem(dismissKey, 'true'),
         })

@@ -2,7 +2,7 @@
 
 - **Status**: Accepted
 - **Date**: 2026-07
-- **Related**: [#712](https://github.com/lfnovo/open-notebook/issues/712) (multi-user umbrella), [VISION.md](../../../VISION.md) (Current Posture)
+- **Related**: [#712](https://github.com/lfnovo/notebooke/issues/712) (multi-user umbrella), [VISION.md](../../../VISION.md) (Current Posture)
 
 ## Context
 

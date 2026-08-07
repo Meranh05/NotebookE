@@ -17,11 +17,11 @@ Before you start, ensure you have the following installed:
 
 ```bash
 # Clone the repository
-git clone https://github.com/lfnovo/open-notebook.git
-cd open-notebook
+git clone https://github.com/lfnovo/notebooke.git
+cd notebooke
 
 # Add upstream remote for keeping your fork updated
-git remote add upstream https://github.com/lfnovo/open-notebook.git
+git remote add upstream https://github.com/lfnovo/notebooke.git
 ```
 
 ## Step 2: Install Python Dependencies
@@ -50,7 +50,7 @@ Edit `.env` with your settings:
 SURREAL_URL=ws://localhost:8000/rpc
 SURREAL_USER=root
 SURREAL_PASSWORD=password
-SURREAL_NAMESPACE=open_notebook
+SURREAL_NAMESPACE=notebooke
 SURREAL_DATABASE=development
 
 # Credential encryption (required for storing API keys)
@@ -327,7 +327,7 @@ make lint
 uv run pytest
 
 # Run tests with coverage
-uv run pytest --cov=open_notebook
+uv run pytest --cov=notebooke
 ```
 
 ## Common Development Tasks
@@ -342,7 +342,7 @@ uv run pytest
 uv run pytest tests/test_notebooks.py
 
 # Run with coverage report
-uv run pytest --cov=open_notebook --cov-report=html
+uv run pytest --cov=notebooke --cov-report=html
 ```
 
 ### Creating a Feature Branch

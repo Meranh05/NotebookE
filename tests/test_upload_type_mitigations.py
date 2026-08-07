@@ -28,7 +28,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastapi.testclient import TestClient
 
-from open_notebook.domain.notebook import Asset, Source
+from notebooke.domain.notebook import Asset, Source
 
 
 def make_source(file_path, **overrides):
@@ -103,7 +103,7 @@ class TestPreflightFileSupport:
         from content_core import FileSupport
 
         from api.routers.sources import _assert_file_supported
-        from open_notebook.exceptions import UnsupportedTypeException
+        from notebooke.exceptions import UnsupportedTypeException
 
         verdict = FileSupport(
             supported=False,

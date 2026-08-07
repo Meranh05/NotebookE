@@ -27,8 +27,8 @@ permissions:
   packages: write
 
 env:
-  GHCR_IMAGE: ghcr.io/lfnovo/open-notebook
-  DOCKERHUB_IMAGE: lfnovo/open_notebook
+  GHCR_IMAGE: ghcr.io/lfnovo/notebooke
+  DOCKERHUB_IMAGE: lfnovo/notebooke
 
 jobs:
   extract-version:
@@ -96,7 +96,7 @@ jobs:
               - 'Dockerfile*'
               - 'pyproject.toml'
               - 'uv.lock'
-              - 'open_notebook/**'
+              - 'notebooke/**'
               - 'api/**'
               - 'commands/**'
               - 'frontend/**'

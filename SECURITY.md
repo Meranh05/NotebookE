@@ -21,7 +21,7 @@ discussions, or pull requests.**
 Instead, report them privately through GitHub's built-in **private vulnerability
 reporting**:
 
-1. Go to the [Security tab](https://github.com/lfnovo/open-notebook/security) of
+1. Go to the [Security tab](https://github.com/lfnovo/notebooke/security) of
    the repository.
 2. Click **"Report a vulnerability"**.
 3. Fill out the form with as much detail as you can.

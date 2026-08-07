@@ -51,7 +51,7 @@ def fetch_data(url: str) -> Dict[str, Any]:
 Use structured error handling with custom exceptions:
 
 ```python
-from open_notebook.exceptions import DatabaseOperationError, InvalidInputError
+from notebooke.exceptions import DatabaseOperationError, InvalidInputError
 
 async def create_notebook(name: str, description: str) -> Notebook:
     """Create a new notebook with validation."""
@@ -244,7 +244,7 @@ async def create_notebook(notebook: NotebookCreate):
 Use the repository pattern consistently:
 
 ```python
-from open_notebook.database.repository import repo_create, repo_query, repo_update
+from notebooke.database.repository import repo_create, repo_query, repo_update
 
 # Create records
 async def create_notebook(data: Dict[str, Any]) -> Dict[str, Any]:

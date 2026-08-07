@@ -56,7 +56,7 @@ A feature request that conflicts with the IS NOT list or a principle gets closed
 
 Decisions about the future we haven't made yet — recorded as "which door to keep open":
 
-- **Single-user first, multi-user compatible.** NotebookE is a single-user tool today, but multi-user is under active consideration ([#712](https://github.com/lfnovo/open-notebook/issues/712)). New features must not gratuitously preclude multi-user (schema, auth, data scoping) ([PDR-001](docs/7-DEVELOPMENT/decisions/PDR-001-single-user-first.md)).
+- **Single-user first, multi-user compatible.** NotebookE is a single-user tool today, but multi-user is under active consideration ([#712](https://github.com/lfnovo/notebooke/issues/712)). New features must not gratuitously preclude multi-user (schema, auth, data scoping) ([PDR-001](docs/7-DEVELOPMENT/decisions/PDR-001-single-user-first.md)).
 - **Portable by default.** Provider-exclusive capabilities (including paid-only ones) are on the table for the future — deliberately, via PDR, never by accident ([PDR-002](docs/7-DEVELOPMENT/decisions/PDR-002-provider-agnostic-core.md)).
 
 ### Horizon
@@ -65,10 +65,10 @@ The big clusters under consideration — direction, not roadmap; no dates. Each 
 
 | Cluster | What it is | Where |
 | --- | --- | --- |
-| **Platform v-next** | SurrealDB v3 migration, possible frontend/backend Docker image split, possible Surreal Commands → Celery move — evaluated together as one coordinated breaking change | [#372](https://github.com/lfnovo/open-notebook/issues/372) · [#378](https://github.com/lfnovo/open-notebook/issues/378) · [#381](https://github.com/lfnovo/open-notebook/issues/381) |
-| **Multi-user** | Deep platform redesign: auth, data scoping, what "multi-user" means for a self-hosted tool | [#712](https://github.com/lfnovo/open-notebook/issues/712) |
-| **Content modes & artifacts** | The output side: generated artifacts, videos, explainers, presentations, mind maps — as one coherent product surface, not a pile of features | [#203](https://github.com/lfnovo/open-notebook/issues/203) |
-| **Agents operating NotebookE** | Role inversion via MCP: AI agents use NotebookE on the user's behalf — the platform becomes the research memory of agents, not just a UI | [#878](https://github.com/lfnovo/open-notebook/issues/878) · [#693](https://github.com/lfnovo/open-notebook/issues/693) · [#973](https://github.com/lfnovo/open-notebook/issues/973) |
+| **Platform v-next** | SurrealDB v3 migration, possible frontend/backend Docker image split, possible Surreal Commands → Celery move — evaluated together as one coordinated breaking change | [#372](https://github.com/lfnovo/notebooke/issues/372) · [#378](https://github.com/lfnovo/notebooke/issues/378) · [#381](https://github.com/lfnovo/notebooke/issues/381) |
+| **Multi-user** | Deep platform redesign: auth, data scoping, what "multi-user" means for a self-hosted tool | [#712](https://github.com/lfnovo/notebooke/issues/712) |
+| **Content modes & artifacts** | The output side: generated artifacts, videos, explainers, presentations, mind maps — as one coherent product surface, not a pile of features | [#203](https://github.com/lfnovo/notebooke/issues/203) |
+| **Agents operating NotebookE** | Role inversion via MCP: AI agents use NotebookE on the user's behalf — the platform becomes the research memory of agents, not just a UI | [#878](https://github.com/lfnovo/notebooke/issues/878) · [#693](https://github.com/lfnovo/notebooke/issues/693) · [#973](https://github.com/lfnovo/notebooke/issues/973) |
 
 ---
 

@@ -105,7 +105,7 @@ class TestCredentialModelDiscovery:
     @pytest.mark.asyncio
     async def test_openai_discovery_respects_base_url(self, monkeypatch):
         """OpenAI model discovery should call the configured API base URL."""
-        from open_notebook.utils.url_validation import PinnedHttpTarget
+        from notebooke.utils.url_validation import PinnedHttpTarget
 
         requests = []
 
@@ -164,7 +164,7 @@ class TestCredentialModelDiscovery:
     @pytest.mark.asyncio
     async def test_model_discovery_base_url_can_include_models_path(self, monkeypatch):
         """Model discovery should not append /models twice."""
-        from open_notebook.utils.url_validation import PinnedHttpTarget
+        from notebooke.utils.url_validation import PinnedHttpTarget
 
         requests = []
 
@@ -205,7 +205,7 @@ class TestCredentialModelDiscovery:
     async def test_anthropic_compatible_discovery_normalizes_models_path(
         self, monkeypatch
     ):
-        from open_notebook.utils.url_validation import PinnedHttpTarget
+        from notebooke.utils.url_validation import PinnedHttpTarget
 
         requests = []
 
@@ -251,7 +251,7 @@ class TestCredentialModelDiscovery:
     async def test_openai_discovery_pins_user_supplied_base_url(self, monkeypatch):
         """OpenAI discovery with a custom base_url must go through DNS pinning:
         the rewritten (IP) URL, Host header and SNI extension reach httpx."""
-        from open_notebook.utils.url_validation import PinnedHttpTarget
+        from notebooke.utils.url_validation import PinnedHttpTarget
 
         captured = {}
 
@@ -312,7 +312,7 @@ class TestOmlxDiscovery:
 
     @pytest.mark.asyncio
     async def test_omlx_discovery_defaults_base_url_and_pins(self, monkeypatch):
-        from open_notebook.utils.url_validation import PinnedHttpTarget
+        from notebooke.utils.url_validation import PinnedHttpTarget
 
         captured = {}
         pinned_calls = []
@@ -351,7 +351,7 @@ class TestOmlxDiscovery:
 
     @pytest.mark.asyncio
     async def test_omlx_discovery_sends_optional_api_key(self, monkeypatch):
-        from open_notebook.utils.url_validation import PinnedHttpTarget
+        from notebooke.utils.url_validation import PinnedHttpTarget
 
         captured = {}
 
@@ -390,7 +390,7 @@ class TestOmlxDiscovery:
 
     def test_omlx_registry_modalities_and_env(self):
         from api.credentials_service import PROVIDER_ENV_CONFIG, PROVIDER_MODALITIES
-        from open_notebook.ai.connection_tester import TEST_MODELS
+        from notebooke.ai.connection_tester import TEST_MODELS
 
         assert PROVIDER_MODALITIES["omlx"] == ["language", "embedding"]
         assert PROVIDER_ENV_CONFIG["omlx"]["required"] == ["OMLX_API_BASE"]
@@ -402,7 +402,7 @@ class TestCredentialNumCtx:
     """Tests for the Ollama num_ctx override threaded into esperanto config."""
 
     def test_num_ctx_included_when_set(self):
-        from open_notebook.domain.credential import Credential
+        from notebooke.domain.credential import Credential
 
         cred = Credential(
             name="Local Ollama",
@@ -416,7 +416,7 @@ class TestCredentialNumCtx:
         assert config["base_url"] == "http://localhost:11434"
 
     def test_num_ctx_absent_when_unset(self):
-        from open_notebook.domain.credential import Credential
+        from notebooke.domain.credential import Credential
 
         cred = Credential(
             name="Local Ollama",
@@ -430,7 +430,7 @@ class TestCredentialVertexConfig:
     """Tests for #1151 - Vertex credentials must emit vertex_project/vertex_location."""
 
     def test_vertex_emits_vertex_prefixed_keys(self):
-        from open_notebook.domain.credential import Credential
+        from notebooke.domain.credential import Credential
 
         cred = Credential(
             name="Vertex",
@@ -451,7 +451,7 @@ class TestCredentialVertexConfig:
         assert config["credentials_path"] == "/secrets/sa.json"
 
     def test_non_vertex_provider_keeps_generic_keys(self):
-        from open_notebook.domain.credential import Credential
+        from notebooke.domain.credential import Credential
 
         cred = Credential(
             name="Other",
@@ -470,7 +470,7 @@ class TestAudioProviderWiring:
     """Tests for the new audio providers (Mistral STT/TTS, Deepgram TTS, xAI TTS)."""
 
     def test_classify_voxtral_and_aura(self):
-        from open_notebook.ai.model_discovery import classify_model_type
+        from notebooke.ai.model_discovery import classify_model_type
 
         # Mistral Voxtral: TTS model must not be mis-detected as STT
         assert classify_model_type("voxtral-mini-tts-2603", "mistral") == "text_to_speech"
@@ -496,7 +496,7 @@ class TestAudioProviderWiring:
 
     def test_deepgram_has_env_and_test_model(self):
         from api.credentials_service import PROVIDER_ENV_CONFIG
-        from open_notebook.ai.connection_tester import TEST_MODELS
+        from notebooke.ai.connection_tester import TEST_MODELS
 
         assert PROVIDER_ENV_CONFIG["deepgram"]["required"] == ["DEEPGRAM_API_KEY"]
         assert TEST_MODELS["deepgram"][1] == "text_to_speech"
@@ -514,7 +514,7 @@ class TestAudioMatrixWiring:
         assert "speech_to_text" in PROVIDER_MODALITIES["elevenlabs"]
 
     def test_classify_matrix(self):
-        from open_notebook.ai.model_discovery import classify_model_type
+        from notebooke.ai.model_discovery import classify_model_type
 
         # Gemini TTS preview is classifiable; plain Gemini STT name stays language
         assert classify_model_type("gemini-3.1-flash-tts-preview", "google") == "text_to_speech"
@@ -528,7 +528,7 @@ class TestAudioMatrixWiring:
         # Gemini id (gemini-2.0-flash) that Google later shut down, so a
         # valid key failed with 404. Use Google's floating alias, which the
         # provider repoints on each retirement, so it can't go stale.
-        from open_notebook.ai.connection_tester import TEST_MODELS
+        from notebooke.ai.connection_tester import TEST_MODELS
 
         assert TEST_MODELS["google"] == ("gemini-flash-latest", "language")
         assert TEST_MODELS["vertex"] == ("gemini-flash-latest", "language")

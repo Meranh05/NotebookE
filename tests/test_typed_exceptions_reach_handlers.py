@@ -2,7 +2,7 @@
 
 The routers used to wrap endpoint bodies in a broad `except Exception` that
 re-raised everything as a generic HTTPException(500), swallowing the typed
-`open_notebook.exceptions` hierarchy before the global handlers could map it
+`notebooke.exceptions` hierarchy before the global handlers could map it
 to its documented status code (NotFoundError -> 404, InvalidInputError -> 400,
 ConfigurationError -> 422, RateLimitError -> 429, NetworkError /
 ExternalServiceError -> 502, ...).
@@ -22,7 +22,7 @@ from unittest.mock import AsyncMock, patch
 import pytest
 from fastapi.testclient import TestClient
 
-from open_notebook.exceptions import ConfigurationError, NotFoundError
+from notebooke.exceptions import ConfigurationError, NotFoundError
 
 CONFIG_ERROR_MESSAGE = "No default model configured. Set one in the Models section."
 
@@ -97,7 +97,7 @@ class TestUnsupportedTypeErrorPropagation:
     OpenNotebookError handler's 500 (#975)."""
 
     def test_unsupported_type_maps_to_415(self, client):
-        from open_notebook.exceptions import UnsupportedTypeException
+        from notebooke.exceptions import UnsupportedTypeException
 
         with patch(
             "api.routers.sources.repo_query",

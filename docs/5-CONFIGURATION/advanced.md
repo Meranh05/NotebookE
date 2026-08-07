@@ -100,7 +100,7 @@ RUST_LOG=surrealdb=debug
 LOGLEVEL=langchain:debug
 
 # Only specific module
-RUST_LOG=open_notebook::database=debug
+RUST_LOG=notebooke::database=debug
 ```
 
 ### LangSmith Tracing
@@ -135,7 +135,7 @@ Edit `docker-compose.yml`:
 
 ```yaml
 services:
-  open-notebook:
+  notebooke:
     ports:
       - "8001:8502"  # Change from 8502 to 8001
 ```
@@ -148,7 +148,7 @@ API auto-detects to: `http://localhost:5055` ✓
 
 ```yaml
 services:
-  open-notebook:
+  notebooke:
     ports:
       - "127.0.0.1:8502:8502"  # Frontend
       - "5056:5055"            # Change API from 5055 to 5056
@@ -458,21 +458,21 @@ BACKUP_DIR="/path/to/backups"
 DATE=$(date +%Y%m%d-%H%M%S)
 
 # Create backup
-tar -czf "$BACKUP_DIR/open-notebook-$DATE.tar.gz" \
+tar -czf "$BACKUP_DIR/notebooke-$DATE.tar.gz" \
   /path/to/notebook_data \
   /path/to/surreal_data
 
 # Keep only last 7 days
-find "$BACKUP_DIR" -name "open-notebook-*.tar.gz" -mtime +7 -delete
+find "$BACKUP_DIR" -name "notebooke-*.tar.gz" -mtime +7 -delete
 
-echo "Backup complete: open-notebook-$DATE.tar.gz"
+echo "Backup complete: notebooke-$DATE.tar.gz"
 ```
 
 Add to cron:
 
 ```bash
 # Daily backup at 2 AM
-0 2 * * * /path/to/backup.sh >> /var/log/open-notebook-backup.log 2>&1
+0 2 * * * /path/to/backup.sh >> /var/log/notebooke-backup.log 2>&1
 ```
 
 ### Restore
@@ -496,13 +496,13 @@ docker compose up -d
 ```bash
 # On source server
 docker compose down
-tar -czf open-notebook-migration.tar.gz notebook_data/ surreal_data/
+tar -czf notebooke-migration.tar.gz notebook_data/ surreal_data/
 
 # Transfer to new server
-scp open-notebook-migration.tar.gz user@newserver:/path/
+scp notebooke-migration.tar.gz user@newserver:/path/
 
 # On new server
-tar -xzf open-notebook-migration.tar.gz
+tar -xzf notebooke-migration.tar.gz
 docker compose up -d
 ```
 

@@ -6,7 +6,7 @@ from pydantic import BaseModel, Field
 from surreal_commands import registry
 
 from api.command_service import CommandService
-from open_notebook.exceptions import OpenNotebookError
+from notebooke.exceptions import OpenNotebookError
 
 router = APIRouter()
 
@@ -15,7 +15,7 @@ class CommandExecutionRequest(BaseModel):
     command: str = Field(
         ..., description="Command function name (e.g., 'generate_podcast')"
     )
-    app: str = Field(..., description="Application name (e.g., 'open_notebook')")
+    app: str = Field(..., description="Application name (e.g., 'notebooke')")
     input: Dict[str, Any] = Field(..., description="Arguments to pass to the command")
 
 
@@ -44,7 +44,7 @@ async def execute_command(request: CommandExecutionRequest):
     Example request:
     {
         "command": "generate_podcast",
-        "app": "open_notebook",
+        "app": "notebooke",
         "input": {
             "episode_profile": "tech_experts",
             "speaker_profile": "tech_experts",
@@ -56,7 +56,7 @@ async def execute_command(request: CommandExecutionRequest):
     try:
         # Submit command using app name (not module name)
         job_id = await CommandService.submit_command_job(
-            module_name=request.app,  # This should be "open_notebook"
+            module_name=request.app,  # This should be "notebooke"
             command_name=request.command,
             command_args=request.input,
         )

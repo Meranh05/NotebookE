@@ -28,8 +28,8 @@ Comprehensive list of all environment variables available in NotebookE.
 | `SURREAL_URL` | Yes | ws://surrealdb:8000/rpc | SurrealDB WebSocket connection URL |
 | `SURREAL_USER` | Yes | root | SurrealDB username |
 | `SURREAL_PASSWORD` | Yes | root | SurrealDB password |
-| `SURREAL_NAMESPACE` | Yes | open_notebook | SurrealDB namespace |
-| `SURREAL_DATABASE` | Yes | open_notebook | SurrealDB database name |
+| `SURREAL_NAMESPACE` | Yes | notebooke | SurrealDB namespace |
+| `SURREAL_DATABASE` | Yes | notebooke | SurrealDB database name |
 
 ---
 
@@ -194,8 +194,8 @@ OPEN_NOTEBOOK_ENCRYPTION_KEY=my-secret-key
 SURREAL_URL=ws://surrealdb:8000/rpc
 SURREAL_USER=root
 SURREAL_PASSWORD=password
-SURREAL_NAMESPACE=open_notebook
-SURREAL_DATABASE=open_notebook
+SURREAL_NAMESPACE=notebooke
+SURREAL_DATABASE=notebooke
 ```
 
 Then configure AI providers via **Settings → API Keys** in the browser.
@@ -264,7 +264,7 @@ env | grep -E "^[A-Z_]+=" | sort
 
 ## Notes
 
-- **Case-sensitive:** `OPEN_NOTEBOOK_ENCRYPTION_KEY` ≠ `open_notebook_encryption_key`
+- **Case-sensitive:** `OPEN_NOTEBOOK_ENCRYPTION_KEY` ≠ `notebooke_encryption_key`
 - **No spaces:** `OPEN_NOTEBOOK_ENCRYPTION_KEY=my-key` not `OPEN_NOTEBOOK_ENCRYPTION_KEY = my-key`
 - **Quote values:** Use quotes for values with spaces: `API_URL="http://my server:5055"`
 - **Restart required:** Changes take effect after restarting services

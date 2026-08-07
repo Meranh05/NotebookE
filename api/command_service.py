@@ -26,7 +26,7 @@ class CommandService:
 
             # surreal-commands expects: submit_command(app_name, command_name, args)
             cmd_id = submit_command(
-                module_name,  # This is actually the app name (e.g., "open_notebook")
+                module_name,  # This is actually the app name (e.g., "notebooke")
                 command_name,  # Command name (e.g., "generate_podcast")
                 command_args,  # Input data
             )
@@ -83,9 +83,14 @@ class CommandService:
     async def cancel_command_job(job_id: str) -> bool:
         """Cancel a running command job"""
         try:
-            # Implementation depends on surreal-commands cancellation support
-            # For now, just log the attempt
-            logger.info(f"Attempting to cancel job: {job_id}")
+            from notebooke.database.repository import ensure_record_id, repo_query
+            
+            cmd_id = ensure_record_id(job_id)
+            await repo_query(
+                "UPDATE $id SET status = 'cancelled', error_message = 'Cancelled by user';",
+                {"id": cmd_id},
+            )
+            logger.info(f"Cancelled job: {job_id}")
             return True
         except Exception as e:
             logger.error(f"Failed to cancel command job: {e}")
@@ -95,7 +100,7 @@ class CommandService:
     async def update_command_progress(job_id: str, progress: float) -> bool:
         """Update the progress of a running command job in the database"""
         try:
-            from open_notebook.database.repository import ensure_record_id, repo_query
+            from notebooke.database.repository import ensure_record_id, repo_query
             
             cmd_id = ensure_record_id(job_id)
             await repo_query(

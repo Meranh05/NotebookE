@@ -4,8 +4,8 @@ from fastapi import APIRouter, HTTPException
 from loguru import logger
 from pydantic import BaseModel, Field
 
-from open_notebook.exceptions import InvalidInputError, OpenNotebookError
-from open_notebook.podcasts.models import EpisodeProfile, SpeakerProfile
+from notebooke.exceptions import InvalidInputError, OpenNotebookError
+from notebooke.podcasts.models import EpisodeProfile, SpeakerProfile
 
 router = APIRouter()
 

@@ -1,0 +1,7 @@
+
+UPDATE transformation SET title = "Paper Analysis", description = "Analyses a technical/scientific paper" WHERE name = "Analyze Paper";
+UPDATE transformation SET title = "Key Insights", description = "Extracts important insights and actionable items" WHERE name = "Key Insights";
+UPDATE transformation SET title = "Dense Summary", description = "Creates a rich, deep summary of the content" WHERE name = "Dense Summary";
+UPDATE transformation SET title = "Reflection Questions", description = "Generates reflection questions from the document to help explore it further" WHERE name = "Reflections";
+UPDATE transformation SET title = "Table of Contents", description = "Describes the different topics of the document" WHERE name = "Table of Contents";
+UPDATE transformation SET title = "Simple Summary", description = "Generates a small summary of the content" WHERE name = "Simple Summary";

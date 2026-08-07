@@ -26,7 +26,7 @@ Applied today:
 
 ## Consequences
 
-- Adding a provider or content format is mostly an upstream change, plus registry/config sync here (e.g. the four `SupportedProvider` locations — see `open_notebook/AGENTS.md`).
+- Adding a provider or content format is mostly an upstream change, plus registry/config sync here (e.g. the four `SupportedProvider` locations — see `notebooke/AGENTS.md`).
 - The libraries are independently versioned, testable and swappable; the boundary keeps this repo's scope honest.
 - Debugging sometimes spans two repos; issues whose root cause is upstream get the `upstream` + library labels (`esperanto`, `content-core`, `podcast-creator`).
 - Provider-specific *capabilities* (not just plumbing) remain constrained by [PDR-002](PDR-002-provider-agnostic-core.md).

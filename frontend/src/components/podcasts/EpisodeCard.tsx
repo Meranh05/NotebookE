@@ -42,6 +42,80 @@ interface EpisodeCardProps {
   deleting?: boolean
   onRetry?: (episodeId: string) => Promise<void> | void
   retrying?: boolean
+  onCancel?: (episodeId: string) => Promise<void> | void
+  cancelling?: boolean
+}
+
+function ActiveJobProgressViewer({ commandId }: { commandId: string }) {
+  const { t } = useTranslation()
+  const [progress, setProgress] = useState<any>(null)
+  
+  useEffect(() => {
+    let mounted = true
+    
+    const fetchProgress = async () => {
+      if (!commandId) return
+      try {
+        const res = await apiClient.get(`/commands/jobs/${commandId}`)
+        if (mounted && res.data) {
+          setProgress(res.data.progress || { status: res.data.status, message: res.data.error_message || 'Running...' })
+        }
+      } catch (err) {
+        console.error('Failed to fetch job progress', err)
+      }
+    }
+    
+    fetchProgress()
+    const intervalId = setInterval(fetchProgress, 3000)
+    
+    return () => {
+      mounted = false
+      clearInterval(intervalId)
+    }
+  }, [commandId])
+
+  if (!progress) {
+    return (
+      <div className="p-8 text-center text-sm text-muted-foreground">
+        <IconLoader2 className="mx-auto h-6 w-6 animate-spin opacity-50 mb-3" />
+        {t('common.loading')}
+      </div>
+    )
+  }
+
+  // Display progress gracefully instead of raw JSON
+  return (
+    <div className="space-y-4 p-5 rounded-lg border bg-gradient-to-br from-muted/30 to-muted/10 shadow-inner">
+      <div className="flex items-center gap-3">
+        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal/10">
+          <IconLoader2 className="h-5 w-5 animate-spin text-teal" />
+        </div>
+        <div>
+          <h4 className="font-semibold text-sm">Tiến trình AI</h4>
+          <p className="text-xs text-muted-foreground">
+            Hệ thống đang xử lý và tạo podcast. Vui lòng đợi trong giây lát...
+          </p>
+        </div>
+      </div>
+      
+      <div className="mt-4 grid gap-0 rounded-md bg-background/80 border text-sm overflow-hidden">
+        {Object.entries(progress).map(([key, value]) => {
+          if (value === null || typeof value === 'object' || value === '') return null;
+          
+          return (
+            <div key={key} className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 py-2 px-3 border-b last:border-0 border-border/50 hover:bg-muted/30 transition-colors">
+              <span className="text-muted-foreground font-medium uppercase text-xs tracking-wider">
+                {key.replace(/_/g, ' ')}
+              </span>
+              <span className="text-foreground text-right sm:text-left text-sm break-words">
+                {String(value)}
+              </span>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
 }
 
 const getSTATUS_META = (t: TFunction): Record<
@@ -153,7 +227,7 @@ function extractTranscriptEntries(transcript: unknown): TranscriptEntry[] {
   return []
 }
 
-export function EpisodeCard({ episode, onDelete, deleting, onRetry, retrying }: EpisodeCardProps) {
+export function EpisodeCard({ episode, onDelete, deleting, onRetry, retrying, onCancel, cancelling }: EpisodeCardProps) {
   const { t, language } = useTranslation()
   const [audioSrc, setAudioSrc] = useState<string | undefined>()
   const [audioError, setAudioError] = useState<string | null>(null)
@@ -270,15 +344,49 @@ export function EpisodeCard({ episode, onDelete, deleting, onRetry, retrying }: 
           </div>
           <div className="flex items-center gap-2 self-end sm:self-auto">
             {isActive && (
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-8 gap-2 border-teal/30 text-teal hover:bg-teal/10 hover:text-teal"
-                disabled
-              >
-                <IconLoader2 className="h-4 w-4 animate-spin" />
-                {t('podcasts.processing')}
-              </Button>
+              <>
+                <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="h-8 gap-2 border-teal/30 text-teal hover:bg-teal/10 hover:text-teal"
+                    >
+                      <IconInfoCircle className="h-4 w-4" />
+                      <span className="hidden sm:inline">Chi tiết</span>
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="w-[min(90vw,720px)] max-h-[85vh] overflow-hidden">
+                    <DialogHeader>
+                      <DialogTitle>{episode.name}</DialogTitle>
+                      <DialogDescription>
+                        {episode.episode_profile?.name || t('common.unknown')}
+                        {createdLabel ? ` • ${createdLabel}` : ''}
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 overflow-hidden">
+                      {episode.command_id ? (
+                        <ActiveJobProgressViewer commandId={episode.command_id} />
+                      ) : (
+                        <p className="text-sm text-muted-foreground">Không có ID tiến trình để theo dõi.</p>
+                      )}
+                    </div>
+                  </DialogContent>
+                </Dialog>
+                
+                {onCancel && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-8 gap-2 border-destructive/30 text-destructive hover:bg-destructive/10 hover:text-destructive"
+                    onClick={() => onCancel(episode.id)}
+                    disabled={cancelling}
+                  >
+                    {cancelling ? <IconLoader2 className="h-4 w-4 animate-spin" /> : <IconTrash className="h-4 w-4" />}
+                    <span className="hidden sm:inline">Huỷ</span>
+                  </Button>
+                )}
+              </>
             )}
             
             {isFailed && (

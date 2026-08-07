@@ -6,6 +6,7 @@ export type EpisodeStatus =
   | 'error'
   | 'pending'
   | 'submitted'
+  | 'cancelled'
   | 'unknown'
 
 export interface EpisodeProfile {
@@ -88,6 +89,7 @@ export interface PodcastEpisode {
   created?: string | null
   job_status?: EpisodeStatus | null
   error_message?: string | null
+  command_id?: string | null
 }
 
 export interface PodcastGenerationRequest {
@@ -119,7 +121,7 @@ export const ACTIVE_EPISODE_STATUSES: EpisodeStatus[] = [
   'submitted',
 ]
 
-export const FAILED_EPISODE_STATUSES: EpisodeStatus[] = ['failed', 'error']
+export const FAILED_EPISODE_STATUSES: EpisodeStatus[] = ['failed', 'error', 'cancelled']
 
 export function groupEpisodesByStatus(episodes: PodcastEpisode[]): EpisodeStatusGroups {
   return episodes.reduce<EpisodeStatusGroups>(

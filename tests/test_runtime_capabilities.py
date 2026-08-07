@@ -8,7 +8,7 @@ isn't installed.
 
 from unittest.mock import patch
 
-from open_notebook.utils.runtime_capabilities import engine_runtime_missing
+from notebooke.utils.runtime_capabilities import engine_runtime_missing
 
 
 class TestEngineRuntimeMissing:
@@ -27,7 +27,7 @@ class TestEngineRuntimeMissing:
 
     def test_crawl4ai_reports_its_env_var_when_absent(self):
         with patch(
-            "open_notebook.utils.runtime_capabilities.crawl4ai_available",
+            "notebooke.utils.runtime_capabilities.crawl4ai_available",
             return_value=False,
         ):
             assert (
@@ -36,21 +36,21 @@ class TestEngineRuntimeMissing:
 
     def test_crawl4ai_is_usable_when_available(self):
         with patch(
-            "open_notebook.utils.runtime_capabilities.crawl4ai_available",
+            "notebooke.utils.runtime_capabilities.crawl4ai_available",
             return_value=True,
         ):
             assert engine_runtime_missing("crawl4ai") is None
 
     def test_docling_reports_its_env_var_when_absent(self):
         with patch(
-            "open_notebook.utils.runtime_capabilities.docling_available",
+            "notebooke.utils.runtime_capabilities.docling_available",
             return_value=False,
         ):
             assert engine_runtime_missing("docling") == "OPEN_NOTEBOOK_ENABLE_DOCLING"
 
     def test_docling_is_usable_when_available(self):
         with patch(
-            "open_notebook.utils.runtime_capabilities.docling_available",
+            "notebooke.utils.runtime_capabilities.docling_available",
             return_value=True,
         ):
             assert engine_runtime_missing("docling") is None
@@ -58,7 +58,7 @@ class TestEngineRuntimeMissing:
     def test_engine_name_is_normalized(self):
         """Stored values shouldn't have to be exactly lowercased to be gated."""
         with patch(
-            "open_notebook.utils.runtime_capabilities.crawl4ai_available",
+            "notebooke.utils.runtime_capabilities.crawl4ai_available",
             return_value=False,
         ):
             assert (
@@ -69,10 +69,10 @@ class TestEngineRuntimeMissing:
     def test_remote_crawl4ai_counts_as_available(self):
         """CRAWL4AI_API_URL offloads rendering — no local install needed."""
         with patch(
-            "open_notebook.utils.runtime_capabilities.crawl4ai_local_ready",
+            "notebooke.utils.runtime_capabilities.crawl4ai_local_ready",
             return_value=False,
         ), patch(
-            "open_notebook.utils.runtime_capabilities.crawl4ai_remote_configured",
+            "notebooke.utils.runtime_capabilities.crawl4ai_remote_configured",
             return_value=True,
         ):
             assert engine_runtime_missing("crawl4ai") is None

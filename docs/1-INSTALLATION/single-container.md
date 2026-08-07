@@ -6,7 +6,7 @@ All-in-one container setup. **Simpler than Docker Compose, but less flexible.**
 
 **Best for:** PikaPods, Railway, shared hosting, minimal setups
 
-> **Alternative Registry:** Images available on both Docker Hub (`lfnovo/open_notebook:v1-latest-single`) and GitHub Container Registry (`ghcr.io/lfnovo/open-notebook:v1-latest-single`).
+> **Alternative Registry:** Images available on both Docker Hub (`lfnovo/notebooke:v1-latest-single`) and GitHub Container Registry (`ghcr.io/lfnovo/notebooke:v1-latest-single`).
 
 ## Prerequisites
 
@@ -21,8 +21,8 @@ All-in-one container setup. **Simpler than Docker Compose, but less flexible.**
 ```yaml
 # docker-compose.yml
 services:
-  open_notebook:
-    image: lfnovo/open_notebook:v1-latest-single
+  notebooke:
+    image: lfnovo/notebooke:v1-latest-single
     pull_policy: always
     ports:
       - "8502:8502"  # Web UI (React frontend)
@@ -32,8 +32,8 @@ services:
       - SURREAL_URL=ws://localhost:8000/rpc
       - SURREAL_USER=root
       - SURREAL_PASSWORD=root
-      - SURREAL_NAMESPACE=open_notebook
-      - SURREAL_DATABASE=open_notebook
+      - SURREAL_NAMESPACE=notebooke
+      - SURREAL_DATABASE=notebooke
     volumes:
       - ./data:/app/data
     restart: always
@@ -67,7 +67,7 @@ Then configure your AI provider:
 **Railway:**
 
 1. Create new project
-2. Add `lfnovo/open_notebook:v1-latest-single`
+2. Add `lfnovo/notebooke:v1-latest-single`
 3. Set environment variables (at minimum: `OPEN_NOTEBOOK_ENCRYPTION_KEY`)
 4. Deploy
 5. Open the app → Go to **Settings → API Keys** to configure your AI provider
@@ -75,14 +75,14 @@ Then configure your AI provider:
 **Render:**
 
 1. Create new Web Service
-2. Use Docker image: `lfnovo/open_notebook:v1-latest-single`
+2. Use Docker image: `lfnovo/notebooke:v1-latest-single`
 3. Set environment variables in dashboard (at minimum: `OPEN_NOTEBOOK_ENCRYPTION_KEY`)
 4. Configure persistent disk for `/app/data` and `/mydata`
 
 **DigitalOcean App Platform:**
 
 1. Create new app from Docker Hub
-2. Use image: `lfnovo/open_notebook:v1-latest-single`
+2. Use image: `lfnovo/notebooke:v1-latest-single`
 3. Set port to 8502
 4. Add environment variables (at minimum: `OPEN_NOTEBOOK_ENCRYPTION_KEY`)
 5. Configure persistent storage
@@ -99,7 +99,7 @@ heroku config:set OPEN_NOTEBOOK_ENCRYPTION_KEY=your-secret-key
 **Coolify:**
 
 1. Add new service → Docker Image
-2. Image: `lfnovo/open_notebook:v1-latest-single`
+2. Image: `lfnovo/notebooke:v1-latest-single`
 3. Port: 8502
 4. Add environment variables (at minimum: `OPEN_NOTEBOOK_ENCRYPTION_KEY`)
 5. Enable persistent volumes
@@ -107,12 +107,12 @@ heroku config:set OPEN_NOTEBOOK_ENCRYPTION_KEY=your-secret-key
 
 **EasyPanel:**
 
-NotebookE ships an EasyPanel template at [`examples/easypanel/`](https://github.com/lfnovo/open-notebook/tree/main/examples/easypanel). Unlike the single-image options above, the template provisions **two services** — the NotebookE app and a dedicated SurrealDB instance — and generates the database password, encryption key, and (optionally) the app password for you.
+NotebookE ships an EasyPanel template at [`examples/easypanel/`](https://github.com/lfnovo/notebooke/tree/main/examples/easypanel). Unlike the single-image options above, the template provisions **two services** — the NotebookE app and a dedicated SurrealDB instance — and generates the database password, encryption key, and (optionally) the app password for you.
 
 - **One-click (recommended):** once the template is published to the official [EasyPanel template gallery](https://github.com/easypanel-io/templates), create a new service from "NotebookE", set an app password (or leave it blank to auto-generate one), and deploy.
-- **Manual:** copy `examples/easypanel/` into `templates/open-notebook` in a checkout of [`easypanel-io/templates`](https://github.com/easypanel-io/templates), run the templates playground (`npm run dev`), and create the template from the generated JSON in your EasyPanel instance.
+- **Manual:** copy `examples/easypanel/` into `templates/notebooke` in a checkout of [`easypanel-io/templates`](https://github.com/easypanel-io/templates), run the templates playground (`npm run dev`), and create the template from the generated JSON in your EasyPanel instance.
 
-After deployment, open the EasyPanel domain and configure your AI provider in **Settings → API Keys**. See [`examples/easypanel/README.md`](https://github.com/lfnovo/open-notebook/blob/main/examples/easypanel/README.md) for details.
+After deployment, open the EasyPanel domain and configure your AI provider in **Settings → API Keys**. See [`examples/easypanel/README.md`](https://github.com/lfnovo/notebooke/blob/main/examples/easypanel/README.md) for details.
 
 ---
 
@@ -124,8 +124,8 @@ After deployment, open the EasyPanel domain and configure your AI provider in **
 | `SURREAL_URL` | Database | `ws://localhost:8000/rpc` |
 | `SURREAL_USER` | DB user | `root` |
 | `SURREAL_PASSWORD` | DB password | `root` |
-| `SURREAL_NAMESPACE` | DB namespace | `open_notebook` |
-| `SURREAL_DATABASE` | DB name | `open_notebook` |
+| `SURREAL_NAMESPACE` | DB namespace | `notebooke` |
+| `SURREAL_DATABASE` | DB name | `notebooke` |
 | `API_URL` | External URL (for remote access) | `https://myapp.example.com` |
 
 AI provider API keys are configured via the **Settings → API Keys** UI after deployment.
