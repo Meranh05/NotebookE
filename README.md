@@ -1,16 +1,16 @@
 <a id="readme-top"></a>
 
-<!-- [![Contributors][contributors-shield]][contributors-url] -->
+<!-- [![Contributors][contributors-shield]][contributors-url] 
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
-<!-- [![LinkedIn][linkedin-shield]][linkedin-url] -->
+[![LinkedIn][linkedin-shield]][linkedin-url] -->
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/lfnovo/notebooke">
+  <a href="https://github.com/Meranh05/NotebookE">
     <img src="docs/assets/hero.svg" alt="Logo">
   </a>
 
@@ -18,11 +18,11 @@
 
   <p align="center">
     An open source, privacy-focused alternative to Google's Notebook LM!
-    <br /><strong>Join our <a href="https://discord.gg/37XJPXfz2w">Discord server</a> for help, to share workflow ideas, and suggest features!</strong>
     <br />
-    <a href="https://www.notebooke.ai"><strong>Checkout our website »</strong></a>
     <br />
-    Follow <a href="https://x.com/lfnovo">@lfnovo on X</a> for updates
+    <a href=""><strong>Checkout our website »</strong></a>
+    <br />
+    Follow  for updates
     <br />
     <br />
     <a href="docs/0-START-HERE/index.md">📚 Get Started</a>
@@ -68,7 +68,6 @@ In a world dominated by Artificial Intelligence, having the ability to think �
 - 💬 **Chat with context** - AI conversations powered by your research
 - 🌐 **Multi-language UI** - English, Portuguese, Chinese (Simplified & Traditional), Japanese, Russian, and Bengali support
 
-Learn more about our project at [https://www.notebooke.ai](https://www.notebooke.ai)
 
 ---
 
@@ -221,9 +220,8 @@ Done! You're ready to create your first notebook.
 
 ---
 
-## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=lfnovo/notebooke&type=date&legend=top-left)](https://www.star-history.com/#lfnovo/notebooke&type=date&legend=top-left)
+
 
 ## Provider Support Matrix
 
@@ -333,7 +331,6 @@ Thanks to the [Esperanto](https://github.com/lfnovo/esperanto) library, we suppo
 - **Enhanced Citations**: Improved layout and finer control for source citations
 - **Multiple Chat Sessions**: Manage different conversations within notebooks
 
-Explore [GitHub Discussions](https://github.com/lfnovo/notebooke/discussions/categories/ideas) for proposed features and product ideas, and [open Issues](https://github.com/lfnovo/notebooke/issues) for known bugs and approved work.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -373,7 +370,7 @@ See our [Contributing Guide](CONTRIBUTING.md) for detailed information on how to
 ## 📄 License
 
 NotebookE is MIT licensed. See the [LICENSE](LICENSE) file for details.
-
+<!--
 **Community Support**:
 
 - 💬 [Discord Server](https://discord.gg/37XJPXfz2w) - Get help, share ideas, and connect with users
