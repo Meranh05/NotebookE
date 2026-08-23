@@ -109,7 +109,7 @@ export function MarkdownRenderer({
     <div
       className={[
         // base prose
-        'prose prose-neutral dark:prose-invert max-w-none break-words overflow-hidden',
+        'prose prose-neutral dark:prose-invert max-w-none break-words',
         // headings
         'prose-headings:font-bold prose-headings:text-foreground',
         'prose-h1:text-[1.6rem] prose-h1:mt-8 prose-h1:mb-4 prose-h1:pb-2 prose-h1:border-b prose-h1:border-border',

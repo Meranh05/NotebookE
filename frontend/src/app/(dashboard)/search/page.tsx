@@ -158,348 +158,316 @@ export default function SearchPage() {
 
   return (
     <AppShell>
-      <div className="flex-1 overflow-y-auto p-4 md:p-6 flex flex-col items-center">
-        <div className="w-full max-w-4xl space-y-8 mt-4 md:mt-10">
-          <div className="text-center space-y-4 mb-8">
-            <h1 className="font-display text-3xl md:text-4xl font-bold tracking-tight bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-transparent pb-1">
-              {t('searchPage.askAndSearch')}
-            </h1>
-            <p className="text-muted-foreground text-base max-w-2xl mx-auto">
-              {t('searchPage.askYourKbDesc')}
-            </p>
+      <div className="flex-1 flex flex-col relative h-full">
+        {/* Scrollable Content Area */}
+        <div className="flex-1 overflow-y-auto p-4 md:p-6 pb-[250px] flex flex-col items-center">
+          <div className="w-full max-w-4xl mt-4 md:mt-8">
+            <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'ask' | 'search')} className="w-full flex flex-col">
+              <div className="w-full mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 px-2 sm:px-0">
+                <div className="space-y-2">
+                  <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">
+                    {t('searchPage.askAndSearch')}
+                  </h1>
+                  <p className="text-muted-foreground text-sm max-w-md leading-relaxed">
+                    {t('searchPage.askYourKbDesc')}
+                  </p>
+                </div>
+
+                <TabsList aria-label={t('common.accessibility.searchKB')} className="grid w-full md:w-auto grid-cols-2 rounded-full bg-muted/50 p-1 shrink-0 h-11">
+                  <TabsTrigger value="ask" className="flex items-center justify-center gap-2 rounded-full text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground text-muted-foreground px-6 h-full transition-all">
+                    <IconMessageCircleQuestion className="h-4 w-4" />
+                    <span>{t('searchPage.askBeta')}</span>
+                  </TabsTrigger>
+                  <TabsTrigger value="search" className="flex items-center justify-center gap-2 rounded-full text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground text-muted-foreground px-6 h-full transition-all">
+                    <IconSearch className="h-4 w-4" />
+                    <span>{t('searchPage.search')}</span>
+                  </TabsTrigger>
+                </TabsList>
+              </div>
+
+              <TabsContent value="ask" className="w-full mt-0 max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="space-y-6">
+                  {/* Streaming Response */}
+                  <StreamingResponse
+                    isStreaming={ask.isStreaming}
+                    strategy={ask.strategy}
+                    answers={ask.answers}
+                    finalAnswer={ask.finalAnswer}
+                  />
+
+                  {/* Advanced Models Dialog */}
+                  <AdvancedModelsDialog
+                    open={showAdvancedModels}
+                    onOpenChange={setShowAdvancedModels}
+                    defaultModels={{
+                      strategy: customModels?.strategy || modelDefaults?.default_chat_model || '',
+                      answer: customModels?.answer || modelDefaults?.default_chat_model || '',
+                      finalAnswer: customModels?.finalAnswer || modelDefaults?.default_chat_model || ''
+                    }}
+                    onSave={setCustomModels}
+                  />
+
+                  {/* IconDeviceFloppy to Notebooks Dialog */}
+                  {ask.finalAnswer && (
+                    <SaveToNotebooksDialog
+                      open={showSaveDialog}
+                      onOpenChange={setShowSaveDialog}
+                      question={askQuestion}
+                      answer={ask.finalAnswer}
+                    />
+                  )}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="search" className="w-full mt-0 max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
+                <div className="space-y-8">
+                  {/* IconSearch Options */}
+                  <div className="flex flex-col sm:flex-row sm:items-start gap-6 p-4 rounded-xl border bg-card/50">
+                    {/* IconSearch Type */}
+                    <div className="space-y-3 flex-1" role="group" aria-labelledby="search-type-label">
+                      <span id="search-type-label" className="text-sm font-semibold">{t('searchPage.searchType')}</span>
+                      {!hasEmbeddingModel && (
+                        <div className="flex items-center gap-2 text-xs text-warn">
+                          <IconAlertCircle className="h-3.5 w-3.5" />
+                          <span>{t('searchPage.vectorSearchWarning')}</span>
+                        </div>
+                      )}
+                      <RadioGroup
+                        name="search-type"
+                        value={searchType}
+                        onValueChange={(value: 'text' | 'vector') => setSearchType(value)}
+                        disabled={modelsLoading || searchMutation.isPending}
+                        className="flex flex-col gap-2"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="text" id="text" />
+                          <Label htmlFor="text" className="font-normal cursor-pointer text-sm">
+                            {t('searchPage.textSearch')}
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem
+                            value="vector"
+                            id="vector"
+                            disabled={!hasEmbeddingModel || searchMutation.isPending}
+                          />
+                          <Label
+                            htmlFor="vector"
+                            className={`font-normal text-sm ${!hasEmbeddingModel ? 'text-muted-foreground cursor-not-allowed' : 'cursor-pointer'}`}
+                          >
+                            {t('searchPage.vectorSearch')}
+                          </Label>
+                        </div>
+                      </RadioGroup>
+                    </div>
+
+                    {/* IconSearch Locations */}
+                    <div className="space-y-3 flex-1" role="group" aria-labelledby="search-in-label">
+                      <span id="search-in-label" className="text-sm font-semibold">{t('searchPage.searchIn')}</span>
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="sources"
+                            name="sources"
+                            checked={searchSources}
+                            onCheckedChange={(checked) => setSearchSources(checked as boolean)}
+                            disabled={searchMutation.isPending}
+                          />
+                          <Label htmlFor="sources" className="font-normal cursor-pointer text-sm">
+                            {t('searchPage.searchSources')}
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="notes"
+                            name="notes"
+                            checked={searchNotes}
+                            onCheckedChange={(checked) => setSearchNotes(checked as boolean)}
+                            disabled={searchMutation.isPending}
+                          />
+                          <Label htmlFor="notes" className="font-normal cursor-pointer text-sm">
+                            {t('searchPage.searchNotes')}
+                          </Label>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* IconSearch Results */}
+                  {searchMutation.data && (
+                    <div className="mt-6 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-medium">
+                          {t('searchPage.resultsFound', { count: searchMutation.data.total_count })}
+                        </h3>
+                        <Badge variant="outline">{searchMutation.data.search_type === 'text' ? t('searchPage.textSearch') : t('searchPage.vectorSearch')}</Badge>
+                      </div>
+
+                      {searchMutation.data.results.length === 0 ? (
+                        <Card>
+                          <CardContent className="pt-6 text-center text-muted-foreground">
+                            {t('searchPage.noResultsFor', { query: searchQuery })}
+                          </CardContent>
+                        </Card>
+                      ) : (
+                        <div className="space-y-2">
+                          {searchMutation.data.results.map((result, index) => {
+                            if (!result.parent_id) {
+                              console.warn('IconSearch result with null parent_id:', result)
+                              return null
+                            }
+                            const [type, id] = result.parent_id.split(':')
+                            const modalType = type === 'source_insight' ? 'insight' : type as 'source' | 'note' | 'insight'
+
+                            return (
+                            <Card key={index} className="transition-shadow hover:shadow-lift">
+                              <CardContent className="pt-4">
+                                <div className="flex items-start justify-between gap-4">
+                                  <div className="flex-1">
+                                    <button
+                                      onClick={() => openModal(modalType, id)}
+                                      className="text-primary hover:underline font-medium"
+                                    >
+                                      {result.title}
+                                    </button>
+                                    <Badge variant="secondary" className="ml-2 font-mono text-[11px]">
+                                      {result.final_score.toFixed(2)}
+                                    </Badge>
+                                  </div>
+                                </div>
+
+                                {result.matches && result.matches.length > 0 && (
+                                  <Collapsible className="mt-3">
+                                    <CollapsibleTrigger className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
+                                      <IconChevronDown className="h-4 w-4" />
+                                      {t('searchPage.matches', { count: result.matches.length })}
+                                    </CollapsibleTrigger>
+                                    <CollapsibleContent className="mt-2 space-y-1">
+                                      {result.matches.map((match, i) => (
+                                        <div key={i} className="text-sm pl-6 py-1 border-l-2 border-muted">
+                                          {match}
+                                        </div>
+                                      ))}
+                                    </CollapsibleContent>
+                                  </Collapsible>
+                                )}
+                              </CardContent>
+                            </Card>
+                          )})}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
+        </div>
 
-          <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'ask' | 'search')} className="w-full flex flex-col items-center space-y-8">
-            <TabsList aria-label={t('common.accessibility.searchKB')} className="grid w-full grid-cols-2 max-w-[400px]">
-              <TabsTrigger value="ask" className="flex items-center gap-2">
-                <IconMessageCircleQuestion className="h-4 w-4 shrink-0" />
-                <span className="whitespace-nowrap">{t('searchPage.askBeta')}</span>
-              </TabsTrigger>
-              <TabsTrigger value="search" className="flex items-center gap-2">
-                <IconSearch className="h-4 w-4 shrink-0" />
-                <span className="whitespace-nowrap">{t('searchPage.search')}</span>
-              </TabsTrigger>
-            </TabsList>
+        {/* Fixed Input Area at Bottom */}
+        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background to-transparent pt-12 pb-6 px-4 md:px-6 pointer-events-none flex flex-col items-center z-10">
+          <div className="w-full max-w-4xl pointer-events-auto">
+            
+            {activeTab === 'ask' && (
+              <div className="flex flex-col gap-2">
+                {!hasEmbeddingModel && (
+                  <div className="flex items-center gap-2 p-2 px-3 text-xs text-warn bg-warn-tint rounded-xl w-fit mx-auto shadow-sm">
+                    <IconAlertCircle className="h-3.5 w-3.5" />
+                    <span>{t('searchPage.noEmbeddingModel')}</span>
+                  </div>
+                )}
+                
+                <div className="relative flex items-center bg-background/80 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] focus-within:ring-4 focus-within:ring-primary/10 transition-all overflow-hidden p-2">
+                  <div className="flex items-center gap-1 pl-1 md:pl-2 shrink-0">
+                    <Button variant="ghost" size="icon" onClick={() => setShowAdvancedModels(true)} className="h-10 w-10 rounded-full text-muted-foreground hover:text-foreground bg-muted/40 hover:bg-muted transition-colors" title={t('searchPage.advanced')}>
+                      <IconSettings className="h-5 w-5" />
+                    </Button>
+                  </div>
 
-            <TabsContent value="ask" className="w-full mt-0 max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <div className="space-y-8">
-                {/* Question Input */}
-                <div className="relative group rounded-xl border bg-card focus-within:ring-1 focus-within:ring-ring transition-all flex flex-col overflow-hidden">
                   <Textarea
                     id="ask-question"
-                    name="ask-question"
-                    placeholder={t('searchPage.enterQuestionPlaceholder')}
                     value={askQuestion}
                     onChange={(e) => setAskQuestion(e.target.value)}
+                    placeholder={t('searchPage.enterQuestionPlaceholder')}
+                    className="flex-1 border-0 focus-visible:ring-0 resize-none shadow-none text-base bg-transparent min-h-[52px] max-h-[160px] py-4 px-3 md:px-4 placeholder:text-muted-foreground/60"
+                    rows={1}
                     onKeyDown={(e) => {
-                      // Submit on Cmd/Ctrl+Enter
-                      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && !ask.isStreaming && askQuestion.trim()) {
+                      if (e.key === 'Enter' && !e.shiftKey && !ask.isStreaming && askQuestion.trim()) {
                         e.preventDefault()
                         handleAsk()
                       }
                     }}
                     disabled={ask.isStreaming}
-                    rows={4}
-                    className="border-0 focus-visible:ring-0 resize-none shadow-none text-base md:text-lg p-6 min-h-[160px] bg-transparent placeholder:text-muted-foreground/60"
-                    aria-label={t('common.accessibility.enterQuestion')}
                   />
-                  
-                  {/* Bottom Toolbar inside the input area */}
-                  <div className="flex items-center justify-between p-4 pt-2 bg-gradient-to-t from-background to-transparent">
-                    <div className="flex-1 flex flex-col gap-2">
-                      <p className="text-xs text-muted-foreground ml-1">
-                        {t('searchPage.pressToSubmit')}
-                      </p>
-                      
-                      {/* Models Display */}
-                      {!hasEmbeddingModel ? (
-                        <div className="flex items-center gap-2 p-2 text-xs text-warn bg-warn-tint rounded-md w-fit">
-                          <IconAlertCircle className="h-3 w-3" />
-                          <span>{t('searchPage.noEmbeddingModel')}</span>
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => setShowAdvancedModels(true)}
-                            disabled={ask.isStreaming}
-                            className="h-6 py-0 px-2 text-xs hover:bg-muted"
-                            title={customModels ? t('searchPage.usingCustomModels') : t('searchPage.usingDefaultModels')}
-                          >
-                            <IconSettings className="h-3 w-3 mr-1.5" />
-                            {t('searchPage.advanced')}
-                          </Button>
-                          <div className="flex gap-1.5 flex-wrap">
-                            <Badge variant="secondary" className="font-mono text-[10px] bg-muted/50 font-normal border-transparent">
-                              {t('searchPage.strategy')}: {resolveModelName(customModels?.strategy || modelDefaults?.default_chat_model)}
-                            </Badge>
-                            <Badge variant="secondary" className="font-mono text-[10px] bg-muted/50 font-normal border-transparent">
-                              {t('searchPage.answer')}: {resolveModelName(customModels?.answer || modelDefaults?.default_chat_model)}
-                            </Badge>
-                            <Badge variant="secondary" className="font-mono text-[10px] bg-muted/50 font-normal border-transparent">
-                              {t('searchPage.final')}: {resolveModelName(customModels?.finalAnswer || modelDefaults?.default_chat_model)}
-                            </Badge>
-                          </div>
-                        </div>
-                      )}
-                    </div>
 
-                    <div className="flex items-center gap-2 shrink-0">
-                      {ask.finalAnswer && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setShowSaveDialog(true)}
-                          className="h-9"
-                        >
-                          <IconDeviceFloppy className="h-4 w-4 sm:mr-1.5" />
-                          <span className="hidden sm:inline">{t('searchPage.saveToNotebooks')}</span>
-                        </Button>
-                      )}
-                      
-                      {hasEmbeddingModel && (
-                        ask.isStreaming ? (
-                          <Button
-                            onClick={() => ask.cancel()}
-                            size="icon"
-                            variant="default"
-                            className="h-10 w-10 rounded-xl rounded-tr-sm rounded-br-2xl shadow-md hover:scale-105 transition-all bg-foreground text-background hover:bg-foreground/90"
-                            aria-label={t('searchPage.stop')}
-                          >
-                            <IconSquare className="h-4 w-4 fill-current" />
-                          </Button>
-                        ) : (
-                          <Button
-                            onClick={handleAsk}
-                            disabled={!askQuestion.trim()}
-                            size="icon"
-                            className="h-10 w-10 rounded-xl rounded-tr-sm rounded-br-2xl shadow-md hover:scale-105 hover:shadow-lg transition-all"
-                            aria-label={t('searchPage.ask')}
-                          >
-                            <IconArrowUp className="h-5 w-5" />
-                          </Button>
-                        )
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Streaming Response */}
-                <StreamingResponse
-                  isStreaming={ask.isStreaming}
-                  strategy={ask.strategy}
-                  answers={ask.answers}
-                  finalAnswer={ask.finalAnswer}
-                />
-
-                {/* Advanced Models Dialog */}
-                <AdvancedModelsDialog
-                  open={showAdvancedModels}
-                  onOpenChange={setShowAdvancedModels}
-                  defaultModels={{
-                    strategy: customModels?.strategy || modelDefaults?.default_chat_model || '',
-                    answer: customModels?.answer || modelDefaults?.default_chat_model || '',
-                    finalAnswer: customModels?.finalAnswer || modelDefaults?.default_chat_model || ''
-                  }}
-                  onSave={setCustomModels}
-                />
-
-                {/* IconDeviceFloppy to Notebooks Dialog */}
-                {ask.finalAnswer && (
-                  <SaveToNotebooksDialog
-                    open={showSaveDialog}
-                    onOpenChange={setShowSaveDialog}
-                    question={askQuestion}
-                    answer={ask.finalAnswer}
-                  />
-                )}
-              </div>
-          </TabsContent>
-
-          <TabsContent value="search" className="w-full mt-0 max-w-3xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div className="space-y-8">
-              <div className="space-y-4">
-                {/* IconSearch Input */}
-                <div className="space-y-2">
-                  <Label htmlFor="search-query" className="sr-only">
-                    {t('searchPage.search')}
-                  </Label>
-                  <div className="relative rounded-xl border bg-background shadow-sm focus-within:ring-1 focus-within:ring-primary focus-within:border-primary transition-all flex items-center p-1">
-                    <div className="flex-1 flex items-center px-2">
-                      <IconSearch className="h-4 w-4 text-muted-foreground shrink-0 ml-2" />
-                      <Input
-                        id="search-query"
-                        name="search-query"
-                        placeholder={t('searchPage.enterSearchPlaceholder')}
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        onKeyPress={handleKeyPress}
-                        disabled={searchMutation.isPending}
-                        className="border-0 focus-visible:ring-0 shadow-none text-base h-12 w-full bg-transparent"
-                        aria-label={t('common.accessibility.enterSearch')}
-                        autoComplete="off"
-                      />
-                    </div>
+                  <div className="flex items-center gap-1.5 pr-1 shrink-0">
+                    {ask.finalAnswer && (
+                      <Button variant="ghost" size="icon" onClick={() => setShowSaveDialog(true)} className="h-10 w-10 rounded-full text-muted-foreground hover:text-foreground transition-colors" title={t('searchPage.saveToNotebooks')}>
+                        <IconDeviceFloppy className="h-5 w-5" />
+                      </Button>
+                    )}
+                    
                     <Button
-                      onClick={handleSearch}
-                      disabled={searchMutation.isPending || !searchQuery.trim()}
-                      aria-label={t('common.accessibility.searchKBBtn')}
-                      size="sm"
-                      className="h-10 px-6 shrink-0 rounded-lg font-medium"
+                      onClick={ask.isStreaming ? () => ask.cancel() : handleAsk}
+                      disabled={!ask.isStreaming && !askQuestion.trim()}
+                      size="icon"
+                      className="h-11 w-11 rounded-full bg-foreground text-background hover:bg-foreground/90 hover:scale-105 active:scale-95 transition-all shadow-md ml-1 disabled:opacity-40 disabled:hover:scale-100"
                     >
-                      {searchMutation.isPending ? (
-                        <LoadingSpinner size="sm" />
-                      ) : (
-                        t('searchPage.search')
-                      )}
+                      {ask.isStreaming ? <IconSquare className="h-4 w-4 fill-current" /> : <IconArrowUp className="h-5 w-5" />}
                     </Button>
                   </div>
-                  <p className="text-xs text-muted-foreground ml-1">{t('searchPage.pressToSearch')}</p>
                 </div>
 
-                {/* IconSearch Options */}
-                <div className="space-y-4">
-                  {/* IconSearch Type */}
-                  <div className="space-y-2" role="group" aria-labelledby="search-type-label">
-                    <span id="search-type-label" className="text-sm font-medium leading-none">{t('searchPage.searchType')}</span>
-                    {!hasEmbeddingModel && (
-                      <div className="flex items-center gap-2 text-sm text-warn">
-                        <IconAlertCircle className="h-4 w-4" />
-                        <span>{t('searchPage.vectorSearchWarning')}</span>
-                      </div>
-                    )}
-                    <RadioGroup
-                      name="search-type"
-                      value={searchType}
-                      onValueChange={(value: 'text' | 'vector') => setSearchType(value)}
-                      disabled={modelsLoading || searchMutation.isPending}
-                    >
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem value="text" id="text" />
-                        <Label htmlFor="text" className="font-normal cursor-pointer">
-                          {t('searchPage.textSearch')}
-                        </Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <RadioGroupItem
-                          value="vector"
-                          id="vector"
-                          disabled={!hasEmbeddingModel || searchMutation.isPending}
-                        />
-                        <Label
-                          htmlFor="vector"
-                          className={`font-normal ${!hasEmbeddingModel ? 'text-muted-foreground cursor-not-allowed' : 'cursor-pointer'}`}
-                        >
-                          {t('searchPage.vectorSearch')}
-                        </Label>
-                      </div>
-                    </RadioGroup>
-                  </div>
-
-                  {/* IconSearch Locations */}
-                  <div className="space-y-2" role="group" aria-labelledby="search-in-label">
-                    <span id="search-in-label" className="text-sm font-medium leading-none">{t('searchPage.searchIn')}</span>
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="sources"
-                          name="sources"
-                          checked={searchSources}
-                          onCheckedChange={(checked) => setSearchSources(checked as boolean)}
-                          disabled={searchMutation.isPending}
-                        />
-                        <Label htmlFor="sources" className="font-normal cursor-pointer">
-                          {t('searchPage.searchSources')}
-                        </Label>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <Checkbox
-                          id="notes"
-                          name="notes"
-                          checked={searchNotes}
-                          onCheckedChange={(checked) => setSearchNotes(checked as boolean)}
-                          disabled={searchMutation.isPending}
-                        />
-                        <Label htmlFor="notes" className="font-normal cursor-pointer">
-                          {t('searchPage.searchNotes')}
-                        </Label>
-                      </div>
+                {hasEmbeddingModel && (
+                  <div className="flex gap-4 justify-center px-4 pt-3 opacity-60 hover:opacity-100 transition-opacity">
+                    <div className="flex items-center gap-1.5 text-[10px] font-medium tracking-wide uppercase text-muted-foreground">
+                      <span className="opacity-70">{t('searchPage.strategy')}</span>
+                      <span className="text-foreground/80">{resolveModelName(customModels?.strategy || modelDefaults?.default_chat_model)}</span>
                     </div>
-                  </div>
-                </div>
-
-                {/* IconSearch Results */}
-                {searchMutation.data && (
-                  <div className="mt-6 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-sm font-medium">
-                        {t('searchPage.resultsFound', { count: searchMutation.data.total_count })}
-                      </h3>
-                      <Badge variant="outline">{searchMutation.data.search_type === 'text' ? t('searchPage.textSearch') : t('searchPage.vectorSearch')}</Badge>
+                    <div className="flex items-center gap-1.5 text-[10px] font-medium tracking-wide uppercase text-muted-foreground">
+                      <span className="opacity-70">{t('searchPage.answer')}</span>
+                      <span className="text-foreground/80">{resolveModelName(customModels?.answer || modelDefaults?.default_chat_model)}</span>
                     </div>
-
-                    {searchMutation.data.results.length === 0 ? (
-                      <Card>
-                        <CardContent className="pt-6 text-center text-muted-foreground">
-                          {t('searchPage.noResultsFor', { query: searchQuery })}
-                        </CardContent>
-                      </Card>
-                    ) : (
-                      <div className="space-y-2">
-                        {searchMutation.data.results.map((result, index) => {
-                          // Parse type from parent_id (format: "source:id" or "note:id" or "source_insight:id")
-                          // Handle null parent_id gracefully (orphaned records)
-                          if (!result.parent_id) {
-                            console.warn('IconSearch result with null parent_id:', result)
-                            return null
-                          }
-                          const [type, id] = result.parent_id.split(':')
-                          const modalType = type === 'source_insight' ? 'insight' : type as 'source' | 'note' | 'insight'
-
-                          return (
-                          <Card key={index} className="transition-shadow hover:shadow-lift">
-                            <CardContent className="pt-4">
-                              <div className="flex items-start justify-between gap-4">
-                                <div className="flex-1">
-                                  <button
-                                    onClick={() => openModal(modalType, id)}
-                                    className="text-primary hover:underline font-medium"
-                                  >
-                                    {result.title}
-                                  </button>
-                                  <Badge variant="secondary" className="ml-2 font-mono text-[11px]">
-                                    {result.final_score.toFixed(2)}
-                                  </Badge>
-                                </div>
-                              </div>
-
-                              {result.matches && result.matches.length > 0 && (
-                                <Collapsible className="mt-3">
-                                  <CollapsibleTrigger className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground">
-                                    <IconChevronDown className="h-4 w-4" />
-                                    {t('searchPage.matches', { count: result.matches.length })}
-                                  </CollapsibleTrigger>
-                                  <CollapsibleContent className="mt-2 space-y-1">
-                                    {result.matches.map((match, i) => (
-                                      <div key={i} className="text-sm pl-6 py-1 border-l-2 border-muted">
-                                        {match}
-                                      </div>
-                                    ))}
-                                  </CollapsibleContent>
-                                </Collapsible>
-                              )}
-                            </CardContent>
-                          </Card>
-                        )})}
-                      </div>
-                    )}
+                    <div className="flex items-center gap-1.5 text-[10px] font-medium tracking-wide uppercase text-muted-foreground">
+                      <span className="opacity-70">{t('searchPage.final')}</span>
+                      <span className="text-foreground/80">{resolveModelName(customModels?.finalAnswer || modelDefaults?.default_chat_model)}</span>
+                    </div>
                   </div>
                 )}
               </div>
-            </div>
-          </TabsContent>
-        </Tabs>
+            )}
+
+            {activeTab === 'search' && (
+              <div className="relative flex items-center bg-background/80 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] focus-within:ring-4 focus-within:ring-primary/10 transition-all overflow-hidden p-2">
+                <div className="flex items-center pl-4 pr-2 shrink-0 text-muted-foreground">
+                  <IconSearch className="h-5 w-5" />
+                </div>
+
+                <Input
+                  id="search-query"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder={t('searchPage.enterSearchPlaceholder')}
+                  className="flex-1 border-0 focus-visible:ring-0 shadow-none text-base bg-transparent h-[52px] px-2 md:px-3 placeholder:text-muted-foreground/60"
+                  onKeyPress={handleKeyPress}
+                  disabled={searchMutation.isPending}
+                  autoComplete="off"
+                />
+
+                <div className="flex items-center gap-1.5 pr-1 shrink-0">
+                  <Button
+                    onClick={handleSearch}
+                    disabled={searchMutation.isPending || !searchQuery.trim()}
+                    size="icon"
+                    className="h-11 w-11 rounded-full bg-foreground text-background hover:bg-foreground/90 hover:scale-105 active:scale-95 transition-all shadow-md ml-1 disabled:opacity-40 disabled:hover:scale-100"
+                  >
+                    {searchMutation.isPending ? <LoadingSpinner size="sm" /> : <IconArrowUp className="h-5 w-5" />}
+                  </Button>
+                </div>
+              </div>
+            )}
+            
+          </div>
         </div>
       </div>
     </AppShell>

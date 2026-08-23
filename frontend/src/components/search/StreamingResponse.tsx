@@ -55,7 +55,7 @@ export function StreamingResponse({
 
   return (
     <div
-      className="space-y-4 mt-6"
+      className="space-y-3 mt-4"
       role="region"
       aria-label={t('common.accessibility.askResponse')}
       aria-live="polite"
@@ -64,32 +64,32 @@ export function StreamingResponse({
       {/* Strategy Section - Collapsible */}
       {strategy && (
         <Collapsible open={strategyOpen} onOpenChange={setStrategyOpen}>
-          <Card>
-            <CardHeader>
+          <Card className="shadow-none border-muted-foreground/20">
+            <CardHeader className="p-4 py-3">
               <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80">
-                <CardTitle className="text-base flex items-center gap-2">
+                <CardTitle className="text-sm font-medium flex items-center gap-2">
                   <IconSparkles className="h-4 w-4 text-teal" />
                   {t('common.strategy')}
                 </CardTitle>
-                <IconChevronDown className={`h-4 w-4 transition-transform ${strategyOpen ? 'rotate-180' : ''}`} />
+                <IconChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${strategyOpen ? 'rotate-180' : ''}`} />
               </CollapsibleTrigger>
             </CardHeader>
             <CollapsibleContent>
-              <CardContent className="space-y-3 pt-0">
+              <CardContent className="space-y-3 px-4 pb-4 pt-0">
                 <div>
-                  <p className="text-sm text-muted-foreground mb-2">{t('common.reasoning')}:</p>
+                  <p className="text-xs font-semibold text-muted-foreground mb-1">{t('common.reasoning')}:</p>
                   <p className="text-sm">{strategy.reasoning}</p>
                 </div>
                 {strategy.searches.length > 0 && (
                   <div>
-                    <p className="text-sm text-muted-foreground mb-2">{t('common.searchTerms')}:</p>
-                    <div className="space-y-2">
+                    <p className="text-xs font-semibold text-muted-foreground mb-1">{t('common.searchTerms')}:</p>
+                    <div className="space-y-1.5">
                       {strategy.searches.map((search, i) => (
-                        <div key={i} className="flex items-start gap-2">
-                          <Badge variant="outline" className="mt-0.5 font-mono text-[11px]">{i + 1}</Badge>
+                        <div key={i} className="flex items-start gap-2 bg-muted/50 p-2 rounded-md">
+                          <Badge variant="outline" className="mt-0.5 font-mono text-[10px] h-4 min-w-4 flex items-center justify-center p-0">{i + 1}</Badge>
                           <div className="flex-1">
-                            <p className="text-sm font-medium">{search.term}</p>
-                            <p className="text-xs text-muted-foreground">{search.instructions}</p>
+                            <p className="text-sm font-medium leading-tight">{search.term}</p>
+                            {search.instructions && <p className="text-xs text-muted-foreground mt-0.5">{search.instructions}</p>}
                           </div>
                         </div>
                       ))}
@@ -105,21 +105,23 @@ export function StreamingResponse({
       {/* Individual Answers Section - Collapsible */}
       {answers.length > 0 && (
         <Collapsible open={answersOpen} onOpenChange={setAnswersOpen}>
-          <Card>
-            <CardHeader>
+          <Card className="shadow-none border-muted-foreground/20">
+            <CardHeader className="p-4 py-3">
               <CollapsibleTrigger className="flex items-center justify-between w-full hover:opacity-80">
-                <CardTitle className="text-base flex items-center gap-2">
-                  <IconBulb className="h-4 w-4 text-teal" />
+                <CardTitle className="text-sm font-medium flex items-center gap-2">
+                  <IconBulb className="h-4 w-4 text-amber-500" />
                   {t('common.individualAnswers', { count: answers.length })}
                 </CardTitle>
-                <IconChevronDown className={`h-4 w-4 transition-transform ${answersOpen ? 'rotate-180' : ''}`} />
+                <IconChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${answersOpen ? 'rotate-180' : ''}`} />
               </CollapsibleTrigger>
             </CardHeader>
             <CollapsibleContent>
-              <CardContent className="space-y-2 pt-0">
+              <CardContent className="space-y-3 px-4 pb-4 pt-0">
                 {answers.map((answer, i) => (
-                  <div key={i} className="p-3 rounded-md bg-muted">
-                    <p className="text-sm">{answer}</p>
+                  <div key={i} className="p-3 rounded-md bg-muted/30 text-sm overflow-x-auto">
+                    <MarkdownRenderer>
+                      {answer}
+                    </MarkdownRenderer>
                   </div>
                 ))}
               </CardContent>
@@ -130,14 +132,14 @@ export function StreamingResponse({
 
       {/* Final Answer Section - Always Open */}
       {finalAnswer && (
-        <Card className="border-teal">
-          <CardHeader>
-            <CardTitle className="text-base flex items-center gap-2">
-              <IconCircleCheck className="h-4 w-4 text-teal" />
+        <Card className="border-teal shadow-sm">
+          <CardHeader className="p-5 pb-3">
+            <CardTitle className="text-base font-semibold flex items-center gap-2">
+              <IconCircleCheck className="h-5 w-5 text-teal" />
               {t('common.finalAnswer')}
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="px-5 pb-5 pt-0">
             <FinalAnswerContent
               content={finalAnswer}
               onReferenceClick={handleReferenceClick}
@@ -148,7 +150,7 @@ export function StreamingResponse({
 
       {/* Loading Indicator */}
       {isStreaming && !finalAnswer && (
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="flex items-center gap-2 text-sm text-muted-foreground py-2">
           <LoadingSpinner size="sm" />
           <span>{t('searchPage.processingQuestion')}</span>
         </div>
