@@ -1,0 +1,5 @@
+-- Migration 26 rollback: Revert gemini-3.5 models to gemini-2.5 models
+-- Note: This rollback isn't perfect since multiple versions get collapsed into 3.5.
+
+UPDATE model SET name = "gemini-2.5-flash" WHERE provider IN ["google", "vertex"] AND name = "gemini-3.5-flash";
+UPDATE model SET name = "gemini-2.5-pro" WHERE provider IN ["google", "vertex"] AND name = "gemini-3.5-pro";

@@ -1,0 +1,5 @@
+-- Migration 26: Update deprecated Gemini models
+-- Replaces gemini-1.5/2.0/2.5 flash and pro variants with their 3.5 counterparts.
+
+UPDATE model SET name = "gemini-3.5-flash" WHERE provider IN ["google", "vertex"] AND name IN ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-2.5-flash", "gemini-1.5-flash-8b", "gemini-flash-latest"];
+UPDATE model SET name = "gemini-3.5-pro" WHERE provider IN ["google", "vertex"] AND name IN ["gemini-1.5-pro", "gemini-2.0-pro", "gemini-2.5-pro", "gemini-pro-latest"];

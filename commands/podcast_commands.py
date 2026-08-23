@@ -328,7 +328,7 @@ async def generate_podcast_command(
                 
             except Exception as e:
                 error_msg = str(e).lower()
-                is_quota_error = "429" in error_msg or "resource_exhausted" in error_msg or "quota" in error_msg or "rate_limit" in error_msg
+                is_quota_error = "429" in error_msg or "resource_exhausted" in error_msg or "quota" in error_msg or "rate_limit" in error_msg or "404" in error_msg or "not_found" in error_msg
                 
                 if not is_quota_error or attempt >= max_attempts:
                     if is_quota_error:

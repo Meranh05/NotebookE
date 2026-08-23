@@ -163,16 +163,15 @@ Only language models are supported for Anthropic-compatible credentials.
 
 **Available Models:**
 
-- `gemini-2.5-pro` — Strongest, best for long context (1M tokens)
-- `gemini-3.5-flash` — Fast, good for general use
+- `gemini-3.5-pro` — Strongest, best for long context (1M tokens)
+- `gemini-3.5-flash` — Current-gen stable, cheaper
 - `gemini-3.1-flash-lite` — Fastest and cheapest
-- `gemini-2.5-flash` — Previous-gen stable, cheaper
 
 **Recommended:**
 
 - For general use: `gemini-3.5-flash` (best value, latest)
 - For cheap: `gemini-3.1-flash-lite` (very cheap)
-- For complex/long context: `gemini-2.5-pro` (1M token context)
+- For complex/long context: `gemini-3.5-pro` (1M token context)
 
 **Advantages:**
 
@@ -262,7 +261,7 @@ Only language models are supported for Anthropic-compatible credentials.
 
 - OpenAI: `openai/gpt-4o`, `openai/o1`
 - Anthropic: `anthropic/claude-sonnet-4.5`, `anthropic/claude-3.5-haiku`
-- Google: `google/gemini-3.5-flash`, `google/gemini-2.5-pro`
+- Google: `google/gemini-3.5-flash`, `google/gemini-3.5-pro`
 - Meta: `meta-llama/llama-3.3-70b-instruct`, `meta-llama/llama-3.1-405b-instruct`
 - Mistral: `mistralai/mistral-large-2411`
 - DeepSeek: `deepseek/deepseek-chat`
@@ -279,7 +278,7 @@ other `vendor/model` id manually via the custom-model input.
 **Recommended:**
 
 - For quality: `anthropic/claude-sonnet-4.5` (best overall)
-- For speed/cost: `google/gemini-2.5-flash` (very fast, cheap)
+- For speed/cost: `google/gemini-3.5-flash` (very fast, cheap)
 - For open-source: `meta-llama/llama-3.3-70b-instruct`
 - For reasoning: `openai/o1`
 

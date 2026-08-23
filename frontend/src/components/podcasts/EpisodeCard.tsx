@@ -48,7 +48,7 @@ interface EpisodeCardProps {
 
 function ActiveJobProgressViewer({ commandId }: { commandId: string }) {
   const { t } = useTranslation()
-  const [progress, setProgress] = useState<any>(null)
+  const [progress, setProgress] = useState<Record<string, unknown> | null>(null)
   
   useEffect(() => {
     let mounted = true
@@ -141,6 +141,10 @@ const getSTATUS_META = (t: TFunction): Record<
   error: {
     label: t('podcasts.failedLabel'),
     className: 'bg-destructive-tint text-destructive border-destructive/30',
+  },
+  cancelled: {
+    label: t('podcasts.failedLabel'),
+    className: 'bg-muted text-muted-foreground border-transparent',
   },
   pending: {
     label: t('podcasts.pendingLabel'),
