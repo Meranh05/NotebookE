@@ -172,7 +172,7 @@ services:
     command: --api --listen
 
   notebooke:
-    image: lfnovo/notebooke:v1-latest
+    image: meranh05/notebooke:v1-latest
     pull_policy: always
     depends_on:
       - text-gen
@@ -220,7 +220,7 @@ services:
               capabilities: [gpu]
 
   notebooke:
-    image: lfnovo/notebooke:v1-latest
+    image: meranh05/notebooke:v1-latest
     pull_policy: always
     depends_on:
       - vllm

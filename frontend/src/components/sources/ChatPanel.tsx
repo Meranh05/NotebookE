@@ -150,7 +150,7 @@ export function ChatPanel({
               {messages.length === 0 ? (
                 <div className="text-center text-muted-foreground py-8">
                   <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full border bg-muted">
-                    <Image src="/logo.png" alt="AI" width={44} height={44} className="dark:invert" />
+                    <Image src="/logo.svg" alt="NotebookE AI" width={44} height={44} className="dark:invert" />
                   </div>
                   <p className="text-sm">
                     {t('chat.startConversation', { type: contextType === 'source' ? t('navigation.sources') : t('common.notebook') })}
@@ -171,7 +171,7 @@ export function ChatPanel({
                 <div className="flex gap-3 justify-start">
                   <div className="flex-shrink-0">
                     <div className="flex h-8 w-8 items-center justify-center rounded-full border bg-card">
-                      <Image src="/logo.png" alt="AI" width={22} height={22} className="dark:invert" />
+                      <Image src="/logo.svg" alt="NotebookE AI" width={22} height={22} className="dark:invert" />
                     </div>
                   </div>
                   <div className="rounded-lg px-4 py-2 bg-card border">
@@ -376,7 +376,7 @@ const ChatMessage = memo(function ChatMessage({
       {message.type === 'ai' && (
         <div className="flex-shrink-0 mt-1">
           <div className="flex h-8 w-8 items-center justify-center rounded-full border bg-card">
-            <Image src="/logo.png" alt="AI" width={20} height={20} className="dark:invert" />
+            <Image src="/logo.svg" alt="NotebookE AI" width={20} height={20} className="dark:invert" />
           </div>
         </div>
       )}

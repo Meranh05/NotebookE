@@ -87,7 +87,7 @@ environment:
 # Add to your docker-compose.yml (requires surrealdb service, see installation guide)
 services:
   notebooke:
-    image: lfnovo/notebooke:v1-latest
+    image: meranh05/notebooke:v1-latest
     pull_policy: always
     environment:
       - OPEN_NOTEBOOK_ENCRYPTION_KEY=your-secret-encryption-key
@@ -250,7 +250,7 @@ async function getNotebooks() {
 # Add to your docker-compose.yml (requires surrealdb service, see installation guide)
 services:
   notebooke:
-    image: lfnovo/notebooke:v1-latest
+    image: meranh05/notebooke:v1-latest
     pull_policy: always
     ports:
       - "127.0.0.1:8502:8502"  # Bind to localhost only

@@ -2,7 +2,7 @@
 
 Multi-container setup with separate services. **Best for most users.**
 
-> **Alternative Registry:** All images are available on both Docker Hub (`lfnovo/notebooke`) and GitHub Container Registry (`ghcr.io/lfnovo/notebooke`). Use GHCR if Docker Hub is blocked or you prefer GitHub-native workflows.
+> **Alternative Registry:** All images are available on both Docker Hub (`meranh05/notebooke`) and GitHub Container Registry (`ghcr.io/meranh05/notebooke`). Use GHCR if Docker Hub is blocked or you prefer GitHub-native workflows.
 
 ## Prerequisites
 
@@ -15,12 +15,12 @@ Multi-container setup with separate services. **Best for most users.**
 **Option A: Download from repository**
 
 ```bash
-curl -o docker-compose.yml https://raw.githubusercontent.com/lfnovo/notebooke/main/docker-compose.yml
+curl -o docker-compose.yml https://raw.githubusercontent.com/meranh05/notebooke/main/docker-compose.yml
 ```
 
 **Option B: Use the official file from the repo**
 
-The official `docker-compose.yml` is in the root of our repository: [View on GitHub](https://github.com/lfnovo/notebooke/blob/main/docker-compose.yml)
+The official `docker-compose.yml` is in the root of our repository: [View on GitHub](https://github.com/Meranh05/NotebookE/blob/main/docker-compose.yml)
 
 Copy that file to your project folder.
 
@@ -55,7 +55,7 @@ services:
     pull_policy: always
 
   notebooke:
-    image: lfnovo/notebooke:v1-latest
+    image: meranh05/notebooke:v1-latest
     ports:
       - "8502:8502"  # Web UI
       - "5055:5055"  # REST API
@@ -83,7 +83,7 @@ services:
 **Edit the file:**
 
 - Replace `change-me-to-a-secret-string` with your own secret (any string works, e.g., `my-super-secret-key-123`)
-- (Optional) To use database credentials other than the default `root:root`, create a `.env` file next to `docker-compose.yml` with `SURREAL_USER=...` and `SURREAL_PASSWORD=...` — both services pick them up automatically ([.env.example](https://github.com/lfnovo/notebooke/blob/main/.env.example) shows the full format)
+- (Optional) To use database credentials other than the default `root:root`, create a `.env` file next to `docker-compose.yml` with `SURREAL_USER=...` and `SURREAL_PASSWORD=...` — both services pick them up automatically ([.env.example](https://github.com/Meranh05/NotebookE/blob/main/.env.example) shows the full format)
 
 ---
 
@@ -170,7 +170,7 @@ Instead of manually editing, use our ready-made example:
 
 ```bash
 # Download the Ollama example
-curl -o docker-compose.yml https://raw.githubusercontent.com/lfnovo/notebooke/main/examples/docker-compose-ollama.yml
+curl -o docker-compose.yml https://raw.githubusercontent.com/meranh05/notebooke/main/examples/docker-compose-ollama.yml
 
 # Or copy from repo
 cp examples/docker-compose-ollama.yml docker-compose.yml
@@ -391,5 +391,5 @@ For production use, see:
 ## Getting Help
 
 - **Discord**: [Community support](https://discord.gg/37XJPXfz2w)
-- **Issues**: [GitHub Issues](https://github.com/lfnovo/notebooke/issues)
+- **Issues**: [GitHub Issues](https://github.com/Meranh05/NotebookE/issues)
 - **Docs**: [Full documentation](../index.md)

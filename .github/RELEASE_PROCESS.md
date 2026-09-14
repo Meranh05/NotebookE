@@ -187,7 +187,7 @@ accepted improvements immediately — update this document, the scripts under
   and after the suite (e.g. credentials count) — a diff means a test is
   leaking writes (this caught 48 leaked `Test` credentials in v1.12.0).
 - **A local `docker-build-local` tag shadows the pushed image.** Both are
-  `lfnovo/notebooke:<ver>`, so Phase 6 could verify your own local build
+  `meranh05/notebooke:<ver>`, so Phase 6 could verify your own local build
   instead of the registry artifact. `rc-stack.sh up` now `docker pull`s the tag
   by default; if you boot the image any other way, pull first (v1.13.0 lesson).
 - **Judge opt-in runtime gating on a clean image, not the dev venv.** A dev

@@ -141,7 +141,7 @@ Once you're up and running:
 ## Need Help?
 
 - **Discord**: [Join community](https://discord.gg/37XJPXfz2w)
-- **GitHub Issues**: [Report problems](https://github.com/lfnovo/notebooke/issues)
+- **GitHub Issues**: [Report problems](https://github.com/Meranh05/NotebookE/issues)
 - **Docs**: See [Full Documentation](../index.md)
 
 ---

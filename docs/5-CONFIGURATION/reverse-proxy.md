@@ -76,10 +76,10 @@ Caddy handles HTTPS automatically. The timeout settings ensure long-running oper
 
 ```yaml
 # Add this to your docker-compose.yml alongside the surrealdb service
-# See full base setup: https://github.com/lfnovo/notebooke/blob/main/docker-compose.yml
+# See full base setup: https://github.com/Meranh05/NotebookE/blob/main/docker-compose.yml
 services:
   notebooke:
-    image: lfnovo/notebooke:v1-latest
+    image: meranh05/notebooke:v1-latest
     pull_policy: always
     environment:
       - API_URL=https://notebook.example.com
@@ -163,12 +163,12 @@ When `API_URL` is not set, the Next.js frontend:
 
 ## Complete Docker Compose Example
 
-> **Note:** This example only shows the notebooke and nginx services. You also need a `surrealdb` service. See the [full base docker-compose.yml](https://github.com/lfnovo/notebooke/blob/main/docker-compose.yml) for the complete setup.
+> **Note:** This example only shows the notebooke and nginx services. You also need a `surrealdb` service. See the [full base docker-compose.yml](https://github.com/Meranh05/NotebookE/blob/main/docker-compose.yml) for the complete setup.
 
 ```yaml
 services:
   notebooke:
-    image: lfnovo/notebooke:v1-latest
+    image: meranh05/notebooke:v1-latest
     pull_policy: always
     container_name: notebooke
     environment:
@@ -315,7 +315,7 @@ API_URL=http://192.168.1.100:5055
 # Add to your docker-compose.yml (requires surrealdb service, see installation guide)
 services:
   notebooke:
-    image: lfnovo/notebooke:v1-latest
+    image: meranh05/notebooke:v1-latest
     pull_policy: always
     environment:
       - API_URL=http://192.168.1.100:5055
@@ -349,7 +349,7 @@ Host the API and frontend on different subdomains:
 # Add to your docker-compose.yml (requires surrealdb service, see installation guide)
 services:
   notebooke:
-    image: lfnovo/notebooke:v1-latest
+    image: meranh05/notebooke:v1-latest
     pull_policy: always
     environment:
       - API_URL=https://api.notebook.example.com
@@ -413,7 +413,7 @@ For complex deployments with separate frontend and API containers:
 ```yaml
 services:
   frontend:
-    image: lfnovo/notebooke_frontend:v1-latest
+    image: meranh05/notebooke_frontend:v1-latest
     pull_policy: always
     environment:
       - API_URL=https://notebook.example.com
@@ -421,7 +421,7 @@ services:
       - "8502:8502"
 
   api:
-    image: lfnovo/notebooke_api:v1-latest
+    image: meranh05/notebooke_api:v1-latest
     pull_policy: always
     environment:
       - OPEN_NOTEBOOK_ENCRYPTION_KEY=${OPEN_NOTEBOOK_ENCRYPTION_KEY}

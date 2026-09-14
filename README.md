@@ -11,7 +11,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/Meranh05/NotebookE">
-    <img src="docs/assets/hero.svg" alt="Logo">
+    <img src="docs/assets/hero.svg" alt="NotebookE logo" width="156">
   </a>
 
   <h3 align="center">NotebookE</h3>
@@ -33,21 +33,10 @@
 </div>
 
 <p align="center">
-<a href="https://trendshift.io/repositories/14536" target="_blank"><img src="https://trendshift.io/api/badge/repositories/14536" alt="lfnovo%2Fnotebooke | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+  <a href="https://github.com/Meranh05/NotebookE/stargazers"><img src="https://img.shields.io/github/stars/Meranh05/NotebookE?style=flat-square" alt="GitHub stars"></a>
+  <a href="https://github.com/Meranh05/NotebookE/issues"><img src="https://img.shields.io/github/issues/Meranh05/NotebookE?style=flat-square" alt="GitHub issues"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/Meranh05/NotebookE?style=flat-square" alt="MIT license"></a>
 </p>
-
-<div align="center">
-  <!-- Keep these links. Translations will automatically update with the README. -->
-  <a href="https://zdoc.app/de/lfnovo/notebooke">Deutsch</a> |
-  <a href="https://zdoc.app/es/lfnovo/notebooke">Español</a> |
-  <a href="https://zdoc.app/fr/lfnovo/notebooke">français</a> |
-  <a href="https://zdoc.app/ja/lfnovo/notebooke">日本語</a> |
-  <a href="https://zdoc.app/ko/lfnovo/notebooke">한국어</a> |
-  <a href="https://zdoc.app/pt/lfnovo/notebooke">Português</a> |
-  <a href="https://zdoc.app/ru/lfnovo/notebooke">Русский</a> |
-  <a href="https://zdoc.app/ru/lfnovo/notebooke">Tiếng Việt</a> |
-  <a href="https://zdoc.app/zh/lfnovo/notebooke">中文</a>
-</div>
 
 ## A private AI research and media workspace that runs on your PC
 
@@ -349,7 +338,6 @@ NotebookE uses the same notebook context for both media workflows. Podcast gener
 ### Join the Community
 
 - 💬 **[Discord Server](https://discord.gg/37XJPXfz2w)** - Get help, share ideas, and connect with other users
-- 𝕏 **[Follow @lfnovo on X](https://x.com/lfnovo)** - Project updates and news from the maintainer
 - 💡 **[GitHub Discussions](https://github.com/Meranh05/NotebookE/discussions)** - Ask questions and shape features, product direction, design, and architecture
 - 🐛 **[GitHub Issues](https://github.com/Meranh05/NotebookE/issues)** - Report reproducible bugs and find approved work
 - ⭐ **Star this repo** - Show your support and help others discover NotebookE
@@ -377,7 +365,6 @@ NotebookE is MIT licensed. See the [LICENSE](LICENSE) file for details.
 **Community Support**:
 
 - 💬 [Discord Server](https://discord.gg/37XJPXfz2w) - Get help, share ideas, and connect with users
-- 𝕏 [Follow @lfnovo on X](https://x.com/lfnovo) - Project updates and news from the maintainer
 - 💡 [GitHub Discussions](https://github.com/Meranh05/NotebookE/discussions) - Ask questions and shape ideas
 - 🐛 [GitHub Issues](https://github.com/Meranh05/NotebookE/issues) - Report reproducible bugs and find approved work
 - 🌐 [Website](https://www.notebooke.ai) - Learn more about the project

@@ -188,4 +188,4 @@ Add to `notebooke` service environment:
 ## 🆘 Need Help?
 
 - **Discord**: [Join our community](https://discord.gg/37XJPXfz2w)
-- **Issues**: [GitHub Issues](https://github.com/lfnovo/notebooke/issues)
+- **Issues**: [GitHub Issues](https://github.com/Meranh05/NotebookE/issues)

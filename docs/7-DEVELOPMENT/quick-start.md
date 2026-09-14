@@ -59,7 +59,7 @@ cd frontend && npm run dev
 
 ## Next Steps
 
-- **First Issue?** Pick a [good first issue](https://github.com/lfnovo/notebooke/issues?q=label%3A%22good+first+issue%22)
+- **First Issue?** Pick a [good first issue](https://github.com/Meranh05/NotebookE/issues?q=label%3A%22good+first+issue%22)
 - **Understand the code?** Read [Architecture Overview](architecture.md)
 - **Make changes?** Follow [Contributing Guide](contributing.md)
 - **Setup details?** See [Development Setup](development-setup.md)

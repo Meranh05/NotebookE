@@ -65,7 +65,7 @@ const getNavigation = (t: TFunction): NavigationSection[] => [
 function AppLogo({ size = 32 }: { size?: number }) {
   return (
     <Image
-      src="/logo.png"
+      src="/logo.svg"
       alt="NotebookE"
       width={size}
       height={size}
@@ -169,7 +169,7 @@ export function AppSidebar() {
               </Button>
             </div>
           ) : (
-            // Expanded: logo.png + "NotebookE" text + collapse button
+            // Expanded: logo mark + "NotebookE" text + collapse button
             <>
               <div className="flex min-w-0 items-center gap-2.5">
                 <AppLogo size={30} />

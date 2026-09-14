@@ -6,7 +6,7 @@ This document outlines security practices for NotebookE development. It is infor
 
 If you discover a security vulnerability, **do not open a public GitHub issue**. Instead:
 
-1. Use [GitHub Security Advisories](https://github.com/lfnovo/notebooke/security/advisories/new) to report privately
+1. Use [GitHub Security Advisories](https://github.com/Meranh05/NotebookE/security/advisories/new) to report privately
 2. Or email the maintainers directly
 
 We follow coordinated vulnerability disclosure and will work with you on a fix before any public announcement.

@@ -1,60 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Gradient Definitions -->
-  <defs>
-    <linearGradient id="nodeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#bd34fe;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#41d1ff;stop-opacity:1" />
-    </linearGradient>
-    <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#bd34fe;stop-opacity:0.3" />
-      <stop offset="100%" style="stop-color:#41d1ff;stop-opacity:0.3" />
-    </linearGradient>
-  </defs>
-
-  <!-- Connection Lines -->
-  <g class="connections">
-    <path d="M120 80L80 120" stroke="url(#lineGradient)" stroke-width="2"/>
-    <path d="M120 80L160 120" stroke="url(#lineGradient)" stroke-width="2"/>
-    <path d="M80 120L120 160" stroke="url(#lineGradient)" stroke-width="2"/>
-    <path d="M160 120L120 160" stroke="url(#lineGradient)" stroke-width="2"/>
-    <path d="M80 120L160 120" stroke="url(#lineGradient)" stroke-width="2"/>
+  <title>NotebookE</title>
+  <rect width="240" height="240" rx="52" fill="#FFFFFF"/>
+  <g fill="#111827">
+    <path d="M48 92.5 119.5 39a20 20 0 0 1 28 4l7 9.4a20 20 0 0 1-4 28L48 157.2V92.5Z"/>
+    <path d="M48 170.5 192 62.7v54.8L48 225.3v-54.8Z"/>
+    <path d="M94.5 205.8 192 132.9v54.8l-64.6 48.4a20 20 0 0 1-28-4l-8.9-11.9a10 10 0 0 1 4-14.4Z"/>
   </g>
-
-  <!-- Nodes -->
-  <g class="nodes">
-    <!-- Central Node -->
-    <circle cx="120" cy="80" r="20" fill="url(#nodeGradient)"/>
-    <circle cx="120" cy="80" r="24" stroke="url(#nodeGradient)" stroke-width="1" fill="none"/>
-    
-    <!-- Left Node -->
-    <circle cx="80" cy="120" r="16" fill="url(#nodeGradient)"/>
-    <circle cx="80" cy="120" r="20" stroke="url(#nodeGradient)" stroke-width="1" fill="none"/>
-    
-    <!-- Right Node -->
-    <circle cx="160" cy="120" r="16" fill="url(#nodeGradient)"/>
-    <circle cx="160" cy="120" r="20" stroke="url(#nodeGradient)" stroke-width="1" fill="none"/>
-    
-    <!-- Bottom Node -->
-    <circle cx="120" cy="160" r="18" fill="url(#nodeGradient)"/>
-    <circle cx="120" cy="160" r="22" stroke="url(#nodeGradient)" stroke-width="1" fill="none"/>
-  </g>
-
-  <!-- Pulse Animation -->
-  <style>
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 0.8; }
-      50% { transform: scale(1.1); opacity: 1; }
-      100% { transform: scale(1); opacity: 0.8; }
-    }
-    .nodes circle {
-      animation: pulse 3s infinite ease-in-out;
-    }
-    .nodes circle:nth-child(2n) {
-      animation-delay: 1s;
-    }
-    .nodes circle:nth-child(3n) {
-      animation-delay: 2s;
-    }
-  </style>
 </svg>

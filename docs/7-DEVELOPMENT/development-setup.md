@@ -17,7 +17,7 @@ Before you start, ensure you have the following installed:
 
 ```bash
 # Clone the repository
-git clone https://github.com/lfnovo/notebooke.git
+git clone https://github.com/Meranh05/NotebookE.git
 cd notebooke
 
 # Add upstream remote for keeping your fork updated

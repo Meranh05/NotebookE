@@ -41,7 +41,7 @@ export function SetupBanner() {
           <AlertDescription className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-destructive">
             <span>{t('setupBanner.encryptionRequiredDescription')}</span>
             <a
-              href="https://github.com/lfnovo/notebooke/blob/main/docs/3-USER-GUIDE/api-configuration.md#encryption-setup"
+              href="https://github.com/Meranh05/NotebookE/blob/main/docs/3-USER-GUIDE/api-configuration.md#encryption-setup"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center shrink-0 text-sm font-medium underline underline-offset-2 hover:text-destructive/80"

@@ -33,7 +33,7 @@ services:
       - ./surreal_data:/mydata
 
   notebooke:
-    image: lfnovo/notebooke:v1-latest
+    image: meranh05/notebooke:v1-latest
     pull_policy: always
     ports:
       - "8502:8502"  # Web UI

@@ -1,6 +1,6 @@
 services:
   notebooke_single:
-    # image: lfnovo/notebooke:v1-latest-single
+    # image: meranh05/notebooke:v1-latest-single
     build:
       context: .
       dockerfile: Dockerfile

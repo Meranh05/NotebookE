@@ -21,9 +21,9 @@
 #   5. Configure providers in UI
 #
 # Full documentation:
-# - Ollama setup: https://github.com/lfnovo/notebooke/blob/main/examples/README.md
-# - TTS setup: https://github.com/lfnovo/notebooke/blob/main/docs/5-CONFIGURATION/local-tts.md
-# - STT setup: https://github.com/lfnovo/notebooke/blob/main/docs/5-CONFIGURATION/local-stt.md
+# - Ollama setup: https://github.com/Meranh05/NotebookE/blob/main/examples/README.md
+# - TTS setup: https://github.com/Meranh05/NotebookE/blob/main/docs/5-CONFIGURATION/local-tts.md
+# - STT setup: https://github.com/Meranh05/NotebookE/blob/main/docs/5-CONFIGURATION/local-stt.md
 
 services:
   surrealdb:
@@ -70,7 +70,7 @@ services:
     # and add GPU device mapping (see docs)
 
   notebooke:
-    image: lfnovo/notebooke:v1-latest
+    image: meranh05/notebooke:v1-latest
     ports:
       - "8502:8502"
       - "5055:5055"

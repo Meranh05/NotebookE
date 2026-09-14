@@ -25,8 +25,22 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "NotebookE",
-  description: "Privacy-focused research and knowledge management",
+  title: {
+    default: "NotebookE",
+    template: "%s · NotebookE",
+  },
+  description: "Local AI workspace for research, contextual chat, podcasts, and videos.",
+  applicationName: "NotebookE",
+  metadataBase: new URL("https://github.com/Meranh05/NotebookE"),
+  openGraph: {
+    title: "NotebookE",
+    description: "Turn documents into knowledge, podcasts, and videos with local AI.",
+    type: "website",
+    images: [{
+      url: "https://raw.githubusercontent.com/Meranh05/NotebookE/main/frontend/public/logobrand.png",
+      alt: "NotebookE",
+    }],
+  },
   icons: [
     {
       media: "(prefers-color-scheme: light)",

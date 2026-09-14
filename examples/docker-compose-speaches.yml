@@ -18,8 +18,8 @@
 #   5. Configure in UI: Settings → API Keys → Add OpenAI-Compatible
 #
 # Full documentation:
-# - TTS setup: https://github.com/lfnovo/notebooke/blob/main/docs/5-CONFIGURATION/local-tts.md
-# - STT setup: https://github.com/lfnovo/notebooke/blob/main/docs/5-CONFIGURATION/local-stt.md
+# - TTS setup: https://github.com/Meranh05/NotebookE/blob/main/docs/5-CONFIGURATION/local-tts.md
+# - STT setup: https://github.com/Meranh05/NotebookE/blob/main/docs/5-CONFIGURATION/local-stt.md
 
 services:
   surrealdb:
@@ -49,7 +49,7 @@ services:
     # and add GPU device mapping (see docs/5-CONFIGURATION/local-tts.md)
 
   notebooke:
-    image: lfnovo/notebooke:v1-latest
+    image: meranh05/notebooke:v1-latest
     ports:
       - "8502:8502"
       - "5055:5055"

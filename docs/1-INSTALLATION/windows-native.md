@@ -1,6 +1,6 @@
 # NotebookE Windows Installation Guide (Native, No Docker)
 
-This guide documents how to install and run [NotebookE](https://github.com/lfnovo/notebooke) on Windows **natively without Docker or WSL**.
+This guide documents how to install and run [NotebookE](https://github.com/Meranh05/NotebookE) on Windows **natively without Docker or WSL**.
 
 ## Who Is This For?
 
@@ -31,7 +31,7 @@ This guide documents how to install and run [NotebookE](https://github.com/lfnov
 
    ```bash
    cd %USERPROFILE%\Projects  # or your preferred location
-   git clone https://github.com/lfnovo/notebooke.git
+   git clone https://github.com/Meranh05/NotebookE.git
    cd notebooke
    uv sync
    cd frontend && npm install && cd ..

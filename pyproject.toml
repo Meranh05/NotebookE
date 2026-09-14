@@ -1,9 +1,10 @@
 [project]
 name = "notebooke"
 version = "1.14.0"
-description = "An open source implementation of a research assistant, inspired by Google Notebook LM"
+description = "A local AI research workspace for contextual chat, podcasts, and video creation"
 authors = [
-    {name = "Luis Novo", email = "lfnovo@gmail.com"}
+    {name = "Luis Novo", email = "lfnovo@gmail.com"},
+    {name = "Meranh05"},
 ]
 readme = "README.md"
 classifiers = [
@@ -12,6 +13,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
 ]
 requires-python = ">=3.11,<3.13"
+
 dependencies = [
     "fastapi>=0.104.0",
     "uvicorn>=0.24.0",
@@ -49,6 +51,12 @@ dependencies = [
     "pycountry>=26.2.16",
     "babel>=2.18.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/Meranh05/NotebookE"
+Repository = "https://github.com/Meranh05/NotebookE"
+Issues = "https://github.com/Meranh05/NotebookE/issues"
+Documentation = "https://github.com/Meranh05/NotebookE/tree/main/docs"
 
 [tool.setuptools]
 package-dir = {"notebooke" = "notebooke"}

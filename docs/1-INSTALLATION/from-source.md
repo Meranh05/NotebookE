@@ -16,7 +16,7 @@ Clone the repository and run locally. **For developers and contributors.**
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/lfnovo/notebooke.git
+git clone https://github.com/Meranh05/NotebookE.git
 cd notebooke
 
 # If you forked it:
@@ -192,4 +192,4 @@ uv run uvicorn api.main:app --port 5056
 ## Getting Help
 
 - **Discord**: [Community](https://discord.gg/37XJPXfz2w)
-- **Issues**: [GitHub Issues](https://github.com/lfnovo/notebooke/issues)
+- **Issues**: [GitHub Issues](https://github.com/Meranh05/NotebookE/issues)
