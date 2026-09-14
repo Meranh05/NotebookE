@@ -98,6 +98,8 @@ class DefaultModelsResponse(BaseModel):
     default_speech_to_text_model: Optional[str] = None
     default_embedding_model: Optional[str] = None
     default_tools_model: Optional[str] = None
+    default_video_model: Optional[str] = None
+    default_image_model: Optional[str] = None
 
 
 class ProviderAvailabilityResponse(BaseModel):
@@ -281,6 +283,11 @@ class SettingsResponse(BaseModel):
     docling_formulas: Optional[bool] = None
     docling_vision: Optional[bool] = None
     youtube_preferred_languages: Optional[List[str]] = None
+    default_video_voice: Optional[str] = None
+    default_video_aspect_ratio: Optional[Literal["16:9", "9:16"]] = None
+    default_video_duration: Optional[str] = None
+    default_video_style: Optional[str] = None
+    default_video_character: Optional[str] = None
 
 
 class SettingsUpdate(BaseModel):
@@ -292,6 +299,11 @@ class SettingsUpdate(BaseModel):
     docling_formulas: Optional[bool] = None
     docling_vision: Optional[bool] = None
     youtube_preferred_languages: Optional[List[str]] = None
+    default_video_voice: Optional[str] = None
+    default_video_aspect_ratio: Optional[Literal["16:9", "9:16"]] = None
+    default_video_duration: Optional[str] = None
+    default_video_style: Optional[str] = None
+    default_video_character: Optional[str] = None
 
 
 # Sources API models

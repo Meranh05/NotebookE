@@ -103,7 +103,7 @@ export function ContentSelectionPanel({
             {t('podcasts.noNotebooksFoundInPodcasts')}
           </div>
         ) : (
-          <ScrollArea className="h-[60vh]">
+          <ScrollArea className="h-[52vh]">
             <Accordion
               type="multiple"
               value={expandedNotebooks}
@@ -130,15 +130,20 @@ export function ContentSelectionPanel({
                         checked={isIndeterminate ? 'indeterminate' : notebookChecked}
                         onCheckedChange={(checked) => {
                           onNotebookToggle(notebook.id, checked)
-                          queryClient.prefetchQuery({
-                            queryKey: QUERY_KEYS.sources(notebook.id),
-                            queryFn: () => sourcesApi.list({ notebook_id: notebook.id }),
-                          })
-                          queryClient.prefetchQuery({
-                            queryKey: QUERY_KEYS.notes(notebook.id),
-                            queryFn: () => notesApi.list({ notebook_id: notebook.id }),
-                          })
+                          // Start the cache warm-up after the checkbox event has
+                          // completed so the control paints immediately.
+                          window.setTimeout(() => {
+                            void queryClient.prefetchQuery({
+                              queryKey: QUERY_KEYS.sources(notebook.id),
+                              queryFn: () => sourcesApi.list({ notebook_id: notebook.id }),
+                            })
+                            void queryClient.prefetchQuery({
+                              queryKey: QUERY_KEYS.notes(notebook.id),
+                              queryFn: () => notesApi.list({ notebook_id: notebook.id }),
+                            })
+                          }, 0)
                         }}
+                        onPointerDown={(event) => event.stopPropagation()}
                         onClick={(event) => event.stopPropagation()}
                       />
                       <AccordionTrigger className="flex-1 px-0 py-0 hover:no-underline">

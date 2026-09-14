@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { IconChevronDown, IconDotsVertical, IconListCheck, IconNote, IconPlus, IconRobot, IconTrash, IconUser } from '@tabler/icons-react'
+import { IconDotsVertical, IconListCheck, IconNote, IconPlus, IconRobot, IconTrash, IconUser } from '@tabler/icons-react'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { EmptyState } from '@/components/common/EmptyState'
 import { Badge } from '@/components/ui/badge'
@@ -84,20 +84,19 @@ export function NotesColumn({
         collapsedIcon={IconNote}
         collapsedLabel={notesLabel}
       >
-        <Card className="h-full flex flex-col flex-1 overflow-hidden border-border/60 bg-card/60 backdrop-blur-sm shadow-sm">
-          <CardHeader className="pb-3 flex-shrink-0">
-            <div className="flex items-center justify-between gap-2">
-              <CardTitle className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.13em] text-muted-foreground">
-                <span aria-hidden className="h-3.5 w-[3px] rounded-full bg-gold" />
+        <Card className="flex h-full min-h-0 min-w-0 flex-1 flex-col gap-0 overflow-hidden border-border bg-card py-0">
+          <CardHeader className="flex-shrink-0 p-4 pb-3">
+            <div className="flex min-w-0 items-center justify-between gap-2">
+              <CardTitle className="flex min-w-0 items-center gap-2 text-xs font-semibold uppercase tracking-[0.13em] text-muted-foreground">
+                <span aria-hidden className="h-3.5 w-0.5 rounded-full bg-foreground/50" />
                 {notesLabel}
               </CardTitle>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-shrink-0 items-center gap-1">
                 {onBulkContextModeChange && notes && notes.length > 0 && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="text-muted-foreground" title={t('sources.bulkContext')}>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" title={t('sources.bulkContext')}>
                         <IconListCheck className="h-4 w-4" />
-                        <IconChevronDown className="h-4 w-4 ml-1" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -112,20 +111,22 @@ export function NotesColumn({
                 )}
                 <Button
                   size="sm"
+                  className="px-2 min-[1440px]:w-8"
+                  title={t('common.writeNote')}
                   onClick={() => {
                     setEditingNote(null)
                     setShowAddDialog(true)
                   }}
                 >
-                  <IconPlus className="h-4 w-4 mr-2" />
-                  {t('common.writeNote')}
+                  <IconPlus className="h-4 w-4 min-[1440px]:mr-0" />
+                  <span className="ml-2 min-[1440px]:sr-only">{t('common.writeNote')}</span>
                 </Button>
                 {collapseButton}
               </div>
             </div>
           </CardHeader>
 
-          <CardContent className="flex-1 overflow-y-auto min-h-0">
+          <CardContent className="flex-1 overflow-y-auto min-h-0 px-4 pb-4">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <LoadingSpinner />
@@ -147,7 +148,7 @@ export function NotesColumn({
                     <div className="flex items-start justify-between mb-2">
                       <div className="flex items-center gap-2">
                         {note.note_type === 'ai' ? (
-                          <IconRobot className="h-4 w-4 text-teal" />
+                          <IconRobot className="h-4 w-4 text-muted-foreground" />
                         ) : (
                           <IconUser className="h-4 w-4 text-muted-foreground" />
                         )}

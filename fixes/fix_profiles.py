@@ -1,8 +1,10 @@
 import asyncio
-import os
+
 from dotenv import load_dotenv
+
 load_dotenv()
 from notebooke.database.repository import db_connection
+
 
 async def fix_profiles():
     async with db_connection() as db:

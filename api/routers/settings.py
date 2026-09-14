@@ -26,6 +26,11 @@ async def get_settings():
             docling_formulas=settings.docling_formulas,
             docling_vision=settings.docling_vision,
             youtube_preferred_languages=settings.youtube_preferred_languages,
+            default_video_voice=settings.default_video_voice,
+            default_video_aspect_ratio=settings.default_video_aspect_ratio,
+            default_video_duration=settings.default_video_duration,
+            default_video_style=settings.default_video_style,
+            default_video_character=settings.default_video_character,
         )
     except HTTPException:
         raise
@@ -83,6 +88,19 @@ async def update_settings(settings_update: SettingsUpdate):
             settings.youtube_preferred_languages = (
                 settings_update.youtube_preferred_languages
             )
+        if settings_update.default_video_voice is not None:
+            settings.default_video_voice = settings_update.default_video_voice
+        if settings_update.default_video_aspect_ratio is not None:
+            from typing import Literal, cast
+            settings.default_video_aspect_ratio = cast(
+                Literal["16:9", "9:16"], settings_update.default_video_aspect_ratio
+            )
+        if settings_update.default_video_duration is not None:
+            settings.default_video_duration = settings_update.default_video_duration
+        if settings_update.default_video_style is not None:
+            settings.default_video_style = settings_update.default_video_style
+        if settings_update.default_video_character is not None:
+            settings.default_video_character = settings_update.default_video_character
 
         await settings.update()
 
@@ -95,6 +113,11 @@ async def update_settings(settings_update: SettingsUpdate):
             docling_formulas=settings.docling_formulas,
             docling_vision=settings.docling_vision,
             youtube_preferred_languages=settings.youtube_preferred_languages,
+            default_video_voice=settings.default_video_voice,
+            default_video_aspect_ratio=settings.default_video_aspect_ratio,
+            default_video_duration=settings.default_video_duration,
+            default_video_style=settings.default_video_style,
+            default_video_character=settings.default_video_character,
         )
     except HTTPException:
         raise

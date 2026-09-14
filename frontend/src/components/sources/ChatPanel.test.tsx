@@ -42,6 +42,7 @@ describe('ChatPanel composer', () => {
     expect(onSendMessage).toHaveBeenCalledTimes(1)
     expect(onSendMessage).toHaveBeenCalledWith('hello world', undefined)
     expect(textarea.value).toBe('')
+    expect(textarea.style.height).toBe('68px')
   })
 
   it('sends on Cmd+Enter on macOS', () => {
@@ -105,6 +106,28 @@ describe('ChatPanel composer', () => {
     // Textarea is disabled while streaming, but the guard must also hold.
     fireEvent.keyDown(textarea, { key: 'Enter', ctrlKey: true })
 
+    expect(onSendMessage).not.toHaveBeenCalled()
+  })
+
+  it('shows a stop action while streaming and cancels once', () => {
+    const onSendMessage = vi.fn()
+    const onCancelStreaming = vi.fn()
+    render(
+      <ChatPanel
+        messages={[]}
+        isStreaming={true}
+        contextIndicators={null}
+        onSendMessage={onSendMessage}
+        onCancelStreaming={onCancelStreaming}
+      />
+    )
+
+    const stopButton = screen.getByRole('button', {
+      name: 'chat.stopGenerating',
+    })
+    fireEvent.click(stopButton)
+
+    expect(onCancelStreaming).toHaveBeenCalledTimes(1)
     expect(onSendMessage).not.toHaveBeenCalled()
   })
 })

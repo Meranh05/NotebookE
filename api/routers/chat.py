@@ -400,10 +400,11 @@ async def stream_chat_response(
         from notebooke.graphs.chat import LANGGRAPH_CHECKPOINT_FILE
         from notebooke.graphs.chat import agent_state as chat_state
         
+        import asyncio
         async with AsyncSqliteSaver.from_conn_string(LANGGRAPH_CHECKPOINT_FILE) as memory:
             async_graph = chat_state.compile(checkpointer=memory)
             
-            async for message_chunk, metadata in async_graph.astream(
+            stream_gen = async_graph.astream(
                 input=state_values,
                 config=RunnableConfig(
                     configurable={
@@ -413,7 +414,19 @@ async def stream_chat_response(
                     }
                 ),
                 stream_mode="messages"
-            ):
+            )
+            
+            while True:
+                try:
+                    async with asyncio.timeout(300.0):
+                        message_chunk, metadata = await anext(stream_gen)
+                except StopAsyncIteration:
+                    break
+                except asyncio.TimeoutError:
+                    error_data = {"type": "error", "message": "Hệ thống phản hồi quá lâu (quá 300 giây). Có thể do máy bị quá tải hoặc thiếu RAM. Vui lòng thử lại!"}
+                    yield f"data: {json.dumps(error_data)}\n\n"
+                    return
+                
                 # Stream AI message chunks
                 if metadata.get("langgraph_node") == "agent":
                     if hasattr(message_chunk, "content") and message_chunk.content:

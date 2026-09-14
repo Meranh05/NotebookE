@@ -12,6 +12,7 @@ import {
   EpisodeStatusGroups,
   PodcastEpisode,
   PodcastGenerationRequest,
+  dedupePodcastEpisodes,
   groupEpisodesByStatus,
   speakerUsageMap,
 } from '@/lib/types/podcasts'
@@ -51,15 +52,15 @@ export function usePodcastEpisodes(options?: { autoRefresh?: boolean }) {
       }
 
       const data = current.state.data as PodcastEpisode[] | undefined
-      if (!data || data.length === 0) {
-        return false
-      }
-
-      return hasActiveEpisodes(data) ? 15_000 : false
+      return data && hasActiveEpisodes(data) ? 2_000 : 5_000
     },
+    refetchOnWindowFocus: true,
   })
 
-  const episodes = useMemo(() => query.data ?? [], [query.data])
+  const episodes = useMemo(
+    () => dedupePodcastEpisodes(query.data ?? []),
+    [query.data]
+  )
 
   const statusGroups = useMemo<EpisodeStatusGroups>(
     () => groupEpisodesByStatus(episodes),
@@ -420,9 +421,10 @@ export function useGeneratePodcast() {
   return useMutation({
     mutationFn: (payload: PodcastGenerationRequest) =>
       podcastsApi.generatePodcast(payload),
-    onSuccess: async (response) => {
-      // Immediately refetch to show the new episode
-      await queryClient.refetchQueries({ queryKey: QUERY_KEYS.podcastEpisodes })
+    onSuccess: (response) => {
+      // The worker creates the episode asynchronously. The episodes query keeps
+      // polling until the new record appears and while it is being processed.
+      void queryClient.invalidateQueries({ queryKey: QUERY_KEYS.podcastEpisodes })
       toast({
         title: t('podcasts.generationStarted'),
         description: t('podcasts.generationStartedDesc', { name: response.episode_name }),
@@ -434,6 +436,26 @@ export function useGeneratePodcast() {
         description: getApiErrorKey(error, t('podcasts.tryAgainMoment')),
         variant: 'destructive',
       })
+    },
+  })
+}
+
+export function usePodcastJobStatus(jobId: string | null) {
+  return useQuery({
+    queryKey: ['podcast-job', jobId],
+    queryFn: () => podcastsApi.getJobStatus(jobId!),
+    enabled: !!jobId,
+    refetchInterval: (query) => {
+      const status = query.state?.data?.status
+      if (
+        status === 'completed' ||
+        status === 'error' ||
+        status === 'failed' ||
+        status === 'cancelled'
+      ) {
+        return false
+      }
+      return 2000 // Poll every 2s
     },
   })
 }

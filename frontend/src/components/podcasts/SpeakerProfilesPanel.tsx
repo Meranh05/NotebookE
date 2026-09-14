@@ -94,8 +94,8 @@ export function SpeakerProfilesPanel({
             const unconfigured = needsModelSetup(profile)
 
             return (
-              <Card key={profile.id}>
-                <CardHeader className="flex flex-col gap-2">
+              <Card key={profile.id} className="overflow-hidden rounded-2xl shadow-sm transition-shadow hover:shadow-md">
+                <CardHeader className="flex flex-col gap-2 border-b bg-muted/10 p-4">
                   <div className="flex items-center justify-between gap-2">
                     <div>
                       <div className="flex items-center gap-2">
@@ -131,12 +131,12 @@ export function SpeakerProfilesPanel({
                   </div>
                 </CardHeader>
 
-                <CardContent className="space-y-4 text-sm">
+                <CardContent className="space-y-4 p-4 text-sm">
                   <div className="space-y-3">
                     {profile.speakers.map((speaker) => (
                       <div
                         key={speaker.name}
-                        className="rounded-md border bg-muted/30 p-3"
+                        className="rounded-xl border bg-muted/30 p-3"
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-2">

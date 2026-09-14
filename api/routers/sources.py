@@ -1,7 +1,10 @@
 import asyncio
+import io
+import mimetypes
 import os
 from pathlib import Path
 from typing import Any, List, Optional
+from urllib.parse import quote
 
 from content_core import check_file_support
 from fastapi import (
@@ -827,10 +830,15 @@ async def download_source_file(source_id: str):
     """Download the original file associated with an uploaded source."""
     try:
         resolved_path, filename = await _resolve_source_file(source_id)
+        media_type = mimetypes.guess_type(filename)[0] or "application/octet-stream"
+        # The same endpoint powers both the download action and the in-app
+        # preview. An inline disposition lets browsers render PDFs/media in
+        # the viewer while the frontend still downloads the returned Blob.
+        content_disposition = f"inline; filename*=UTF-8''{quote(filename)}"
         return FileResponse(
             path=resolved_path,
-            filename=filename,
-            media_type="application/octet-stream",
+            media_type=media_type,
+            headers={"Content-Disposition": content_disposition},
         )
     except HTTPException:
         raise
@@ -839,6 +847,60 @@ async def download_source_file(source_id: str):
     except Exception as e:
         logger.error(f"Error downloading file for source {source_id}: {str(e)}")
         raise HTTPException(status_code=500, detail="Failed to download source file")
+
+
+@router.get("/sources/{source_id}/pdf/info")
+async def get_pdf_preview_info(source_id: str):
+    """Return lightweight metadata used by the paginated PDF preview."""
+    try:
+        import pypdfium2 as pdfium
+
+        resolved_path, filename = await _resolve_source_file(source_id)
+        if Path(filename).suffix.lower() != ".pdf":
+            raise HTTPException(status_code=415, detail="Source is not a PDF")
+        document = pdfium.PdfDocument(str(resolved_path))
+        return {"filename": filename, "page_count": len(document)}
+    except HTTPException:
+        raise
+    except ImportError as exc:
+        raise HTTPException(status_code=503, detail="PDF preview engine is unavailable") from exc
+    except Exception as e:
+        logger.error(f"Error reading PDF preview info for source {source_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to read PDF preview")
+
+
+@router.get("/sources/{source_id}/pdf/pages/{page_number}")
+async def render_pdf_preview_page(source_id: str, page_number: int, width: int = Query(1400, ge=480, le=2400)):
+    """Render one PDF page as PNG for a browser-independent document preview."""
+    try:
+        import pypdfium2 as pdfium
+
+        resolved_path, filename = await _resolve_source_file(source_id)
+        if Path(filename).suffix.lower() != ".pdf":
+            raise HTTPException(status_code=415, detail="Source is not a PDF")
+
+        document = pdfium.PdfDocument(str(resolved_path))
+        if page_number < 1 or page_number > len(document):
+            raise HTTPException(status_code=404, detail="PDF page not found")
+
+        page = document[page_number - 1]
+        scale = max(1.0, width / max(page.get_width(), 1))
+        bitmap = page.render(scale=scale, rev_byteorder=True)
+        image = bitmap.to_pil()
+        output = io.BytesIO()
+        image.save(output, format="PNG", optimize=True)
+        return Response(
+            content=output.getvalue(),
+            media_type="image/png",
+            headers={"Cache-Control": "private, max-age=3600"},
+        )
+    except HTTPException:
+        raise
+    except ImportError as exc:
+        raise HTTPException(status_code=503, detail="PDF preview engine is unavailable") from exc
+    except Exception as e:
+        logger.error(f"Error rendering PDF page for source {source_id}: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to render PDF page")
 
 
 @router.get("/sources/{source_id}/status", response_model=SourceStatusResponse)

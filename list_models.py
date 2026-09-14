@@ -1,10 +1,13 @@
 import asyncio
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('.'))
 from dotenv import load_dotenv
+
 load_dotenv()
 from notebooke.database.repository import db_connection
+
 
 async def list_models():
     async with db_connection() as db:

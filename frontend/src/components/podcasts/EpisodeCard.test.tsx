@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 
-import { EpisodeCard } from './EpisodeCard'
+import { EpisodeCard, replaceLegacySpeakerNames } from './EpisodeCard'
 import type { PodcastEpisode } from '@/lib/types/podcasts'
 
 // useTranslation is mocked globally in setup.ts (t returns the key string)
@@ -44,6 +44,43 @@ function renderAndOpenDetails(episode: PodcastEpisode) {
 }
 
 describe('EpisodeCard model details', () => {
+  it('uses Eric and Luna in legacy speaker labels and dialogue', () => {
+    expect(
+      replaceLegacySpeakerNames(
+        'Marcus chào Elena. Elena trả lời Marcus.',
+        new Map([
+          ['marcus', 'Eric'],
+          ['elena', 'Luna'],
+        ])
+      )
+    ).toBe('Eric chào Luna. Luna trả lời Eric.')
+
+    renderAndOpenDetails(
+      makeEpisode({
+        speaker_profile: {
+          id: 'speaker_profile:1',
+          name: 'legacy-presenters',
+          description: '',
+          speakers: [
+            { name: 'Marcus', voice_id: 'vi-VN-NamMinhNeural', backstory: '', personality: '' },
+            { name: 'Elena', voice_id: 'vi-VN-HoaiMyNeural', backstory: '', personality: '' },
+          ],
+        },
+        transcript: {
+          transcript: [
+            { speaker: 'Marcus', dialogue: 'Chào Elena.' },
+            { speaker: 'Elena', dialogue: 'Chào Marcus.' },
+          ],
+        },
+      })
+    )
+
+    fireEvent.click(screen.getByText('podcasts.transcriptTab'))
+
+    expect(screen.getAllByText('Eric').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('Luna').length).toBeGreaterThan(0)
+  })
+
   it('renders API-resolved model display fields for new episodes', () => {
     renderAndOpenDetails(
       makeEpisode({

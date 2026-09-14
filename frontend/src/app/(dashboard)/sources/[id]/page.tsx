@@ -25,9 +25,9 @@ export default function SourceDetailPage() {
   }, [navigation, router])
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex min-h-screen flex-col lg:h-screen lg:min-h-0">
       {/* Back button */}
-      <div className="pt-6 pb-4 px-6">
+      <div className="shrink-0 px-4 pb-3 pt-4 sm:px-6 sm:pt-6">
         <Button
           variant="ghost"
           size="sm"
@@ -40,9 +40,9 @@ export default function SourceDetailPage() {
       </div>
 
       {/* Main content: Source detail + Chat */}
-      <div className="flex-1 grid gap-6 lg:grid-cols-[2fr_1fr] overflow-hidden px-6">
+      <div className="grid gap-4 px-4 pb-6 sm:px-6 lg:min-h-0 lg:flex-1 lg:grid-cols-[minmax(0,2fr)_minmax(20rem,1fr)] lg:gap-6 lg:overflow-hidden">
         {/* Left column - Source detail */}
-        <div className="overflow-y-auto px-4 pb-6">
+        <div className="min-w-0 overflow-hidden rounded-lg border bg-card lg:min-h-0 lg:overflow-y-auto">
           <SourceDetailContent
             sourceId={sourceId}
             showChatButton={false}
@@ -51,12 +51,13 @@ export default function SourceDetailPage() {
         </div>
 
         {/* Right column - Chat */}
-        <div className="overflow-y-auto px-4 pb-6">
+        <div className="min-w-0 overflow-hidden rounded-lg border bg-card lg:min-h-0 lg:overflow-y-auto">
           <ChatPanel
             messages={chat.messages}
             isStreaming={chat.isStreaming}
             contextIndicators={chat.contextIndicators}
             onSendMessage={(message, model) => chat.sendMessage(message, model)}
+            onCancelStreaming={chat.cancelStreaming}
             modelOverride={chat.currentSession?.model_override}
             onModelChange={(model) => {
               if (chat.currentSessionId) {

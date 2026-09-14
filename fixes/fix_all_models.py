@@ -1,10 +1,13 @@
 import asyncio
 import os
 import sys
+
 sys.path.insert(0, os.path.abspath('.'))
 from dotenv import load_dotenv
+
 load_dotenv()
 from notebooke.database.repository import db_connection
+
 
 async def fix_all_models_in_db():
     async with db_connection() as db:
@@ -15,7 +18,7 @@ async def fix_all_models_in_db():
             
             res_dg = await db.query("SELECT id FROM model WHERE name = 'aura-2-asteria-en';")
             dg_id = res_dg[0]['id']
-        except Exception as e:
+        except Exception:
             # Fallback if first models aren't found
             print("Failed to find llama-3.3 or aura-2, finding any groq/deepgram models...")
             res_groq = await db.query("SELECT id FROM model WHERE provider = 'groq' LIMIT 1;")

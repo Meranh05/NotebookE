@@ -1,0 +1,26 @@
+-- Migration 27: Create video_episode table for Pixelle-Video integration
+DEFINE TABLE video_episode SCHEMAFULL;
+
+DEFINE FIELD name         ON video_episode TYPE string;
+DEFINE FIELD prompt       ON video_episode TYPE string;
+DEFINE FIELD notebook_id  ON video_episode TYPE option<string>;
+DEFINE FIELD llm_model    ON video_episode TYPE option<string>;
+DEFINE FIELD n_scenes     ON video_episode TYPE int DEFAULT 5;
+DEFINE FIELD tts_voice    ON video_episode TYPE string DEFAULT "en-US-JennyNeural";
+DEFINE FIELD language     ON video_episode TYPE option<string>;
+DEFINE FIELD video_type   ON video_episode TYPE option<string>;
+DEFINE FIELD style        ON video_episode TYPE option<string>;
+DEFINE FIELD character_id ON video_episode TYPE option<string>;
+DEFINE FIELD custom_prompt ON video_episode TYPE option<string>;
+DEFINE FIELD aspect_ratio ON video_episode TYPE option<string>;
+DEFINE FIELD video_file   ON video_episode TYPE option<string>;
+DEFINE FIELD duration     ON video_episode TYPE option<float>;
+DEFINE FIELD file_size    ON video_episode TYPE option<int>;
+DEFINE FIELD storyboard   ON video_episode TYPE option<object>;
+DEFINE FIELD command      ON video_episode TYPE option<record<command>>;
+DEFINE FIELD error_message ON video_episode TYPE option<string>;
+DEFINE FIELD created      ON video_episode TYPE option<datetime>;
+DEFINE FIELD updated      ON video_episode TYPE option<datetime>;
+
+DEFINE INDEX idx_video_episode_notebook ON video_episode COLUMNS notebook_id;
+DEFINE INDEX idx_video_episode_command ON video_episode COLUMNS command;

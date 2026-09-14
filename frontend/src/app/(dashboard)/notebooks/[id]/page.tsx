@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
-import { AppShell } from '@/components/layout/AppShell'
 import { NotebookHeader } from '../components/NotebookHeader'
 import { SourcesColumn } from '../components/SourcesColumn'
 import { NotesColumn } from '../components/NotesColumn'
@@ -12,9 +11,8 @@ import { useNotebookSources } from '@/lib/hooks/use-sources'
 import { useNotes } from '@/lib/hooks/use-notes'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { useNotebookColumnsStore } from '@/lib/stores/notebook-columns-store'
-import { useIsDesktop } from '@/lib/hooks/use-media-query'
+import { useMediaQuery } from '@/lib/hooks/use-media-query'
 import { useTranslation } from '@/lib/hooks/use-translation'
-import { cn } from '@/lib/utils'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { IconFileText, IconMessage, IconNote } from '@tabler/icons-react'
 import {
@@ -53,8 +51,9 @@ export default function NotebookPage() {
   // Get collapse states for dynamic layout
   const { sourcesCollapsed, notesCollapsed } = useNotebookColumnsStore()
 
-  // Detect desktop to avoid double-mounting ChatColumn
-  const isDesktop = useIsDesktop()
+  // Three resizable columns need substantially more room than a typical tablet.
+  // Keep the focused tab layout until the viewport can comfortably fit all panels.
+  const hasWideWorkspace = useMediaQuery('(min-width: 1440px)')
 
   // Mobile tab state (Sources, Notes, or Chat)
   const [mobileActiveTab, setMobileActiveTab] = useState<'sources' | 'notes' | 'chat'>('chat')
@@ -142,47 +141,44 @@ export default function NotebookPage() {
 
   if (!notebook) {
     return (
-      <AppShell>
         <div className="p-6">
           <h1 className="text-2xl font-bold mb-4">{t('notebooks.notFound')}</h1>
           <p className="text-muted-foreground">{t('notebooks.notFoundDesc')}</p>
         </div>
-      </AppShell>
     )
   }
 
   return (
-    <AppShell>
-      <div className="flex flex-col flex-1 min-h-0">
-        <div className="flex-shrink-0 p-6 pb-0">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
+        <div className="flex-shrink-0 px-3 pt-3 sm:px-4 sm:pt-4 xl:px-5 xl:pt-4">
           <NotebookHeader notebook={notebook} />
         </div>
 
-        <div className="flex-1 p-6 pt-6 overflow-x-hidden flex flex-col">
+        <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden p-3 sm:p-4 xl:px-5 xl:pb-5 xl:pt-4">
           {/* Mobile: Tabbed interface - only render on mobile to avoid double-mounting */}
-          {!isDesktop && (
+          {!hasWideWorkspace && (
             <>
-              <div className="lg:hidden mb-4">
+              <div className="mb-3 min-[1440px]:hidden sm:mb-4">
                 <Tabs value={mobileActiveTab} onValueChange={(value) => setMobileActiveTab(value as 'sources' | 'notes' | 'chat')}>
-                  <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="sources" className="gap-2">
+                  <TabsList className="grid h-auto w-full grid-cols-3 rounded-xl p-1">
+                    <TabsTrigger value="sources" className="min-w-0 gap-1 px-1 py-2 text-xs sm:gap-2 sm:px-3 sm:text-sm">
                       <IconFileText className="h-4 w-4" />
-                      {t('navigation.sources')}
+                      <span className="truncate">{t('navigation.sources')}</span>
                     </TabsTrigger>
-                    <TabsTrigger value="notes" className="gap-2">
-                      <IconNote className="h-4 w-4" />
-                      {t('common.notes')}
-                    </TabsTrigger>
-                    <TabsTrigger value="chat" className="gap-2">
+                    <TabsTrigger value="chat" className="min-w-0 gap-1 px-1 py-2 text-xs sm:gap-2 sm:px-3 sm:text-sm">
                       <IconMessage className="h-4 w-4" />
-                      {t('common.chat')}
+                      <span className="truncate">{t('common.chat')}</span>
+                    </TabsTrigger>
+                    <TabsTrigger value="notes" className="min-w-0 gap-1 px-1 py-2 text-xs sm:gap-2 sm:px-3 sm:text-sm">
+                      <IconNote className="h-4 w-4" />
+                      <span className="truncate">{t('common.notes')}</span>
                     </TabsTrigger>
                   </TabsList>
                 </Tabs>
               </div>
 
               {/* Mobile: Show only active tab */}
-              <div className="flex-1 overflow-hidden lg:hidden">
+              <div className="min-h-0 min-w-0 flex-1 overflow-hidden min-[1440px]:hidden">
                 {mobileActiveTab === 'sources' && (
                   <SourcesColumn
                     sources={sources}
@@ -221,15 +217,14 @@ export default function NotebookPage() {
           )}
 
           {/* Desktop: Collapsible columns layout */}
-          <div className={cn(
-            'hidden lg:flex h-full min-h-0 gap-6 transition-all duration-150',
-            'flex-row'
-          )}>
+          <div
+            className="hidden h-full min-h-0 min-w-0 gap-4 transition-all duration-150 min-[1440px]:grid"
+            style={{
+              gridTemplateColumns: `${sourcesCollapsed ? '3rem' : 'minmax(15rem, 20rem)'} minmax(0, 1fr) ${notesCollapsed ? '3rem' : 'minmax(15rem, 20rem)'}`,
+            }}
+          >
             {/* Sources Column */}
-            <div className={cn(
-              'transition-all duration-150',
-              sourcesCollapsed ? 'w-12 flex-shrink-0' : 'flex-none w-[28%] xl:w-[22%]'
-            )}>
+            <div className="min-h-0 min-w-0 transition-all duration-150">
               <SourcesColumn
                 sources={sources}
                 isLoading={sourcesLoading}
@@ -246,7 +241,7 @@ export default function NotebookPage() {
             </div>
 
             {/* Chat Column - always expanded, takes remaining space */}
-            <div className="transition-all duration-150 flex-1 min-w-0">
+            <div className="min-h-0 min-w-0 transition-all duration-150">
               <ChatColumn
                 notebookId={notebookId}
                 contextSelections={contextSelections}
@@ -256,10 +251,7 @@ export default function NotebookPage() {
             </div>
 
             {/* Notes Column */}
-            <div className={cn(
-              'transition-all duration-150 lg:pr-6 lg:-mr-6',
-              notesCollapsed ? 'w-12 flex-shrink-0' : 'flex-none w-[28%] xl:w-[22%]'
-            )}>
+            <div className="min-h-0 min-w-0 transition-all duration-150">
               <NotesColumn
                 notes={notes}
                 isLoading={notesLoading}
@@ -272,6 +264,5 @@ export default function NotebookPage() {
           </div>
         </div>
       </div>
-    </AppShell>
   )
 }

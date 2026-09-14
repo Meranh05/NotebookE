@@ -1,0 +1,10 @@
+REMOVE INDEX IF EXISTS idx_episode_notebook ON TABLE episode;
+REMOVE FIELD IF EXISTS notebook_id ON episode;
+
+REMOVE INDEX IF EXISTS idx_video_episode_command ON TABLE video_episode;
+REMOVE INDEX IF EXISTS idx_video_episode_notebook ON TABLE video_episode;
+REMOVE FIELD IF EXISTS aspect_ratio ON video_episode;
+REMOVE FIELD IF EXISTS custom_prompt ON video_episode;
+REMOVE FIELD IF EXISTS character_id ON video_episode;
+REMOVE FIELD IF EXISTS style ON video_episode;
+REMOVE FIELD IF EXISTS video_type ON video_episode;

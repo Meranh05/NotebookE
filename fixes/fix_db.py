@@ -1,5 +1,7 @@
 import asyncio
+
 from notebooke.database.manager import get_db
+
 
 async def fix_db():
     db = await get_db()

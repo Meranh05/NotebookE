@@ -63,16 +63,17 @@ export function DeleteCredentialDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent>
-        <DialogHeader>
+      <DialogContent className="gap-0 p-0 sm:max-w-lg">
+        <DialogHeader className="border-b bg-destructive/5 px-6 py-5 pr-14">
           <DialogTitle>{t('apiKeys.deleteConfig')}</DialogTitle>
           <DialogDescription>
             {t('apiKeys.deleteConfigConfirm', { name: credential.name })}
           </DialogDescription>
         </DialogHeader>
 
+        <div className="space-y-5 px-6 py-5">
         {credential.model_count > 0 && (
-          <Alert>
+          <Alert className="border-warn/30 bg-warn-tint">
             <IconAlertCircle className="h-4 w-4" />
             <AlertDescription>
               This credential has {credential.model_count} linked model(s).
@@ -95,7 +96,8 @@ export function DeleteCredentialDialog({
           </Alert>
         )}
 
-        <DialogFooter className="flex-col sm:flex-row gap-2">
+        </div>
+        <DialogFooter className="border-t bg-muted/10 px-6 py-4 flex-col sm:flex-row gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             {t('common.cancel')}
           </Button>

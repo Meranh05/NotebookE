@@ -25,6 +25,11 @@ const settingsSchema = z.object({
   docling_ocr: z.boolean().optional(),
   docling_formulas: z.boolean().optional(),
   docling_vision: z.boolean().optional(),
+  default_video_voice: z.string().optional(),
+  default_video_aspect_ratio: z.enum(['16:9', '9:16']).optional(),
+  default_video_duration: z.string().optional(),
+  default_video_style: z.string().optional(),
+  default_video_character: z.string().optional(),
 })
 
 type SettingsFormData = z.infer<typeof settingsSchema>
@@ -66,6 +71,11 @@ export function SettingsForm() {
       docling_ocr: undefined,
       docling_formulas: undefined,
       docling_vision: undefined,
+      default_video_voice: undefined,
+      default_video_aspect_ratio: undefined,
+      default_video_duration: undefined,
+      default_video_style: undefined,
+      default_video_character: undefined,
     }
   })
 
@@ -84,6 +94,11 @@ export function SettingsForm() {
         docling_ocr: settings.docling_ocr ?? true,
         docling_formulas: settings.docling_formulas ?? false,
         docling_vision: settings.docling_vision ?? false,
+        default_video_voice: settings.default_video_voice || 'vi-VN-HoaiMyNeural',
+        default_video_aspect_ratio: settings.default_video_aspect_ratio || '16:9',
+        default_video_duration: settings.default_video_duration || '3',
+        default_video_style: settings.default_video_style || 'AI Visual Director',
+        default_video_character: settings.default_video_character || 'AI tự chọn',
       }
       reset(formData)
       setHasResetForm(true)
@@ -345,6 +360,156 @@ export function SettingsForm() {
                 <p>{t('settings.filesHelp')}</p>
               </CollapsibleContent>
             </Collapsible>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('settings.videoDefaults')}</CardTitle>
+          <CardDescription>
+            {t('settings.videoDefaultsDesc')}
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-3">
+              <Label htmlFor="video_voice">{t('settings.videoVoice')}</Label>
+              <Controller
+                name="default_video_voice"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    key={field.value}
+                    name={field.name}
+                    value={field.value || 'vi-VN-HoaiMyNeural'}
+                    onValueChange={field.onChange}
+                    disabled={field.disabled || isLoading}
+                  >
+                    <SelectTrigger id="video_voice" className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="vi-VN-NamMinhNeural">Vietnamese Male (Eric)</SelectItem>
+                      <SelectItem value="vi-VN-HoaiMyNeural">Vietnamese Female (Luna)</SelectItem>
+                      <SelectItem value="en-US-GuyNeural">English Male (Eric)</SelectItem>
+                      <SelectItem value="en-US-JennyNeural">English Female (Luna)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
+
+            <div className="space-y-3">
+              <Label htmlFor="video_aspect_ratio">{t('settings.videoAspectRatio')}</Label>
+              <Controller
+                name="default_video_aspect_ratio"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    key={field.value}
+                    name={field.name}
+                    value={field.value || '16:9'}
+                    onValueChange={field.onChange}
+                    disabled={field.disabled || isLoading}
+                  >
+                    <SelectTrigger id="video_aspect_ratio" className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="16:9">Ngang (16:9 - YouTube/Web)</SelectItem>
+                      <SelectItem value="9:16">Dọc (9:16 - TikTok/Shorts)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
+
+            <div className="space-y-3">
+              <Label htmlFor="video_duration">{t('settings.videoDuration')}</Label>
+              <Controller
+                name="default_video_duration"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    key={field.value}
+                    name={field.name}
+                    value={field.value || '3'}
+                    onValueChange={field.onChange}
+                    disabled={field.disabled || isLoading}
+                  >
+                    <SelectTrigger id="video_duration" className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">1 {t('common.minutes')}</SelectItem>
+                      <SelectItem value="3">3 {t('common.minutes')}</SelectItem>
+                      <SelectItem value="5">5 {t('common.minutes')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
+
+            <div className="space-y-3">
+              <Label htmlFor="video_style">{t('settings.videoStyle')}</Label>
+              <Controller
+                name="default_video_style"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    key={field.value}
+                    name={field.name}
+                    value={field.value || 'AI Visual Director'}
+                    onValueChange={field.onChange}
+                    disabled={field.disabled || isLoading}
+                  >
+                    <SelectTrigger id="video_style" className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="AI Visual Director">AI tự đạo diễn (Khuyên dùng)</SelectItem>
+                      <SelectItem value="Documentary Cinematic">Điện ảnh tài liệu</SelectItem>
+                      <SelectItem value="Editorial Presentation">Thuyết trình hiện đại</SelectItem>
+                      <SelectItem value="Technical Visualization">Trực quan kỹ thuật</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
+
+            <div className="space-y-3">
+              <Label htmlFor="video_character">{t('settings.videoCharacter')}</Label>
+              <Controller
+                name="default_video_character"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    key={field.value}
+                    name={field.name}
+                    value={field.value || 'AI tự chọn'}
+                    onValueChange={field.onChange}
+                    disabled={field.disabled || isLoading}
+                  >
+                    <SelectTrigger id="video_character" className="w-full">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="AI tự chọn">🤖 AI Tự chọn</SelectItem>
+                      <SelectItem value="Eric">Eric</SelectItem>
+                      <SelectItem value="Luna">Luna</SelectItem>
+                      <SelectItem value="Penguin">🐧 Penguin</SelectItem>
+                      <SelectItem value="Cat">🐱 Cat</SelectItem>
+                      <SelectItem value="Fox">🦊 Fox</SelectItem>
+                      <SelectItem value="Rabbit">🐰 Rabbit</SelectItem>
+                      <SelectItem value="Bear">🐻 Bear</SelectItem>
+                      <SelectItem value="Robot">🤖 Robot</SelectItem>
+                      <SelectItem value="Owl">🦉 Owl</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
           </div>
         </CardContent>
       </Card>

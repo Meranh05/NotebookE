@@ -50,7 +50,8 @@ function getFileTypeInfo(filename: string): FileTypeInfo {
     tar:  { icon: IconFileZip,    label: 'TAR',   bg: 'bg-gray-100 dark:bg-gray-800',         text: 'text-gray-600 dark:text-gray-400',      ext: 'TAR'  },
     gz:   { icon: IconFileZip,    label: 'GZ',    bg: 'bg-gray-100 dark:bg-gray-800',         text: 'text-gray-600 dark:text-gray-400',      ext: 'GZ'   },
   }
-  return map[ext] ?? { icon: IconFile, label: ext.toUpperCase() || 'FILE', bg: 'bg-muted', text: 'text-muted-foreground', ext: ext.toUpperCase() }
+  const info = map[ext] ?? { icon: IconFile, label: ext.toUpperCase() || 'FILE', bg: 'bg-muted', text: 'text-muted-foreground', ext: ext.toUpperCase() }
+  return { ...info, bg: 'border border-border bg-muted', text: 'text-muted-foreground' }
 }
 
 const IMAGE_EXTS = new Set(['jpg', 'jpeg', 'png', 'gif', 'webp', 'tiff', 'bmp', 'svg'])

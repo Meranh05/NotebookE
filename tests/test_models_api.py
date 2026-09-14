@@ -442,6 +442,7 @@ class TestUpdateDefaultModels:
         defaults.default_speech_to_text_model = None
         defaults.default_embedding_model = "model:embed"
         defaults.default_tools_model = "model:tools"
+        defaults.default_video_model = None
         defaults.update = AsyncMock()
         return defaults
 
@@ -507,6 +508,7 @@ class TestAutoAssignDefaults:
         defaults.large_context_model = None
         defaults.default_text_to_speech_model = None
         defaults.default_speech_to_text_model = None
+        defaults.default_video_model = None
         defaults.update = AsyncMock()
         return defaults
 
@@ -546,6 +548,7 @@ class TestAutoAssignDefaults:
             "large_context_model",
             "default_text_to_speech_model",
             "default_speech_to_text_model",
+            "default_video_model",
         ):
             assert slot not in body["assigned"]
         assert defaults.default_transformation_model is None
@@ -580,6 +583,7 @@ class TestGetDefaultModelFallback:
         defaults.default_text_to_speech_model = None
         defaults.default_speech_to_text_model = None
         defaults.default_embedding_model = "model:embed"
+        defaults.default_video_model = None
         return defaults
 
     @pytest.mark.asyncio

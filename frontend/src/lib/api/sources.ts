@@ -107,4 +107,16 @@ export const sourcesApi = {
       responseType: 'blob',
     })
   },
+
+  getPdfPreviewInfo: async (id: string) => {
+    const response = await apiClient.get<{ filename: string; page_count: number }>(`/sources/${id}/pdf/info`)
+    return response.data
+  },
+
+  renderPdfPage: async (id: string, page: number, width = 1400): Promise<AxiosResponse<Blob>> => {
+    return apiClient.get(`/sources/${id}/pdf/pages/${page}`, {
+      params: { width },
+      responseType: 'blob',
+    })
+  },
 }

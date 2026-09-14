@@ -6,6 +6,7 @@ instead of raw episode names, preventing filesystem issues with
 spaces and special characters (GitHub issue #663).
 """
 
+import os
 import uuid
 from pathlib import Path, PurePosixPath
 from types import SimpleNamespace
@@ -27,7 +28,7 @@ class TestBuildEpisodeOutputDir:
 
     def test_path_structure(self):
         dir_name, output_dir = build_episode_output_dir("/data/podcasts")
-        assert str(output_dir) == f"/data/podcasts/episodes/{dir_name}"
+        assert output_dir == Path("/data/podcasts") / "episodes" / dir_name
 
     def test_defaults_to_podcasts_folder(self):
         """No-arg form builds under PODCASTS_FOLDER - the same root the
@@ -70,6 +71,7 @@ class TestBuildEpisodeOutputDir:
                 f"Unexpected chars in directory name: {dir_component}"
             )
 
+    @pytest.mark.skipif(os.name == "nt", reason="POSIX path semantics")
     def test_path_works_on_posix(self):
         dir_name, output_dir = build_episode_output_dir("/data/podcasts")
         posix = PurePosixPath(str(output_dir))

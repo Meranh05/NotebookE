@@ -59,6 +59,7 @@ export function GeneratePodcastDialog({ open, onOpenChange }: GeneratePodcastDia
   const notebooksQuery = useNotebooks()
   const episodeProfilesQuery = useEpisodeProfiles()
   const generatePodcast = useGeneratePodcast()
+  const submitLockRef = useRef(false)
 
   const notebooks = useMemo(
     () => notebooksQuery.data ?? [],
@@ -383,6 +384,8 @@ export function GeneratePodcastDialog({ open, onOpenChange }: GeneratePodcastDia
   }, [notebooks, selections, t])
 
   const handleSubmit = useCallback(async () => {
+    if (submitLockRef.current) return
+
     if (!selectedEpisodeProfile) {
       toast({
         title: t('podcasts.profileRequired'),
@@ -416,6 +419,7 @@ export function GeneratePodcastDialog({ open, onOpenChange }: GeneratePodcastDia
       return
     }
 
+    submitLockRef.current = true
     setIsBuildingContext(true)
     try {
       const content = await buildContentFromSelections()
@@ -455,6 +459,7 @@ export function GeneratePodcastDialog({ open, onOpenChange }: GeneratePodcastDia
         variant: 'destructive',
       })
     } finally {
+      submitLockRef.current = false
       setIsBuildingContext(false)
     }
   }, [
@@ -478,15 +483,15 @@ export function GeneratePodcastDialog({ open, onOpenChange }: GeneratePodcastDia
         resetState()
       }
     }}>
-      <DialogContent className="w-[80vw] max-w-[1080px] max-h-[90vh] overflow-hidden">
-        <DialogHeader>
+      <DialogContent className="!max-h-[88vh] w-[calc(100vw-2rem)] !max-w-[1180px] overflow-y-auto p-4 sm:overflow-hidden sm:p-5">
+        <DialogHeader className="border-b bg-muted/20 pb-3 pr-10">
           <DialogTitle>{t('podcasts.generateEpisode')}</DialogTitle>
           <DialogDescription>
             {t('podcasts.generateEpisodeDesc')}
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-6 md:grid-cols-[2fr_1fr] xl:grid-cols-[3fr_1fr]">
+        <div className="grid min-w-0 gap-4 md:grid-cols-[minmax(0,1.75fr)_minmax(280px,1fr)]">
           <ContentSelectionPanel
             notebooks={notebooks}
             isLoading={notebooksQuery.isLoading}
@@ -504,7 +509,7 @@ export function GeneratePodcastDialog({ open, onOpenChange }: GeneratePodcastDia
             onNoteToggle={handleNoteToggle}
           />
 
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="space-y-3">
               <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                 {t('podcasts.episodeSettings')}

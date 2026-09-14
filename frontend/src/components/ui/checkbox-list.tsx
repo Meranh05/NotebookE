@@ -48,6 +48,7 @@ export function CheckboxList({
     return (
       <div className={cn('border-2 border-border rounded-2xl p-4 bg-card', className)}>
         <p className="text-sm text-muted-foreground">{emptyMessage}</p>
+      
       </div>
     )
   }

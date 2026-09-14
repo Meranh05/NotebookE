@@ -8,7 +8,7 @@ Start-Process powershell -ArgumentList "-NoExit", "-Command", "chcp 65001; `$env
 
 Start-Sleep -Seconds 3
 Write-Host "Starting background worker in a new window..."
-Start-Process powershell -ArgumentList "-NoExit", "-Command", "chcp 65001; `$env:PYTHONUTF8=1; uv run --env-file .env surreal-commands-worker start --import-modules commands --max-tasks 5"
+Start-Process powershell -ArgumentList "-NoExit", "-Command", "chcp 65001; `$env:PYTHONUTF8='1'; `$env:PYTHONIOENCODING='utf-8'; uv run --env-file .env surreal-commands-worker start --import-modules commands --max-tasks 5"
 
 Start-Sleep -Seconds 2
 Write-Host "Starting Next.js frontend in a new window..."

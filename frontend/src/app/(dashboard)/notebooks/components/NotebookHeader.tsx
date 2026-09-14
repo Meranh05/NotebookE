@@ -11,6 +11,7 @@ import { formatDistanceToNow } from 'date-fns'
 import { getDateLocale } from '@/lib/utils/date-locale'
 import { InlineEdit } from '@/components/common/InlineEdit'
 import { useTranslation } from '@/lib/hooks/use-translation'
+import { NotebookMediaQuickActions } from './NotebookMediaQuickActions'
 
 interface NotebookHeaderProps {
   notebook: NotebookResponse
@@ -50,18 +51,18 @@ export function NotebookHeader({ notebook }: NotebookHeaderProps) {
 
   return (
     <>
-      <div className="border-b pb-4">
-        <div className="flex flex-col gap-2 w-full">
-          <div className="flex items-start lg:items-center justify-between flex-col lg:flex-row gap-4 lg:gap-6 w-full">
+      <div className="min-w-0 border-b pb-4">
+        <div className="flex min-w-0 w-full flex-col gap-3">
+          <div className="flex min-w-0 w-full flex-col items-start justify-between gap-4 2xl:flex-row 2xl:items-center 2xl:gap-6">
             {/* Title Section (Fixed proportion) */}
-            <div className="flex items-center gap-3 w-full lg:w-[25%] min-w-0 flex-shrink-0">
+            <div className="flex min-w-0 w-full items-center gap-3 2xl:w-[22%] 2xl:flex-shrink-0">
               <InlineEdit
                 id="notebook-name"
                 name="notebook-name"
                 value={notebook.name}
                 onSave={handleUpdateName}
                 className="font-display text-xl font-bold tracking-tight truncate text-left w-full block"
-                inputClassName="font-display text-xl font-bold tracking-tight w-full min-w-[200px]"
+                inputClassName="font-display text-xl font-bold tracking-tight w-full min-w-0"
                 placeholder={t('notebooks.namePlaceholder')}
               />
               {notebook.archived && (
@@ -69,7 +70,7 @@ export function NotebookHeader({ notebook }: NotebookHeaderProps) {
               )}
             </div>
 
-            <div className="h-[30px] w-[1px] bg-border hidden lg:block flex-shrink-0" />
+            <div className="hidden h-[30px] w-px flex-shrink-0 bg-border 2xl:block" />
 
             {/* Description Section (Remaining space) */}
             <div className="flex flex-col gap-1 min-w-0 flex-1 w-full">
@@ -90,11 +91,14 @@ export function NotebookHeader({ notebook }: NotebookHeaderProps) {
               </div>
 
             {/* Actions Section */}
-            <div className="flex gap-2 flex-shrink-0 w-full lg:w-auto justify-start lg:justify-end">
+            <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:flex-wrap 2xl:w-auto 2xl:flex-shrink-0 2xl:justify-end">
+              <NotebookMediaQuickActions notebookId={notebook.id} notebookName={notebook.name} />
+              
               <Button
                 variant="outline"
                 size="sm"
                 onClick={handleArchiveToggle}
+                className="w-full justify-center sm:w-auto"
               >
                 {notebook.archived ? (
                   <>
@@ -112,7 +116,7 @@ export function NotebookHeader({ notebook }: NotebookHeaderProps) {
                 variant="outline"
                 size="sm"
                 onClick={() => setShowDeleteDialog(true)}
-                className="text-destructive hover:text-destructive"
+                className="w-full justify-center text-destructive hover:text-destructive sm:w-auto"
               >
                 <IconTrash className="h-4 w-4 mr-2" />
                 {t('common.delete')}

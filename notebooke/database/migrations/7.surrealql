@@ -129,13 +129,13 @@ insert into speaker_profile
                 tts_model: "gpt-4o-mini-tts",
                 speakers: [
                     {
-                        name: "Marcus Thompson",
+                        name: "Henry",
                         voice_id: "echo",
                         backstory: "Former McKinsey consultant, now startup advisor. Expert in strategic analysis and market dynamics.",
                         personality: "Strategic thinker, data-driven, excellent at identifying key insights and implications"
                     },
                     {
-                        name: "Elena Vasquez", 
+                        name: "Luna", 
                         voice_id: "shimmer",
                         backstory: "Serial entrepreneur and investor. Focuses on practical implementation and execution.",
                         personality: "Action-oriented, pragmatic, brings startup experience and execution focus"

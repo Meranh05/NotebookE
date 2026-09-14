@@ -16,6 +16,7 @@ from .embedding_commands import (
 )
 from .podcast_commands import generate_podcast_command
 from .source_commands import process_source_command, run_transformation_command
+from .video_commands import generate_video_command
 
 __all__ = [
     # Embedding commands
@@ -27,4 +28,5 @@ __all__ = [
     "generate_podcast_command",
     "process_source_command",
     "run_transformation_command",
+    "generate_video_command",
 ]

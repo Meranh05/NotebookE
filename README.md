@@ -17,12 +17,9 @@
   <h3 align="center">NotebookE</h3>
 
   <p align="center">
-    An open source, privacy-focused alternative to Google's Notebook LM!
+    <strong>Local AI that understands your documents and creates podcasts and videos directly on your PC.</strong>
     <br />
-    <br />
-    <a href=""><strong>Checkout our website »</strong></a>
-    <br />
-    Follow  for updates
+    A private, multi-model research workspace for turning source material into useful knowledge and media.
     <br />
     <br />
     <a href="docs/0-START-HERE/index.md">📚 Get Started</a>
@@ -52,11 +49,13 @@
   <a href="https://zdoc.app/zh/lfnovo/notebooke">中文</a>
 </div>
 
-## A private, multi-model, 100% local, full-featured alternative to Notebook LM
+## Research, create, and keep control of your data
 
 ![New Notebook](docs/assets/asset_list.png)
 
 In a world dominated by Artificial Intelligence, having the ability to think 🧠 and acquire new knowledge 💡, is a skill that should not be a privilege for a few, nor restricted to a single provider.
+
+NotebookE combines document research, local and cloud AI models, contextual chat, and media generation in one self-hosted workspace.
 
 **NotebookE empowers you to:**
 
@@ -64,6 +63,8 @@ In a world dominated by Artificial Intelligence, having the ability to think �
 - 🤖 **Choose your AI models** - Support for 18+ providers including OpenAI, Anthropic, Ollama, LM Studio, and more
 - 📚 **Organize multi-modal content** - PDFs, videos, audio, web pages, and more
 - 🎙️ **Generate professional podcasts** - Advanced multi-speaker podcast generation
+- 🎬 **Create videos on your PC** - Turn notebook content into narrated videos with locally managed workflows
+- 🗣️ **Use natural Edge TTS voices** - Vietnamese and English-aware narration for podcasts and videos
 - 🔍 **Search intelligently** - Full-text and vector search across all your content
 - 💬 **Chat with context** - AI conversations powered by your research
 - 🌐 **Multi-language UI** - English, Portuguese, Chinese (Simplified & Traditional), Japanese, Russian, and Bengali support
@@ -78,6 +79,7 @@ In a world dominated by Artificial Intelligence, having the ability to think �
 | **Privacy & Control** | Self-hosted, your data | Google cloud only | Complete data sovereignty |
 | **AI Provider Choice** | 18+ providers (OpenAI, Anthropic, Ollama, LM Studio, etc.) | Google models only | Flexibility and cost optimization |
 | **Podcast Speakers** | 1-4 speakers with custom profiles | 2 speakers only | Extreme flexibility |
+| **Video Generation** | Create narrated videos from notebook content | Limited | Research-to-video workflow on your PC |
 | **Content Transformations** | Custom and built-in | Limited options | Unlimited processing power |
 | **API Access** | Full REST API | No API | Complete automation |
 | **Deployment** | Docker, cloud, or local | Google hosted only | Deploy anywhere |
@@ -109,7 +111,7 @@ In a world dominated by Artificial Intelligence, having the ability to think �
 **Option A:** Download directly
 
 ```bash
-curl -o docker-compose.yml https://raw.githubusercontent.com/lfnovo/notebooke/main/docker-compose.yml
+curl -o docker-compose.yml https://raw.githubusercontent.com/Meranh05/NotebookE/main/docker-compose.yml
 ```
 
 **Option B:** Create the file manually

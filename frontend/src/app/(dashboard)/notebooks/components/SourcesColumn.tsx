@@ -10,7 +10,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { IconChevronDown, IconFileText, IconLink, IconListCheck, IconLoader2, IconPlus } from '@tabler/icons-react'
+import {
+  IconChevronDown,
+  IconFile,
+  IconFileSpreadsheet,
+  IconFileText,
+  IconFileZip,
+  IconLink,
+  IconListCheck,
+  IconLoader2,
+  IconMusic,
+  IconPhoto,
+  IconPlus,
+  IconPresentation,
+  IconVideo,
+} from '@tabler/icons-react'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { EmptyState } from '@/components/common/EmptyState'
 import { AddSourceDialog } from '@/components/sources/AddSourceDialog'
@@ -40,6 +54,27 @@ interface SourcesColumnProps {
   fetchNextPage?: () => void
 }
 
+function getSourceRailIcon(source: SourceListResponse) {
+  if (source.asset?.url) return { Icon: IconLink, label: 'LINK' }
+
+  const fileName = source.asset?.file_path?.split(/[\\/]/).pop() ?? source.title ?? ''
+  const extension = fileName.includes('.') ? fileName.split('.').pop()?.toLowerCase() ?? '' : ''
+
+  if (extension === 'pdf') return { Icon: IconFileText, label: 'PDF' }
+  if (['doc', 'docx', 'txt', 'md', 'rtf'].includes(extension)) return { Icon: IconFileText, label: extension.toUpperCase().slice(0, 4) }
+  if (['xls', 'xlsx', 'csv'].includes(extension)) return { Icon: IconFileSpreadsheet, label: extension.toUpperCase().slice(0, 4) }
+  if (['ppt', 'pptx'].includes(extension)) return { Icon: IconPresentation, label: extension.toUpperCase().slice(0, 4) }
+  if (['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'].includes(extension)) return { Icon: IconPhoto, label: extension.toUpperCase().slice(0, 4) }
+  if (['mp4', 'mov', 'avi', 'webm'].includes(extension)) return { Icon: IconVideo, label: extension.toUpperCase().slice(0, 4) }
+  if (['mp3', 'wav', 'm4a', 'ogg'].includes(extension)) return { Icon: IconMusic, label: extension.toUpperCase().slice(0, 4) }
+  if (['zip', 'rar', 'tar', 'gz'].includes(extension)) return { Icon: IconFileZip, label: extension.toUpperCase().slice(0, 4) }
+  return { Icon: IconFile, label: extension ? extension.toUpperCase().slice(0, 4) : 'FILE' }
+}
+
+function getSourceRailLabel(source: SourceListResponse) {
+  return source.title || source.asset?.file_path?.split(/[\\/]/).pop() || source.asset?.url || 'Nguồn'
+}
+
 export function SourcesColumn({
   sources,
   isLoading,
@@ -53,6 +88,7 @@ export function SourcesColumn({
   fetchNextPage,
 }: SourcesColumnProps) {
   const { t } = useTranslation()
+  const sourcesLabel = t('navigation.sources')
   const [dropdownOpen, setDropdownOpen] = useState(false)
   const [addDialogOpen, setAddDialogOpen] = useState(false)
   const [addExistingDialogOpen, setAddExistingDialogOpen] = useState(false)
@@ -69,8 +105,8 @@ export function SourcesColumn({
   // Collapsible column state
   const { sourcesCollapsed, toggleSources } = useNotebookColumnsStore()
   const collapseButton = useMemo(
-    () => createCollapseButton(toggleSources, t('navigation.sources')),
-    [toggleSources, t('navigation.sources')]
+    () => createCollapseButton(toggleSources, sourcesLabel),
+    [toggleSources, sourcesLabel]
   )
 
   // Scroll container ref for infinite scroll
@@ -154,22 +190,41 @@ export function SourcesColumn({
         isCollapsed={sourcesCollapsed}
         onToggle={toggleSources}
         collapsedIcon={IconFileText}
-        collapsedLabel={t('navigation.sources')}
+        collapsedLabel={sourcesLabel}
+        collapsedContent={
+          <>
+            {(sources ?? []).map((source) => {
+              const { Icon, label } = getSourceRailIcon(source)
+              return (
+                <span
+                  key={source.id}
+                  title={getSourceRailLabel(source)}
+                  aria-label={getSourceRailLabel(source)}
+                  className="group/source flex w-7 flex-shrink-0 flex-col items-center gap-0.5 rounded-md border border-transparent px-1 py-1 transition-colors hover:border-border hover:bg-accent"
+                >
+                  <Icon className="h-4 w-4 text-muted-foreground" />
+                  <span className="max-w-full truncate text-[7px] font-bold leading-none text-muted-foreground">{label}</span>
+                </span>
+              )
+            })}
+            {isLoading && <IconLoader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
+            {!isLoading && (sources?.length ?? 0) === 0 && <IconFile className="h-4 w-4 text-muted-foreground/60" />}
+          </>
+        }
       >
-        <Card className="h-full flex flex-col flex-1 overflow-hidden border-border/60 bg-card/60 backdrop-blur-sm shadow-sm">
-          <CardHeader className="pb-3 flex-shrink-0">
-            <div className="flex items-center justify-between gap-2">
-              <CardTitle className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.13em] text-muted-foreground">
-                <span aria-hidden className="h-3.5 w-[3px] rounded-full bg-sage" />
-                {t('navigation.sources')}
+        <Card className="flex h-full min-h-0 min-w-0 flex-1 flex-col gap-0 overflow-hidden border-border bg-card py-0">
+          <CardHeader className="flex-shrink-0 p-4 pb-3">
+            <div className="flex min-w-0 items-center justify-between gap-2">
+              <CardTitle className="flex min-w-0 items-center gap-2 text-xs font-semibold uppercase tracking-[0.13em] text-muted-foreground">
+                <span aria-hidden className="h-3.5 w-0.5 rounded-full bg-foreground/50" />
+                {sourcesLabel}
               </CardTitle>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-shrink-0 items-center gap-1">
                 {onBulkContextModeChange && sources && sources.length > 0 && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="text-muted-foreground" title={t('sources.bulkContext')}>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground" title={t('sources.bulkContext')}>
                         <IconListCheck className="h-4 w-4" />
-                        <IconChevronDown className="h-4 w-4 ml-1" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
@@ -187,10 +242,10 @@ export function SourcesColumn({
                 )}
                 <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
                   <DropdownMenuTrigger asChild>
-                    <Button size="sm">
-                      <IconPlus className="h-4 w-4 mr-2" />
-                      {t('sources.addSource')}
-                      <IconChevronDown className="h-4 w-4 ml-2" />
+                    <Button size="sm" className="px-2 min-[1440px]:w-8" title={t('sources.addSource')}>
+                      <IconPlus className="h-4 w-4 min-[1440px]:mr-0" />
+                      <span className="ml-2 min-[1440px]:sr-only">{t('sources.addSource')}</span>
+                      <IconChevronDown className="ml-2 h-4 w-4 min-[1440px]:hidden" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
@@ -209,7 +264,7 @@ export function SourcesColumn({
             </div>
           </CardHeader>
 
-          <CardContent ref={scrollContainerRef} className="flex-1 overflow-y-auto min-h-0">
+          <CardContent ref={scrollContainerRef} className="flex-1 overflow-y-auto min-h-0 px-4 pb-4">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <LoadingSpinner />

@@ -12,10 +12,44 @@ from loguru import logger
 from surrealdb import RecordID
 
 from notebooke.ai.connection_tester import normalize_anthropic_compatible_base_url
+from notebooke.ai.edge_tts_provider import EdgeTTSProvider
 from notebooke.database.repository import ensure_record_id, repo_query
 from notebooke.domain.base import ObjectModel, RecordModel
 from notebooke.exceptions import ConfigurationError
 from notebooke.utils.url_validation import validate_url
+
+# Esperanto does not ship an Edge TTS provider. Keep its classmethod contract
+# intact because podcast-creator calls this method directly on AIFactory.
+_original_create_tts = AIFactory.create_text_to_speech
+
+
+def _patched_create_tts(
+    cls,
+    provider: str,
+    model_name: Optional[str] = None,
+    config: Optional[Dict[str, Any]] = None,
+    api_key: Optional[str] = None,
+    base_url: Optional[str] = None,
+    **kwargs: Any,
+) -> TextToSpeechModel:
+    normalized_provider = provider.lower().replace("-", "").replace("_", "")
+    if normalized_provider == "edgetts":
+        merged_config = {**(config or {}), **kwargs}
+        return EdgeTTSProvider(
+            model_name=model_name or "edge-tts",
+            config=merged_config,
+        )
+    return _original_create_tts(
+        provider=provider,
+        model_name=model_name,
+        config=config,
+        api_key=api_key,
+        base_url=base_url,
+        **kwargs,
+    )
+
+
+setattr(AIFactory, "create_text_to_speech", classmethod(_patched_create_tts))
 
 ModelType = Union[LanguageModel, EmbeddingModel, SpeechToTextModel, TextToSpeechModel]
 
@@ -144,6 +178,8 @@ class DefaultModels(RecordModel):
     # default_vision_model: Optional[str]
     default_embedding_model: Optional[str] = None
     default_tools_model: Optional[str] = None
+    default_video_model: Optional[str] = None
+    default_image_model: Optional[str] = None
 
     @classmethod
     async def get_instance(cls) -> "DefaultModels":
@@ -354,6 +390,10 @@ class ModelManager:
             model_id = defaults.default_speech_to_text_model
         elif model_type == "large_context":
             model_id = defaults.large_context_model or defaults.default_chat_model
+        elif model_type == "video":
+            model_id = defaults.default_video_model or defaults.default_chat_model
+        elif model_type == "image":
+            model_id = defaults.default_image_model
 
         if not model_id:
             logger.warning(

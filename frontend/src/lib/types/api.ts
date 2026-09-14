@@ -61,6 +61,11 @@ export interface SettingsResponse {
   docling_formulas?: boolean
   docling_vision?: boolean
   youtube_preferred_languages?: string[]
+  default_video_voice?: string
+  default_video_aspect_ratio?: '16:9' | '9:16'
+  default_video_duration?: string
+  default_video_style?: string
+  default_video_character?: string
 }
 
 export interface Capabilities {

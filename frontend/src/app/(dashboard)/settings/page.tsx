@@ -1,6 +1,5 @@
 'use client'
 
-import { AppShell } from '@/components/layout/AppShell'
 import { SettingsForm } from './components/SettingsForm'
 import { useSettings } from '@/lib/hooks/use-settings'
 import { Button } from '@/components/ui/button'
@@ -12,7 +11,6 @@ export default function SettingsPage() {
   const { refetch } = useSettings()
 
   return (
-    <AppShell>
       <div className="flex-1 overflow-y-auto">
         <div className="p-6">
           <div className="max-w-4xl">
@@ -27,6 +25,5 @@ export default function SettingsPage() {
           </div>
         </div>
       </div>
-    </AppShell>
   )
 }

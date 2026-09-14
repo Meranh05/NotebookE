@@ -145,6 +145,24 @@ class AsyncMigrationManager:
             AsyncMigration.from_file(
                 "notebooke/database/migrations/23.surrealql"
             ),
+            AsyncMigration.from_file(
+                "notebooke/database/migrations/24.surrealql"
+            ),
+            AsyncMigration.from_file(
+                "notebooke/database/migrations/25.surrealql"
+            ),
+            AsyncMigration.from_file(
+                "notebooke/database/migrations/26.surrealql"
+            ),
+            AsyncMigration.from_file(
+                "notebooke/database/migrations/27.surrealql"
+            ),
+            AsyncMigration.from_file(
+                "notebooke/database/migrations/28.surrealql"
+            ),
+            AsyncMigration.from_file(
+                "notebooke/database/migrations/29.surrealql"
+            ),
         ]
         self.down_migrations = [
             AsyncMigration.from_file(
@@ -215,6 +233,24 @@ class AsyncMigrationManager:
             ),
             AsyncMigration.from_file(
                 "notebooke/database/migrations/23_down.surrealql"
+            ),
+            AsyncMigration.from_file(
+                "notebooke/database/migrations/24_down.surrealql"
+            ),
+            AsyncMigration.from_file(
+                "notebooke/database/migrations/25_down.surrealql"
+            ),
+            AsyncMigration.from_file(
+                "notebooke/database/migrations/26_down.surrealql"
+            ),
+            AsyncMigration.from_file(
+                "notebooke/database/migrations/27_down.surrealql"
+            ),
+            AsyncMigration.from_file(
+                "notebooke/database/migrations/28_down.surrealql"
+            ),
+            AsyncMigration.from_file(
+                "notebooke/database/migrations/29_down.surrealql"
             ),
         ]
         self.runner = AsyncMigrationRunner(

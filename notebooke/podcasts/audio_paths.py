@@ -23,6 +23,7 @@ import os
 from pathlib import Path
 from typing import Optional, Union
 from urllib.parse import unquote, urlparse
+from urllib.request import url2pathname
 
 from notebooke.config import PODCASTS_FOLDER
 
@@ -49,8 +50,16 @@ def to_relative_audio_path(audio_path: Union[str, Path]) -> str:
             marks the generation job as permanently failed (no retry).
     """
     raw = str(audio_path)
-    if raw.startswith("file://"):
-        raw = unquote(urlparse(raw).path)
+    if raw.lower().startswith("file://"):
+        parsed = urlparse(raw)
+        uri_path = unquote(parsed.path)
+        if parsed.netloc:
+            # Path.as_uri() produces file:///C:/..., while some Windows
+            # libraries emit file://C:\... . Support both forms.
+            uri_path = f"//{parsed.netloc}{uri_path}"
+        raw = url2pathname(uri_path)
+        if os.name == "nt" and raw.startswith("\\") and len(raw) > 2 and raw[2] == ":":
+            raw = raw[1:]
     resolved = Path(os.path.realpath(raw))
     root = podcasts_root()
     if resolved == root or not resolved.is_relative_to(root):

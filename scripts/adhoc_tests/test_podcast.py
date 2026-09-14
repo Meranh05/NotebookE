@@ -1,13 +1,17 @@
-import sys
 import os
+import sys
+
 sys.path.insert(0, os.path.abspath('.'))
 
 import asyncio
+
 from dotenv import load_dotenv
+
 load_dotenv()
 
-from commands.podcast_commands import generate_podcast_command, PodcastGenerationInput
+from commands.podcast_commands import PodcastGenerationInput, generate_podcast_command
 from notebooke.database.repository import db_connection
+
 
 async def test():
     async with db_connection() as db:

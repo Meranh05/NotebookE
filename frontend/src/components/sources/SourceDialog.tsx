@@ -42,17 +42,18 @@ export function SourceDialog({ open, onOpenChange, sourceId }: SourceDialogProps
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-5xl max-h-[90vh] flex flex-col p-0">
+      <DialogContent className="flex h-[88dvh] max-h-[860px] w-[calc(100vw-1.5rem)] max-w-[1360px] flex-col overflow-hidden p-0 sm:max-w-[1360px]">
         {/* Accessibility title (hidden visually but read by screen readers) */}
         <DialogTitle className="sr-only">{t('sources.detailsTitle')}</DialogTitle>
 
         {/* Source detail content */}
-        <div className="flex-1 overflow-y-auto min-h-0 p-6">
+        <div className="min-h-0 flex-1 overflow-hidden">
           <SourceDetailContent
             sourceId={sourceIdWithPrefix}
             showChatButton={true}
             onChatClick={handleChatClick}
             onClose={handleClose}
+            fillHeight
           />
         </div>
       </DialogContent>

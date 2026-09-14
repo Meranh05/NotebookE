@@ -22,6 +22,7 @@ export function useSourceChat(sourceId: string) {
   const [isStreaming, setIsStreaming] = useState(false)
   const [contextIndicators, setContextIndicators] = useState<SourceChatContextIndicator | null>(null)
   const abortControllerRef = useRef<AbortController | null>(null)
+  const stoppedByUserRef = useRef(false)
 
   // Fetch sessions
   const { data: sessions = [], isLoading: loadingSessions, refetch: refetchSessions } = useQuery<SourceChatSession[]>({
@@ -39,7 +40,7 @@ export function useSourceChat(sourceId: string) {
 
   // Update messages when session changes
   useEffect(() => {
-    if (currentSession?.messages && !isStreaming) {
+    if (currentSession?.messages && !isStreaming && !stoppedByUserRef.current) {
       setMessages(currentSession.messages)
     }
   }, [currentSession, isStreaming])
@@ -130,12 +131,16 @@ export function useSourceChat(sourceId: string) {
     }
     setMessages(prev => [...prev, userMessage])
     setIsStreaming(true)
+    stoppedByUserRef.current = false
+    abortControllerRef.current?.abort()
+    const requestController = new AbortController()
+    abortControllerRef.current = requestController
 
     try {
       const response = await sourceChatApi.sendMessage(sourceId, sessionId, {
         message,
         model_override: modelOverride
-      })
+      }, requestController.signal)
 
       if (!response) {
         throw new Error('No response body')
@@ -192,28 +197,49 @@ export function useSourceChat(sourceId: string) {
         }
       }
     } catch (err: unknown) {
+      if ((err as Error).name === 'AbortError') {
+        return
+      }
       const error = err as { response?: { data?: { detail?: string } }, message?: string };
       console.error('Error sending message:', error)
       toast.error(getApiErrorMessage(error.response?.data?.detail || error.message, (key) => t(key), 'apiErrors.failedToSendMessage'))
       // Remove optimistic messages on error
       setMessages(prev => prev.filter(msg => !msg.id.startsWith('temp-')))
     } finally {
-      setIsStreaming(false)
-      // Refetch session to get persisted messages
-      refetchCurrentSession()
+      if (abortControllerRef.current === requestController) {
+        setIsStreaming(false)
+        abortControllerRef.current = null
+      }
+      // Refetch session to get persisted messages after a completed request.
+      if (!requestController.signal.aborted) {
+        refetchCurrentSession()
+      }
     }
   }, [sourceId, currentSessionId, refetchCurrentSession, queryClient, t])
 
   // Cancel streaming
   const cancelStreaming = useCallback(() => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort()
+    const controller = abortControllerRef.current
+    if (controller) {
+      stoppedByUserRef.current = true
+      abortControllerRef.current = null
+      controller.abort()
+      setMessages(prev => [
+        ...prev,
+        {
+          id: `stopped-${Date.now()}`,
+          type: 'ai',
+          content: t('chat.stoppedByUser'),
+          timestamp: new Date().toISOString()
+        }
+      ])
       setIsStreaming(false)
     }
-  }, [])
+  }, [t])
 
   // Switch session
   const switchSession = useCallback((sessionId: string) => {
+    stoppedByUserRef.current = false
     setCurrentSessionId(sessionId)
     setContextIndicators(null)
   }, [])

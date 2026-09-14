@@ -482,7 +482,7 @@ export function AddSourceDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[780px] p-0 overflow-hidden rounded-2xl gap-0">
+      <DialogContent className="gap-0 overflow-hidden p-0 sm:max-w-[780px]">
         {/* Header */}
         <DialogHeader className="px-6 pt-5 pb-4 border-b border-border">
           <DialogTitle className="text-lg font-bold tracking-tight">{t('sources.addNew')}</DialogTitle>
@@ -520,7 +520,7 @@ export function AddSourceDialog({
             <Accordion type="single" collapsible className="w-full">
               <AccordionItem
                 value="advanced-settings"
-                className="border-2 border-border rounded-2xl px-4 bg-card overflow-hidden"
+                className="overflow-hidden rounded-lg border border-border bg-card px-4"
               >
                 <AccordionTrigger className="text-sm font-semibold hover:no-underline py-3.5 text-foreground [&[data-state=open]]:text-primary">
                   <span className="flex items-center gap-2">
@@ -562,7 +562,7 @@ export function AddSourceDialog({
             <Button
               type="submit"
               disabled={!isFormValid || createSource.isPending}
-              className="min-w-[130px] rounded-xl font-semibold h-10 px-6 bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm disabled:opacity-50 transition-all"
+              className="h-10 min-w-[130px] rounded-md bg-primary px-6 font-semibold text-primary-foreground transition-colors hover:bg-primary/90 disabled:opacity-50"
             >
               {createSource.isPending ? t('common.adding') : t('sources.addSource')}
             </Button>

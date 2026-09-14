@@ -3,7 +3,17 @@
 import { useEffect, useMemo, useState } from 'react'
 import { formatDistanceToNow } from 'date-fns'
 import { getDateLocale } from '@/lib/utils/date-locale'
-import { IconInfoCircle, IconRefresh, IconTrash, IconLoader2, IconCopy } from '@tabler/icons-react'
+import {
+  IconCopy,
+  IconCircleCheck,
+  IconClock,
+  IconHeadphones,
+  IconInfoCircle,
+  IconListDetails,
+  IconLoader2,
+  IconRefresh,
+  IconTrash,
+} from '@tabler/icons-react'
 
 import apiClient from '@/lib/api/client'
 import { resolvePodcastAssetUrl } from '@/lib/api/podcasts'
@@ -46,7 +56,13 @@ interface EpisodeCardProps {
   cancelling?: boolean
 }
 
-function ActiveJobProgressViewer({ commandId }: { commandId: string }) {
+function ActiveJobProgressViewer({
+  commandId,
+  episode,
+}: {
+  commandId: string
+  episode: PodcastEpisode
+}) {
   const { t } = useTranslation()
   const [progress, setProgress] = useState<Record<string, unknown> | null>(null)
   
@@ -83,37 +99,70 @@ function ActiveJobProgressViewer({ commandId }: { commandId: string }) {
     )
   }
 
-  // Display progress gracefully instead of raw JSON
+  const status = String(progress.status ?? 'running').toLowerCase()
+  const isFinished = status === 'completed'
+  const outlineSegments = extractOutlineSegments(episode.outline)
+  const expectedSegments = Math.max(episode.episode_profile?.num_segments ?? 0, outlineSegments.length)
+
+  const steps = [
+    { label: t('podcasts.summaryTab'), done: true, active: false },
+    { label: t('podcasts.outlineGeneration'), done: outlineSegments.length > 0 || isFinished, active: !isFinished && outlineSegments.length === 0 },
+    { label: t('podcasts.transcriptGeneration'), done: Boolean(episode.transcript) || isFinished, active: !isFinished && outlineSegments.length > 0 && !episode.transcript },
+    { label: 'Eric · Luna', done: isFinished, active: !isFinished && Boolean(episode.transcript) },
+  ]
+
   return (
-    <div className="space-y-4 p-5 rounded-lg border bg-gradient-to-br from-muted/30 to-muted/10 shadow-inner">
+    <div className="space-y-5 rounded-xl border bg-muted/20 p-5">
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-teal/10">
           <IconLoader2 className="h-5 w-5 animate-spin text-teal" />
         </div>
         <div>
-          <h4 className="font-semibold text-sm">Tiến trình AI</h4>
+          <h4 className="text-sm font-semibold">{t('podcasts.processingLabel')}</h4>
           <p className="text-xs text-muted-foreground">
-            Hệ thống đang xử lý và tạo podcast. Vui lòng đợi trong giây lát...
+            {t('podcasts.statusRunningDesc')}
           </p>
         </div>
       </div>
-      
-      <div className="mt-4 grid gap-0 rounded-md bg-background/80 border text-sm overflow-hidden">
-        {Object.entries(progress).map(([key, value]) => {
-          if (value === null || typeof value === 'object' || value === '') return null;
-          
-          return (
-            <div key={key} className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 py-2 px-3 border-b last:border-0 border-border/50 hover:bg-muted/30 transition-colors">
-              <span className="text-muted-foreground font-medium uppercase text-xs tracking-wider">
-                {key.replace(/_/g, ' ')}
-              </span>
-              <span className="text-foreground text-right sm:text-left text-sm break-words">
-                {String(value)}
-              </span>
+
+      <div className="grid gap-2 sm:grid-cols-2">
+        {steps.map((step, index) => (
+          <div key={step.label} className="flex items-center gap-3 rounded-lg border bg-background px-3 py-2.5">
+            <div className={cn(
+              'flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold',
+              step.done && 'border-fern/30 bg-fern-tint text-fern',
+              step.active && 'border-teal/30 bg-teal-tint text-teal',
+              !step.done && !step.active && 'bg-muted text-muted-foreground'
+            )}>
+              {step.done ? <IconCircleCheck className="h-4 w-4" /> : step.active ? <IconLoader2 className="h-4 w-4 animate-spin" /> : <IconClock className="h-4 w-4" />}
             </div>
-          )
-        })}
+            <div className="min-w-0">
+              <p className="truncate text-xs font-semibold text-foreground">{step.label}</p>
+              <p className="text-[11px] text-muted-foreground">{t('podcasts.segment')} {index + 1}/4</p>
+            </div>
+          </div>
+        ))}
       </div>
+
+      {expectedSegments > 0 ? (
+        <div className="rounded-lg border bg-background p-3">
+          <div className="mb-3 flex items-center gap-2">
+            <IconListDetails className="h-4 w-4 text-teal" />
+            <p className="text-xs font-semibold">{t('podcasts.outlineTab')} · {expectedSegments} {t('podcasts.segments').toLocaleLowerCase()}</p>
+          </div>
+          <div className="grid gap-2 sm:grid-cols-2">
+            {Array.from({ length: expectedSegments }, (_, index) => {
+              const segment = outlineSegments[index]
+              return (
+                <div key={index} className="rounded-md bg-muted/50 px-3 py-2">
+                  <p className="truncate text-xs font-medium">{segment?.name ?? `${t('podcasts.segment')} ${index + 1}`}</p>
+                  {segment?.description ? <p className="mt-1 line-clamp-2 text-[11px] leading-4 text-muted-foreground">{segment.description}</p> : null}
+                </div>
+              )
+            })}
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }
@@ -231,6 +280,32 @@ function extractTranscriptEntries(transcript: unknown): TranscriptEntry[] {
   return []
 }
 
+function getSpeakerDisplayName(speaker: { name?: string; voice_id?: string }, index: number): string {
+  const voice = `${speaker.voice_id ?? ''} ${speaker.name ?? ''}`.toLowerCase()
+  if (/hoa.?my|jenny|female|nữ|woman/.test(voice)) return 'Luna'
+  if (/nam.?minh|guy|male|nam|man/.test(voice)) return 'Eric'
+  if (index === 0) return 'Eric'
+  if (index === 1) return 'Luna'
+  return speaker.name || `${index + 1}`
+}
+
+export function replaceLegacySpeakerNames(text: string, speakerNames: Map<string, string>): string {
+  let nextText = text
+    .replace(/\bMarcus\b/gi, 'Eric')
+    .replace(/\bElena\b/gi, 'Luna')
+  const replacements = new Map(speakerNames)
+  replacements.set('marcus', 'Eric')
+  replacements.set('elena', 'Luna')
+
+  for (const [legacyName, displayName] of replacements) {
+    if (!legacyName || legacyName.toLocaleLowerCase() === displayName.toLocaleLowerCase()) continue
+    const escapedName = legacyName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    nextText = nextText.replace(new RegExp(escapedName, 'gi'), displayName)
+  }
+
+  return nextText
+}
+
 export function EpisodeCard({ episode, onDelete, deleting, onRetry, retrying, onCancel, cancelling }: EpisodeCardProps) {
   const { t, language } = useTranslation()
   const [audioSrc, setAudioSrc] = useState<string | undefined>()
@@ -239,6 +314,15 @@ export function EpisodeCard({ episode, onDelete, deleting, onRetry, retrying, on
 
   const outlineSegments = useMemo(() => extractOutlineSegments(episode.outline), [episode.outline])
   const transcriptEntries = useMemo(() => extractTranscriptEntries(episode.transcript), [episode.transcript])
+  const speakerNames = useMemo(
+    () => new Map(
+      (episode.speaker_profile?.speakers ?? []).map((speaker, index) => [
+        speaker.name.trim().toLocaleLowerCase(),
+        getSpeakerDisplayName(speaker, index),
+      ])
+    ),
+    [episode.speaker_profile?.speakers]
+  )
 
   const displayErrorMessage = useMemo(() => {
     if (!episode.error_message) return '';
@@ -316,37 +400,51 @@ export function EpisodeCard({ episode, onDelete, deleting, onRetry, retrying, on
 
   return (
     <Card className={cn(
-      "overflow-hidden transition-all duration-500", 
+      "group overflow-hidden border-l-2 bg-card transition-colors duration-150",
       isActive 
-        ? "border-teal/40 shadow-[0_4px_20px_-4px_rgba(14,114,104,0.15)] dark:shadow-[0_4px_20px_-4px_rgba(63,179,165,0.15)] bg-gradient-to-r from-background via-teal/5 to-background" 
+        ? "border-foreground/50"
         : isFailed 
-          ? "border-destructive/40 shadow-sm" 
-          : "hover:border-primary/40 hover:shadow-md"
+          ? "border-destructive"
+          : "border-foreground/20 hover:border-foreground/40"
     )}>
-      <CardContent className="space-y-4 p-3 pb-3 relative">
+      <CardContent className="relative space-y-4 p-4 sm:p-5">
         {/* Top-aligned progress bar for active state */}
         {isActive && (
-          <div className="absolute top-0 left-0 right-0 h-1 bg-teal/10 overflow-hidden">
-            <div className="h-full bg-teal w-1/2 animate-progress-indeterminate shadow-[0_0_10px_rgba(14,114,104,0.5)]"></div>
+          <div className="absolute inset-x-0 top-0 h-0.5 overflow-hidden bg-muted">
+            <div className="h-full w-1/2 animate-progress-indeterminate bg-foreground/70" />
           </div>
         )}
         
-        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pt-1">
-          <div className="flex items-start gap-3">
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center gap-2">
-                <h3 className="font-semibold leading-none tracking-tight">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="flex min-w-0 items-start gap-3.5">
+            <div className={cn(
+              "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border",
+              isActive && "border-teal/20 bg-teal/10 text-teal",
+              isFailed && "border-destructive/20 bg-destructive/10 text-destructive",
+              isDone && "border-primary/15 bg-primary/10 text-primary"
+            )}>
+              {isActive ? (
+                <IconLoader2 className="h-5 w-5 animate-spin" />
+              ) : (
+                <IconHeadphones className="h-5 w-5" />
+              )}
+            </div>
+            <div className="min-w-0 space-y-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="truncate font-display text-base font-semibold leading-tight tracking-tight sm:text-lg">
                   {episode.name}
                 </h3>
                 <StatusBadge status={episode.job_status} />
               </div>
-              <p className="text-sm text-muted-foreground">
-                {t('podcasts.profile')}: <span className="font-medium">{episode.episode_profile?.name || t('common.unknown')}</span>
-                {createdLabel ? ` • ${createdLabel}` : ''}
-              </p>
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+                <span className="rounded-md bg-muted px-2 py-1 font-medium text-foreground/80">
+                  {episode.episode_profile?.name || t('common.unknown')}
+                </span>
+                {createdLabel ? <span>{createdLabel}</span> : null}
+              </div>
             </div>
           </div>
-          <div className="flex items-center gap-2 self-end sm:self-auto">
+          <div className="flex shrink-0 items-center gap-2 self-end sm:self-auto">
             {isActive && (
               <>
                 <Dialog open={detailsOpen} onOpenChange={setDetailsOpen}>
@@ -370,7 +468,7 @@ export function EpisodeCard({ episode, onDelete, deleting, onRetry, retrying, on
                     </DialogHeader>
                     <div className="space-y-4 overflow-hidden">
                       {episode.command_id ? (
-                        <ActiveJobProgressViewer commandId={episode.command_id} />
+                        <ActiveJobProgressViewer commandId={episode.command_id} episode={episode} />
                       ) : (
                         <p className="text-sm text-muted-foreground">Không có ID tiến trình để theo dõi.</p>
                       )}
@@ -423,7 +521,7 @@ export function EpisodeCard({ episode, onDelete, deleting, onRetry, retrying, on
                 </DialogHeader>
                 <div className="space-y-4 overflow-hidden">
                   {audioSrc ? (
-                    <div className="rounded-md border bg-card p-2">
+                    <div className="rounded-xl border bg-muted/30 p-2">
                       <audio controls preload="none" src={audioSrc} className="w-full" />
                     </div>
                   ) : audioError ? (
@@ -496,7 +594,7 @@ export function EpisodeCard({ episode, onDelete, deleting, onRetry, retrying, on
                                 key={`${speaker.name}-${index}`}
                                 className="rounded-md border bg-muted/20 p-3 text-xs"
                               >
-                                <p className="font-semibold text-foreground">{speaker.name}</p>
+                                <p className="font-semibold text-foreground">{getSpeakerDisplayName(speaker, index)}</p>
                                 <p className="text-muted-foreground">{t('podcasts.voiceId')}: {speaker.voice_id}</p>
                                 <p className="mt-2 whitespace-pre-wrap text-muted-foreground">
                                   <span className="font-semibold">{t('podcasts.backstory')}:</span> {speaker.backstory}
@@ -547,8 +645,14 @@ export function EpisodeCard({ episode, onDelete, deleting, onRetry, retrying, on
                         {transcriptEntries.length > 0 ? (
                           transcriptEntries.map((entry, index) => (
                             <div key={index} className="rounded border bg-muted/20 p-3 text-xs space-y-1">
-                              <p className="font-semibold text-foreground">{entry.speaker ?? t('podcasts.speaker')}</p>
-                              <p className="text-muted-foreground whitespace-pre-wrap">{entry.dialogue ?? ''}</p>
+                              <p className="font-semibold text-foreground">
+                                {entry.speaker
+                                  ? speakerNames.get(entry.speaker.trim().toLocaleLowerCase()) ?? entry.speaker
+                                  : t('podcasts.speaker')}
+                              </p>
+                              <p className="whitespace-pre-wrap text-muted-foreground">
+                                {replaceLegacySpeakerNames(entry.dialogue ?? '', speakerNames)}
+                              </p>
                             </div>
                           ))
                         ) : (
@@ -612,15 +716,15 @@ export function EpisodeCard({ episode, onDelete, deleting, onRetry, retrying, on
         </div>
 
         {isDone && audioSrc ? (
-          <div className="rounded-lg bg-muted/50 p-2">
-            <audio controls preload="none" src={audioSrc} className="h-10 w-full" />
+          <div className="rounded-xl border bg-muted/30 p-2.5 transition-colors group-hover:bg-muted/50">
+            <audio controls preload="metadata" src={audioSrc} className="h-10 w-full accent-primary" />
           </div>
         ) : audioError ? (
           <p className="text-sm text-destructive">{audioError}</p>
         ) : null}
 
         {isFailed && displayErrorMessage ? (
-          <div className="rounded-md border border-destructive/30 bg-destructive-tint p-2.5 mt-2 relative group">
+          <div className="relative mt-2 rounded-xl border border-destructive/30 bg-destructive-tint p-3">
             <div className="flex items-center justify-between">
               <p className="text-xs font-medium text-destructive">{t('podcasts.errorDetails')}</p>
               <Button 

@@ -1,0 +1,6 @@
+CREATE model:edgetts_tts SET 
+    name = "Edge TTS (Free)",
+    provider = "edgetts",
+    type = "text_to_speech",
+    is_active = true,
+    credential = NONE;

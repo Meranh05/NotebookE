@@ -11,7 +11,8 @@
      fern acts · teal speaks (AI/system voice) · red destroys, and only destroys
      warn is clay, never the action hues · color never washes a reading surface
      hairline borders, near-zero shadows — popovers own the one real shadow
-     geometry is squared, 4–6px, floor is 4 · mono is for data, not prose
+   geometry is soft and consistent; compact controls stay restrained while
+   larger surfaces get roomier corners · mono is for data, not prose
 
    Layering: raw palette + semantic raws live in :root and are overridden by
    `.dark`; every alias defined with var() re-resolves automatically — never
@@ -120,10 +121,10 @@
   --color-ctx-insights-tint: var(--ctx-insights-tint);
 
   /* shape — squared: instrument, not toy; floor is 4px */
-  --radius-sm: 4px;
-  --radius-md: 5px;
-  --radius-lg: 5px;
-  --radius-xl: 6px;
+  --radius-sm: 7px;
+  --radius-md: 9px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
 
   /* depth — hairlines separate; popovers own the one real shadow */
   --shadow-soft: var(--shadow-soft);
@@ -262,7 +263,7 @@
   /* --------------------------------------------------------------
      shadcn semantic slots — the contract existing components use
      -------------------------------------------------------------- */
-  --radius: 5px;
+  --radius: 10px;
   --background: var(--bg);
   --foreground: var(--ink);
   --card: var(--surface);
@@ -328,20 +329,20 @@
   --clay-tint: #35211a;
 
   /* semantic raws */
-  --bg: #1e1f22;
-  --bg-deep: #17181a;
-  --surface: #2b2d31;
-  --surface-raised: #313338;
-  --surface-recessed: #1e1f22;
-  --surface-sunken: #111214;
+  --bg: #25272b;
+  --bg-deep: #1f2124;
+  --surface: #303238;
+  --surface-raised: #363940;
+  --surface-recessed: #282a2f;
+  --surface-sunken: #1e2024;
 
   --ink: #f2f3f5;
   --ink-soft: #b5bac1;
   --ink-faint: #949ba4;
   --ink-faintest: #80848e;
 
-  --line: #3f4147;
-  --line-soft: #35373c;
+  --line: #484b53;
+  --line-soft: #3d4047;
   --line-strong: #f2f3f5;
 
   --primary: #f9fafb;

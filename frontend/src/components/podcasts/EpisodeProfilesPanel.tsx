@@ -117,8 +117,8 @@ export function EpisodeProfilesPanel({
             const unconfigured = needsModelSetup(profile)
 
             return (
-              <Card key={profile.id}>
-                <CardHeader className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+              <Card key={profile.id} className="overflow-hidden rounded-2xl shadow-sm transition-shadow hover:shadow-md">
+                <CardHeader className="flex flex-col gap-2 border-b bg-muted/10 p-4 md:flex-row md:items-start md:justify-between">
                   <div>
                     <div className="flex items-center gap-2">
                       <CardTitle className="text-lg font-semibold">
@@ -197,7 +197,7 @@ export function EpisodeProfilesPanel({
                   </div>
                 </CardHeader>
 
-                <CardContent className="space-y-4 text-sm">
+                <CardContent className="space-y-4 p-4 text-sm">
                   <div className="grid gap-3 md:grid-cols-2">
                     <div>
                       <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">

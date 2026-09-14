@@ -28,6 +28,26 @@ The podcast features the following speakers:
 {% endfor %}
 </speakers>
 
+{% if language %}
+REQUIRED SPOKEN LANGUAGE: Every dialogue line must be written in natural, conversational {{ language }}.
+Translate explanations into {{ language }} even when the source material, briefing, or outline contains another language. Keep proper nouns and unavoidable technical terms, but explain them naturally in {{ language }}.
+{% if language == "Vietnamese" %}
+Write for the ear, not for the page:
+- Use fluent, idiomatic Vietnamese instead of literal word-for-word translation.
+- Keep most sentences between 12 and 24 words. Split long ideas into several complete sentences.
+- Use commas for short breathing pauses and periods for clear pauses between ideas.
+- Each turn should contain 2 to 4 connected sentences and one clear main idea.
+- Use natural transitions such as “trước hết”, “điểm đáng chú ý là”, “nói cách khác”, and “vì vậy” where they fit. Do not repeat the same transition mechanically.
+- Avoid long English sentences. Introduce an unavoidable English technical term once, then explain it immediately in Vietnamese.
+- Expand symbols, formulas, units, abbreviations, and acronyms into words that sound natural when read aloud.
+- Write numbers in spoken Vietnamese when pronunciation could be ambiguous. For decimals, use “phẩy”; for percentages, write “phần trăm”.
+- Do not emit Markdown, bullet markers, raw URLs, citation syntax, mathematical notation, or stage directions.
+- Preserve all important facts and reasoning from the source. Explain each conclusion with enough context instead of listing disconnected claims.
+{% elif language == "English" %}
+For English speech, use idiomatic spoken English. Expand symbols and formulas into spoken words, and write acronyms so their intended pronunciation is unambiguous. Avoid raw markup, URLs, and notation that a narrator would read awkwardly.
+{% endif %}
+{% endif %}
+
 Next, examine the outline produced by our director:
 <outline>
 {{ outline }}
@@ -99,6 +119,9 @@ Guidelines for creating the transcript:
    - Break up the content into digestible segments with natural transitions.
    - Use appropriate transitions between topics.
    - Match the speaker's dialogue to their personality and expertise.
+   - Go deep into the topics. Provide insightful analysis, real-world examples, and nuanced perspectives rather than just superficial summaries.
+   - Use analogies or break down complex ideas to make them understandable yet comprehensive, uncovering the "why" and "how" behind the facts.
+   - Avoid generic filler text; make every sentence contribute to a rich and thoughtful discussion.
    - This is a whole podcast so no need to reintroduce the speaker or topics on each segment. Segments are just markers for us to know to change the topics, nothing else.
    - CRITICAL: There is only ONE speaker. Use ONLY: {{ speaker_names[0] }}. Do NOT invent additional speakers.
 {% else %}
@@ -111,6 +134,9 @@ Guidelines for creating the transcript:
    - Use appropriate transitions between topics.
    - Match each speaker's dialogue to their personality and expertise.
    - Choose speakers strategically based on who would naturally contribute to each topic.
+   - Go deep into the topics. Provide insightful analysis, real-world examples, and nuanced perspectives rather than just superficial summaries.
+   - Use analogies or break down complex ideas to make them understandable yet comprehensive, uncovering the "why" and "how" behind the facts.
+   - Avoid generic filler text; make every sentence contribute to a rich and thoughtful discussion.
    - This is a whole podcast so no need to reintroduce speakers or topics on each segment. Segments are just markers for us to know to change the topics, nothing else.
    - IMPORTANT: Only use the provided speaker names: {{ speaker_names|join(', ') }}
 {% endif %}

@@ -1,0 +1,2 @@
+-- Migration 25 rollback: no-op (data-only migration, cannot be reliably reversed)
+RETURN true;

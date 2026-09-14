@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="template:media-width" content="1920">
+    <meta name="template:media-height" content="1080">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700&family=Lora:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            width: 1920px;
+            height: 1080px;
+            overflow: hidden;
+            font-family: 'Outfit', sans-serif;
+            background: #fafafa;
+            position: relative;
+            color: #1e293b;
+        }
+
+        /* Abstract Minimalist Background Shapes */
+        .shape-1 {
+            position: absolute;
+            top: -200px;
+            right: -100px;
+            width: 800px;
+            height: 800px;
+            background: linear-gradient(135deg, #fce7f3 0%, #fbcfe8 100%);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .shape-2 {
+            position: absolute;
+            bottom: -300px;
+            left: -200px;
+            width: 1000px;
+            height: 1000px;
+            background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%);
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .shape-3 {
+            position: absolute;
+            top: 20%;
+            left: 10%;
+            width: 200px;
+            height: 200px;
+            border: 40px solid #fef3c7;
+            border-radius: 50%;
+            z-index: 1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 120px 200px;
+        }
+
+        .tag {
+            font-size: 24px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: #6366f1;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .tag::before {
+            content: '';
+            width: 60px;
+            height: 3px;
+            background: #6366f1;
+        }
+
+        .title {
+            font-family: 'Lora', serif;
+            font-size: 85px;
+            font-weight: 500;
+            color: #0f172a;
+            line-height: 1.15;
+            margin-bottom: 60px;
+            max-width: 1400px;
+        }
+
+        .content {
+            font-size: 48px;
+            color: #475569;
+            line-height: 1.6;
+            font-weight: 300;
+            max-width: 1300px;
+            white-space: pre-line;
+            border-left: 6px solid #e2e8f0;
+            padding-left: 40px;
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 60px;
+            left: 200px;
+            right: 200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 30px;
+        }
+
+        .author {
+            font-size: 28px;
+            font-weight: 500;
+            color: #94a3b8;
+        }
+
+        .logo {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e293b;
+            letter-spacing: -1px;
+        }
+        
+        .logo span {
+            color: #6366f1;
+        }
+    </style>
+</head>
+<body>
+    <div class="shape-1"></div>
+    <div class="shape-2"></div>
+    <div class="shape-3"></div>
+
+    <div class="container">
+        <div class="tag">Topic Highlight</div>
+        <div class="title">{{title}}</div>
+        <div class="content">{{text}}</div>
+    </div>
+
+    <div style="position: absolute; bottom: 40px; left: 80px; right: 80px; display: flex; justify-content: space-between; align-items: center; z-index: 100; font-family: 'Outfit', -apple-system, sans-serif;">
+        <div style="font-size: 32px; font-weight: 500; color: rgba(0, 0, 0, 0.5);">By NotebookE</div>
+        <div style="font-size: 36px; font-weight: 700; color: #000000; letter-spacing: -1px;">Note<span style="color: #6366f1;">bookE</span></div>
+    </div>
+</body>
+</html>

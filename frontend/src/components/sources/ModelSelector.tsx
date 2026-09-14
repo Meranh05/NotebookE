@@ -1,15 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
-import { Label } from '@/components/ui/label'
 import {
   Dialog,
   DialogContent,
@@ -19,10 +11,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { IconAdjustmentsHorizontal, IconSparkles } from '@tabler/icons-react'
+import { IconAdjustmentsHorizontal, IconCheck } from '@tabler/icons-react'
 import { useModelDefaults, useModels } from '@/lib/hooks/use-models'
 import { useTranslation } from '@/lib/hooks/use-translation'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
+import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from '@/components/ui/command'
 
 interface ModelSelectorProps {
   currentModel?: string
@@ -68,7 +61,7 @@ export function ModelSelector({
       return defaultModel.name
     }
     return t('common.default')
-  }, [currentModel, languageModels, defaultModel, t('common.default')])
+  }, [currentModel, languageModels, defaultModel, t])
 
   const handleSave = () => {
     onModelChange(selectedModel === 'default' ? undefined : selectedModel)
@@ -88,64 +81,68 @@ export function ModelSelector({
           variant="outline"
           size="sm"
           disabled={disabled}
-          className="gap-2"
+          aria-label={`${t('chat.model')}: ${currentModelName}`}
+          className="h-8 max-w-[190px] gap-1.5 rounded-full border border-border/70 bg-muted/35 px-2.5 text-muted-foreground shadow-none hover:bg-muted hover:text-foreground"
         >
-          <IconAdjustmentsHorizontal className="h-4 w-4" />
-          <span className="text-xs">
+          <IconAdjustmentsHorizontal className="h-3.5 w-3.5" />
+          <span className="truncate text-xs">
             {currentModelName}
           </span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="p-0 sm:max-w-[480px]">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <IconSparkles className="h-5 w-5" />
+          <DialogTitle className="flex items-center gap-2 border-b px-5 pb-4 pt-5 pr-12">
+            <span className="flex h-8 w-8 items-center justify-center rounded-md border bg-muted text-muted-foreground">
+              <IconAdjustmentsHorizontal className="h-4 w-4" />
+            </span>
             {t('common.modelConfiguration')}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="px-5">
             {t('transformations.overrideModelDesc')}
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid gap-2">
-            <Label htmlFor="model">{t('common.model')}</Label>
-            <Select value={selectedModel} onValueChange={setSelectedModel}>
-              <SelectTrigger id="model">
-                <SelectValue placeholder={t('models.selectModelPlaceholder')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="default">
-                  <div className="flex items-center justify-between w-full">
-                    <span>
+        <div className="grid gap-3 px-5">
+          <div className="overflow-hidden rounded-lg border">
+            <Command>
+              <CommandInput placeholder={t('models.searchOrAddModel')} />
+              <CommandList className="max-h-[280px] p-1">
+                <CommandEmpty>{t('models.noModelsFound')}</CommandEmpty>
+                <CommandItem
+                  value={`default ${defaultModel?.name ?? ''} ${defaultModel?.provider ?? ''}`}
+                  onSelect={() => setSelectedModel('default')}
+                  className="min-h-11 gap-3 px-3"
+                >
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium">
                       {defaultModel
                         ? `${t('common.default')} (${defaultModel.name})`
                         : t('transformations.systemDefault')}
-                    </span>
-                    {defaultModel?.provider && (
-                      <span className="text-xs text-muted-foreground ml-2">
-                        {defaultModel.provider}
-                      </span>
-                    )}
+                    </p>
+                    {defaultModel?.provider && <p className="mt-0.5 text-xs text-muted-foreground">{defaultModel.provider}</p>}
                   </div>
-                </SelectItem>
+                  {selectedModel === 'default' && <IconCheck className="h-4 w-4" />}
+                </CommandItem>
                 {isLoading ? (
-                  <div className="flex items-center justify-center py-2">
+                  <div className="flex items-center justify-center py-6">
                     <LoadingSpinner size="sm" />
                   </div>
-                ) : (
-                  languageModels.map((model) => (
-                    <SelectItem key={model.id} value={model.id}>
-                      <div className="flex items-center justify-between w-full">
-                        <span>{model.name}</span>
-                        <span className="text-xs text-muted-foreground ml-2">
-                          {model.provider}
-                        </span>
-                      </div>
-                    </SelectItem>
-                  ))
-                )}
-              </SelectContent>
-            </Select>
+                ) : languageModels.map((model) => (
+                  <CommandItem
+                    key={model.id}
+                    value={`${model.name} ${model.provider}`}
+                    onSelect={() => setSelectedModel(model.id)}
+                    className="min-h-11 gap-3 px-3"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-medium">{model.name}</p>
+                      <p className="mt-0.5 truncate text-xs text-muted-foreground">{model.provider}</p>
+                    </div>
+                    {selectedModel === model.id && <IconCheck className="h-4 w-4" />}
+                  </CommandItem>
+                ))}
+              </CommandList>
+            </Command>
           </div>
           {selectedModel && selectedModel !== 'default' && (
             <div className="rounded-lg bg-muted p-3">
@@ -155,7 +152,7 @@ export function ModelSelector({
             </div>
           )}
         </div>
-        <DialogFooter className="flex justify-between">
+        <DialogFooter className="border-t px-5 py-4 sm:justify-between">
           <Button variant="outline" onClick={handleReset}>
             {t('common.resetToDefault')}
           </Button>

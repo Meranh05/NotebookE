@@ -12,6 +12,10 @@ vi.mock('@/components/ui/tooltip', () => ({
   TooltipContent: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
 }))
 
+vi.mock('@/lib/hooks/use-media-query', () => ({
+  useMediaQuery: () => true,
+}))
+
 describe('AppSidebar', () => {
   it('renders correctly when expanded', () => {
     render(<AppSidebar />)

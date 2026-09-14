@@ -170,6 +170,11 @@ function SourceCardImpl({
   const StatusIcon = statusConfig.icon
   const sourceType = getSourceType(source)
   const SourceTypeIcon = SOURCE_TYPE_ICONS[sourceType]
+  const sourceTypeIconClass = sourceType === 'link'
+    ? 'text-sky-600 dark:text-sky-400'
+    : sourceType === 'upload'
+      ? 'text-amber-600 dark:text-amber-400'
+      : 'text-emerald-600 dark:text-emerald-400'
   
    const title = source.title || t('sources.untitledSource')
 
@@ -220,7 +225,7 @@ function SourceCardImpl({
   return (
     <Card
       className={cn(
-        'transition-colors duration-150 shadow-none hover:border-sage/50 group relative cursor-pointer border',
+        'transition-colors duration-150 shadow-none hover:border-sage/50 group relative cursor-pointer border py-0',
         className
       )}
       onClick={handleCardClick}
@@ -228,7 +233,7 @@ function SourceCardImpl({
       <CardContent className="px-3 py-1">
         {/* Header with status indicator */}
         <div className="flex items-start justify-between gap-3 mb-1">
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1 pr-12">
             {/* Status badge - only show if not completed */}
             {!isCompleted && (
               <div className="flex items-center gap-2 mb-2">
@@ -246,7 +251,7 @@ function SourceCardImpl({
 
                 {/* Source type indicator */}
                 <div className="flex items-center gap-1 text-muted-foreground">
-                  <SourceTypeIcon className="h-3 w-3" />
+                  <SourceTypeIcon className={cn('h-3 w-3', sourceTypeIconClass)} />
                   <span className="text-xs capitalize">{t('common.source')}</span>
                 </div>
               </div>
@@ -255,7 +260,7 @@ function SourceCardImpl({
             {/* Title */}
             <div className={cn('mb-1.5', !isCompleted && 'mb-1')}>
               <h4
-                className="text-sm font-medium leading-tight line-clamp-2 break-words pr-6"
+                className="text-sm font-medium leading-tight line-clamp-2 break-words"
                 title={title}
               >
                 {title}
@@ -275,7 +280,7 @@ function SourceCardImpl({
             {/* One-line metadata row: type + meta in a single muted line */}
             <div className="flex items-center gap-1.5 flex-wrap text-xs text-muted-foreground min-w-0">
               <span className="inline-flex items-center gap-1">
-                <SourceTypeIcon className="h-3 w-3" />
+                <SourceTypeIcon className={cn('h-3 w-3', sourceTypeIconClass)} />
                 {sourceType === 'link' ? t('sources.addUrl') : sourceType === 'upload' ? t('sources.uploadFile') : t('sources.enterText')}
               </span>
 

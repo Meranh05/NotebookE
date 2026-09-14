@@ -26,6 +26,11 @@ The podcast will feature the following speakers:
 {% endfor %}
 </speakers>
 
+{% if language %}
+REQUIRED LANGUAGE: Write every segment name and description in {{ language }}.
+Translate explanations into {{ language }} even when the source material or briefing is in another language. Keep only proper nouns, product names, and technical terms that should remain untranslated. Do not switch to English unless the required language is English.
+{% endif %}
+
 Please create an outline based on this briefing. Your outline should consist of {{ num_segments }} main segments for the podcast episode, along with a description of each segment. Follow these guidelines:
 
 1. Read the briefing carefully and identify the main topics and themes.
@@ -71,6 +76,8 @@ Additional tips:
 - Consider the target audience mentioned in the briefing when crafting your outline.
 - If the briefing mentions a guest, include segments for introducing the guest and featuring their expertise.
 - The size of the segment should be short, medium or long. Think about the content of the segment and how important it is to the episode.
+- CRITICAL: Dive deep into the topics rather than just skimming the surface. The outline should guide the dialogue to provide analytical insights, nuanced perspectives, and thoughtful reflections.
+- Ask probing questions that challenge common assumptions and encourage critical thinking.
 
 IMPORTANT OUTPUT FORMAT:
 - If you use extended thinking with <think> tags, put ALL your reasoning inside <think></think> tags

@@ -45,3 +45,23 @@ class ContentSettings(RecordModel):
         ["en", "pt", "es", "de", "nl", "en-GB", "fr", "de", "hi", "ja"],
         description="Preferred languages for YouTube transcripts",
     )
+    default_video_voice: Optional[str] = Field(
+        "vi-VN-HoaiMyNeural",
+        description="Default TTS voice for video generation",
+    )
+    default_video_aspect_ratio: Optional[Literal["16:9", "9:16"]] = Field(
+        "16:9",
+        description="Default aspect ratio for video generation",
+    )
+    default_video_duration: Optional[str] = Field(
+        "3",
+        description="Default duration for video generation (minutes)",
+    )
+    default_video_style: Optional[str] = Field(
+        "AI Visual Director",
+        description="Default visual style for video generation",
+    )
+    default_video_character: Optional[str] = Field(
+        "AI tự chọn",
+        description="Default character for video generation",
+    )

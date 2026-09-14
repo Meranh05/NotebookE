@@ -5,6 +5,7 @@ from fastapi.responses import FileResponse
 from loguru import logger
 from pydantic import BaseModel
 
+from api.command_service import CommandService
 from api.podcast_service import (
     PodcastGenerationRequest,
     PodcastGenerationResponse,
@@ -12,7 +13,6 @@ from api.podcast_service import (
 )
 from notebooke.ai.models import Model
 from notebooke.exceptions import OpenNotebookError
-from api.command_service import CommandService
 from notebooke.podcasts.audio_paths import resolve_contained_audio_path
 from notebooke.podcasts.models import PodcastEpisode
 
@@ -110,6 +110,7 @@ def _delete_episode_audio(episode: PodcastEpisode, episode_id: str) -> None:
 class PodcastEpisodeResponse(BaseModel):
     id: str
     name: str
+    notebook_id: Optional[str] = None
     episode_profile: dict
     speaker_profile: dict
     briefing: str
@@ -227,6 +228,7 @@ async def list_podcast_episodes():
                 PodcastEpisodeResponse(
                     id=str(episode.id),
                     name=episode.name,
+                    notebook_id=episode.notebook_id,
                     episode_profile=_with_resolved_model_fields(
                         episode.episode_profile,
                         _EPISODE_PROFILE_MODEL_FIELDS,

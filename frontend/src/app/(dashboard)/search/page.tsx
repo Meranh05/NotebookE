@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { useTranslation } from '@/lib/hooks/use-translation'
-import { AppShell } from '@/components/layout/AppShell'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
@@ -11,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Label } from '@/components/ui/label'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { IconAlertCircle, IconArrowUp, IconChevronDown, IconDeviceFloppy, IconMessageCircleQuestion, IconSearch, IconSettings, IconSquare } from '@tabler/icons-react'
@@ -157,13 +156,12 @@ export default function SearchPage() {
   }, [searchParams])
 
   return (
-    <AppShell>
       <div className="flex-1 flex flex-col relative h-full">
         {/* Scrollable Content Area */}
         <div className="flex-1 overflow-y-auto p-4 md:p-6 pb-[250px] flex flex-col items-center">
           <div className="w-full max-w-4xl mt-4 md:mt-8">
             <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'ask' | 'search')} className="w-full flex flex-col">
-              <div className="w-full mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6 px-2 sm:px-0">
+              <div className="mb-8 flex w-full flex-col gap-5 rounded-2xl border border-border/80 bg-card p-5 shadow-sm md:flex-row md:items-center md:justify-between">
                 <div className="space-y-2">
                   <h1 className="font-display text-3xl font-bold tracking-tight text-foreground">
                     {t('searchPage.askAndSearch')}
@@ -173,13 +171,13 @@ export default function SearchPage() {
                   </p>
                 </div>
 
-                <TabsList aria-label={t('common.accessibility.searchKB')} className="grid w-full md:w-auto grid-cols-2 rounded-full bg-muted/50 p-1 shrink-0 h-11">
-                  <TabsTrigger value="ask" className="flex items-center justify-center gap-2 rounded-full text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground text-muted-foreground px-6 h-full transition-all">
-                    <IconMessageCircleQuestion className="h-4 w-4" />
+                <TabsList aria-label={t('common.accessibility.searchKB')} className="grid h-10 w-full shrink-0 grid-cols-2 rounded-xl bg-muted/60 p-1 md:w-[300px]">
+                  <TabsTrigger value="ask" className="flex h-full items-center justify-center gap-2 rounded-lg px-4 text-sm font-medium text-muted-foreground transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
+                    <IconMessageCircleQuestion className="h-4 w-4 text-teal-600 dark:text-teal-300" />
                     <span>{t('searchPage.askBeta')}</span>
                   </TabsTrigger>
-                  <TabsTrigger value="search" className="flex items-center justify-center gap-2 rounded-full text-sm font-medium data-[state=active]:bg-background data-[state=active]:shadow-sm data-[state=active]:text-foreground text-muted-foreground px-6 h-full transition-all">
-                    <IconSearch className="h-4 w-4" />
+                  <TabsTrigger value="search" className="flex h-full items-center justify-center gap-2 rounded-lg px-4 text-sm font-medium text-muted-foreground transition-all data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm">
+                    <IconSearch className="h-4 w-4 text-indigo-600 dark:text-indigo-300" />
                     <span>{t('searchPage.search')}</span>
                   </TabsTrigger>
                 </TabsList>
@@ -187,6 +185,17 @@ export default function SearchPage() {
 
               <TabsContent value="ask" className="w-full mt-0 max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="space-y-6">
+                  {!ask.isStreaming && !ask.finalAnswer && !ask.strategy && (
+                    <Card className="overflow-hidden rounded-2xl border-border/80 bg-card/60 shadow-sm">
+                      <CardContent className="flex flex-col items-center px-6 py-6 text-center sm:py-8">
+                        <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl border border-teal-100 bg-teal-50 text-teal-700 shadow-sm dark:border-teal-900/60 dark:bg-teal-950/30 dark:text-teal-300">
+                          <IconMessageCircleQuestion className="h-7 w-7" />
+                        </div>
+                        <h2 className="font-display text-xl font-semibold tracking-tight">{t('searchPage.askYourKb')}</h2>
+                        <p className="mt-2 max-w-lg text-sm leading-6 text-muted-foreground">{t('searchPage.askYourKbDesc')}</p>
+                      </CardContent>
+                    </Card>
+                  )}
                   {/* Streaming Response */}
                   <StreamingResponse
                     isStreaming={ask.isStreaming}
@@ -222,7 +231,7 @@ export default function SearchPage() {
               <TabsContent value="search" className="w-full mt-0 max-w-5xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <div className="space-y-8">
                   {/* IconSearch Options */}
-                  <div className="flex flex-col sm:flex-row sm:items-start gap-6 p-4 rounded-xl border bg-card/50">
+                  <div className="flex flex-col gap-6 rounded-2xl border border-border/80 bg-card/70 p-5 shadow-sm sm:flex-row sm:items-start">
                     {/* IconSearch Type */}
                     <div className="space-y-3 flex-1" role="group" aria-labelledby="search-type-label">
                       <span id="search-type-label" className="text-sm font-semibold">{t('searchPage.searchType')}</span>
@@ -365,21 +374,21 @@ export default function SearchPage() {
         </div>
 
         {/* Fixed Input Area at Bottom */}
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background via-background to-transparent pt-12 pb-6 px-4 md:px-6 pointer-events-none flex flex-col items-center z-10">
+        <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center border-t border-border/80 bg-background/95 px-4 py-4 shadow-[0_-8px_24px_rgba(15,23,42,0.04)] backdrop-blur-sm md:px-6 dark:shadow-[0_-8px_24px_rgba(0,0,0,0.16)]">
           <div className="w-full max-w-4xl pointer-events-auto">
             
             {activeTab === 'ask' && (
               <div className="flex flex-col gap-2">
                 {!hasEmbeddingModel && (
-                  <div className="flex items-center gap-2 p-2 px-3 text-xs text-warn bg-warn-tint rounded-xl w-fit mx-auto shadow-sm">
+                  <div className="mx-auto flex w-fit items-center gap-2 rounded-md border border-warn/30 bg-warn-tint px-3 py-2 text-xs text-warn">
                     <IconAlertCircle className="h-3.5 w-3.5" />
                     <span>{t('searchPage.noEmbeddingModel')}</span>
                   </div>
                 )}
                 
-                <div className="relative flex items-center bg-background/80 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] focus-within:ring-4 focus-within:ring-primary/10 transition-all overflow-hidden p-2">
+                <div className="relative flex items-center overflow-hidden rounded-2xl border border-border bg-card p-1.5 shadow-sm transition-[border-color,box-shadow] focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/20">
                   <div className="flex items-center gap-1 pl-1 md:pl-2 shrink-0">
-                    <Button variant="ghost" size="icon" onClick={() => setShowAdvancedModels(true)} className="h-10 w-10 rounded-full text-muted-foreground hover:text-foreground bg-muted/40 hover:bg-muted transition-colors" title={t('searchPage.advanced')}>
+                    <Button variant="ghost" size="icon" onClick={() => setShowAdvancedModels(true)} className="h-9 w-9 rounded-md text-muted-foreground hover:text-foreground" title={t('searchPage.advanced')}>
                       <IconSettings className="h-5 w-5" />
                     </Button>
                   </div>
@@ -438,7 +447,7 @@ export default function SearchPage() {
             )}
 
             {activeTab === 'search' && (
-              <div className="relative flex items-center bg-background/80 backdrop-blur-2xl border border-black/5 dark:border-white/10 rounded-[32px] shadow-[0_8px_30px_rgb(0,0,0,0.08)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.2)] focus-within:ring-4 focus-within:ring-primary/10 transition-all overflow-hidden p-2">
+              <div className="relative flex items-center overflow-hidden rounded-2xl border border-border bg-card p-1.5 shadow-sm transition-[border-color,box-shadow] focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/20">
                 <div className="flex items-center pl-4 pr-2 shrink-0 text-muted-foreground">
                   <IconSearch className="h-5 w-5" />
                 </div>
@@ -470,6 +479,5 @@ export default function SearchPage() {
           </div>
         </div>
       </div>
-    </AppShell>
   )
 }

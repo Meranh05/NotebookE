@@ -44,8 +44,10 @@ from api.routers import (
     sources,
     speaker_profiles,
     transformations,
+    videos,
 )
 from api.routers import commands as commands_router
+from api.routers import video_test as video_test_router
 from notebooke.database.async_migrate import AsyncMigrationManager
 from notebooke.exceptions import (
     AuthenticationError,
@@ -404,6 +406,8 @@ app.include_router(credentials.router, prefix="/api", tags=["credentials"])
 app.include_router(providers.router, prefix="/api", tags=["providers"])
 app.include_router(capabilities.router, prefix="/api", tags=["capabilities"])
 app.include_router(languages.router, prefix="/api", tags=["languages"])
+app.include_router(videos.router, prefix="/api", tags=["videos"])
+app.include_router(video_test_router.router, prefix="/api", tags=["video-test"])
 
 
 @app.get("/")

@@ -9,7 +9,7 @@ from notebooke.domain.base import ObjectModel
 
 
 async def _resolve_model_config(
-    model_id: str, max_tokens: Optional[int] = None
+    model_id: str, max_tokens: Optional[int] = None, model_type: str = "language"
 ) -> Tuple[str, str, dict]:
     """Load Model record, resolve credential -> (provider, model_name, config_dict).
 
@@ -18,7 +18,21 @@ async def _resolve_model_config(
     """
     from notebooke.ai.models import Model
 
-    model = await Model.get(model_id)
+    try:
+        model = await Model.get(model_id)
+    except Exception as e:
+        logger.warning(
+            f"Failed to get model {model_id} ({e}), falling back to first "
+            f"available {model_type} model"
+        )
+        fallback_models = await Model.get_models_by_type(model_type)
+        if not fallback_models:
+            raise ValueError(
+                f"Model '{model_id}' was deleted and no alternative {model_type} "
+                f"model is available. Please add a {model_type} model in settings."
+            )
+        model = fallback_models[0]
+
     config: dict = {}
     if model.credential:
         credential = await model.get_credential_obj()
@@ -102,7 +116,7 @@ class EpisodeProfile(ObjectModel):
                 f"Episode profile '{self.name}' has no outline model configured. "
                 "Please update the profile to select an outline model."
             )
-        return await _resolve_model_config(self.outline_llm, max_tokens=self.max_tokens)
+        return await _resolve_model_config(self.outline_llm, max_tokens=self.max_tokens, model_type="language")
 
     async def resolve_transcript_config(self) -> Tuple[str, str, dict]:
         """Resolve transcript model -> (provider, model_name, config_dict)"""
@@ -112,7 +126,7 @@ class EpisodeProfile(ObjectModel):
                 "Please update the profile to select a transcript model."
             )
         return await _resolve_model_config(
-            self.transcript_llm, max_tokens=self.max_tokens
+            self.transcript_llm, max_tokens=self.max_tokens, model_type="language"
         )
 
     @classmethod
@@ -181,7 +195,7 @@ class SpeakerProfile(ObjectModel):
                 f"Speaker profile '{self.name}' has no voice model configured. "
                 "Please update the profile to select a voice model."
             )
-        return await _resolve_model_config(self.voice_model)
+        return await _resolve_model_config(self.voice_model, model_type="text_to_speech")
 
     @classmethod
     async def get_by_name(cls, name: str) -> Optional["SpeakerProfile"]:
@@ -221,6 +235,9 @@ class PodcastEpisode(ObjectModel):
     table_name: ClassVar[str] = "episode"
 
     name: str = Field(..., description="Episode name")
+    notebook_id: Optional[str] = Field(
+        default=None, description="Notebook used as the source for this episode"
+    )
     episode_profile: Dict[str, Any] = Field(
         ..., description="Episode profile used (stored as object)"
     )

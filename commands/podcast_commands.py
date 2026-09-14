@@ -41,6 +41,97 @@ def build_episode_output_dir(podcasts_folder: str = PODCASTS_FOLDER) -> tuple[st
     return episode_dir_name, output_dir
 
 
+def apply_language_voice_preset(profile: dict, language: Optional[str]) -> None:
+    """Select voices and pacing that match the episode language.
+
+    Vietnamese uses Microsoft's native Vietnamese voices. English uses native
+    US English voices. Each preset also tunes pacing for spoken narration.
+    """
+    normalized = (language or "").strip().lower()
+    if normalized.startswith("en") or normalized == "english":
+        voices = (
+            "en-US-GuyNeural",
+            "en-US-JennyNeural",
+            "en-US-AndrewMultilingualNeural",
+            "en-US-AvaMultilingualNeural",
+        )
+        rate = "-2%"
+    elif normalized.startswith("vi") or normalized in {
+        "vietnamese",
+        "tiếng việt",
+        "tieng viet",
+    }:
+        voices = (
+            "vi-VN-NamMinhNeural",
+            "vi-VN-HoaiMyNeural",
+        )
+        rate = "-8%"
+    else:
+        return
+
+    profile["tts_config"] = {
+        **(profile.get("tts_config") or {}),
+        "language": normalized,
+        "rate": rate,
+    }
+    for index, speaker in enumerate(profile.get("speakers", [])):
+        speaker["voice_id"] = voices[index % len(voices)]
+        speaker["tts_config"] = {
+            **(speaker.get("tts_config") or {}),
+            "language": normalized,
+            "rate": rate,
+        }
+
+
+def apply_presenter_names(profile: dict) -> None:
+    """Use the NotebookE presenter names in prompts and stored snapshots."""
+    for index, speaker in enumerate(profile.get("speakers", [])):
+        voice = str(speaker.get("voice_id", "")).lower()
+        if any(marker in voice for marker in ("hoaimy", "jenny", "female", "ava", "emma")):
+            speaker["name"] = "Luna"
+        elif any(marker in voice for marker in ("namminh", "guy", "male", "andrew")):
+            speaker["name"] = "Eric"
+        elif index == 0:
+            speaker["name"] = "Eric"
+        elif index == 1:
+            speaker["name"] = "Luna"
+
+
+async def _select_language_fallback(tried_model_ids: set[str]):
+    """Choose a fallback only from the user's configured language defaults.
+
+    Profile references can outlive model records, and locally served models can
+    disappear from an OpenAI-compatible endpoint. Restrict fallback selection
+    to explicit defaults so podcast generation never silently switches to an
+    installed model the user did not choose.
+    """
+    from notebooke.ai.models import DefaultModels, Model
+
+    preferred_ids: list[str] = []
+    try:
+        defaults = await DefaultModels.get_instance()
+        for field in (
+            "default_transformation_model",
+            "default_tools_model",
+            "large_context_model",
+            "default_chat_model",
+        ):
+            model_id = getattr(defaults, field, None)
+            if model_id and str(model_id) not in preferred_ids:
+                preferred_ids.append(str(model_id))
+    except Exception as exc:
+        logger.warning("Could not load default models for podcast fallback: {}", exc)
+
+    all_models = await Model.get_models_by_type("language")
+    models_by_id = {str(model.id): model for model in all_models}
+    ordered = [models_by_id[model_id] for model_id in preferred_ids if model_id in models_by_id]
+
+    return next(
+        (model for model in ordered if str(model.id) not in tried_model_ids),
+        None,
+    )
+
+
 class PodcastGenerationInput(CommandInput):
     episode_profile: str
     # Speaker profile record ID or name (the API boundary resolves the
@@ -49,6 +140,7 @@ class PodcastGenerationInput(CommandInput):
     speaker_profile: Optional[str] = None
     episode_name: str
     content: str
+    notebook_id: Optional[str] = None
     briefing_suffix: Optional[str] = None
 
 
@@ -195,6 +287,7 @@ async def generate_podcast_command(
                     prov, model, conf = await _resolve_model_config(
                         str(ep_dict["outline_llm"]),
                         max_tokens=ep_dict.get("max_tokens"),
+                        model_type="language"
                     )
                     ep_dict["outline_provider"] = prov
                     ep_dict["outline_model"] = model
@@ -203,6 +296,7 @@ async def generate_podcast_command(
                     prov, model, conf = await _resolve_model_config(
                         str(ep_dict["transcript_llm"]),
                         max_tokens=ep_dict.get("max_tokens"),
+                        model_type="language"
                     )
                     ep_dict["transcript_provider"] = prov
                     ep_dict["transcript_model"] = model
@@ -221,7 +315,8 @@ async def generate_podcast_command(
             if sp_dict.get("voice_model"):
                 try:
                     prov, model, conf = await _resolve_model_config(
-                        str(sp_dict["voice_model"])
+                        str(sp_dict["voice_model"]),
+                        model_type="text_to_speech"
                     )
                     sp_dict["tts_provider"] = prov
                     sp_dict["tts_model"] = model
@@ -239,7 +334,8 @@ async def generate_podcast_command(
                 if speaker.get("voice_model"):
                     try:
                         prov, model, conf = await _resolve_model_config(
-                            str(speaker["voice_model"])
+                            str(speaker["voice_model"]),
+                            model_type="text_to_speech"
                         )
                         speaker["tts_provider"] = prov
                         speaker["tts_model"] = model
@@ -249,16 +345,25 @@ async def generate_podcast_command(
                             f"Failed to resolve per-speaker TTS for '{speaker.get('name')}': {e}"
                         )
 
+            apply_language_voice_preset(sp_dict, episode_profile.language)
+            if sp_name == speaker_profile.name:
+                apply_presenter_names(sp_dict)
+
         # 6. Generate briefing
         briefing = episode_profile.default_briefing
         if input_data.briefing_suffix:
             briefing += f"\n\nAdditional instructions: {input_data.briefing_suffix}"
 
         # Create the record for the episode and associate with the ongoing command
+        speaker_profile_snapshot = full_model_dump(speaker_profile.model_dump())
+        apply_language_voice_preset(speaker_profile_snapshot, episode_profile.language)
+        apply_presenter_names(speaker_profile_snapshot)
+
         episode = PodcastEpisode(
             name=input_data.episode_name,
+            notebook_id=input_data.notebook_id,
             episode_profile=full_model_dump(episode_profile.model_dump()),
-            speaker_profile=full_model_dump(speaker_profile.model_dump()),
+            speaker_profile=speaker_profile_snapshot,
             command=ensure_record_id(input_data.execution_context.command_id)
             if input_data.execution_context
             else None,
@@ -305,8 +410,6 @@ async def generate_podcast_command(
         result = None
         audio_error: Optional[str] = None
         
-        from notebooke.ai.models import Model
-        
         while attempt <= max_attempts:
             try:
                 result = await create_podcast(
@@ -328,21 +431,56 @@ async def generate_podcast_command(
                 
             except Exception as e:
                 error_msg = str(e).lower()
-                is_quota_error = "429" in error_msg or "resource_exhausted" in error_msg or "quota" in error_msg or "rate_limit" in error_msg or "404" in error_msg or "not_found" in error_msg
-                
-                if not is_quota_error or attempt >= max_attempts:
-                    if is_quota_error:
-                        raise RuntimeError("Podcast generation failed: All available AI models have exhausted their Quota/Rate Limit. Please check your billing details or wait before trying again.") from e
-                    raise  # Re-raise if it's not a quota error or we're out of retries
-                
-                logger.warning(f"Attempt {attempt} failed due to Quota/Rate Limit. Finding fallback model...")
-                
-                all_lang_models = await Model.get_models_by_type("language")
-                fallback_model = next((m for m in all_lang_models if str(m.id) not in tried_model_ids), None)
-                
+                is_quota_error = any(
+                    marker in error_msg
+                    for marker in (
+                        "429",
+                        "resource_exhausted",
+                        "quota",
+                        "rate_limit",
+                        "rate limit",
+                    )
+                )
+                is_connection_error = any(
+                    marker in error_msg
+                    for marker in (
+                        "connection error",
+                        "connecterror",
+                        "connection refused",
+                        "all connection attempts failed",
+                        "timed out",
+                        "timeout",
+                        "service unavailable",
+                        "503",
+                    )
+                )
+                is_retryable_model_error = is_quota_error or is_connection_error
+
+                if not is_retryable_model_error:
+                    raise
+                if attempt >= max_attempts:
+                    raise RuntimeError(
+                        "Podcast generation failed after trying the configured "
+                        f"language models. Last error: {e}"
+                    ) from e
+
+                failure_kind = "quota/rate limit" if is_quota_error else "connection"
+                logger.warning(
+                    "Podcast attempt {} failed due to {}; selecting another "
+                    "configured language model",
+                    attempt,
+                    failure_kind,
+                )
+
+                fallback_model = await _select_language_fallback(tried_model_ids)
+
                 if not fallback_model:
                     logger.warning("No more fallback language models available.")
-                    raise RuntimeError("Podcast generation failed: The selected model is out of Quota (Rate Limit), and no other fallback models are available in your system. Please add more API Keys or wait.") from e
+                    raise RuntimeError(
+                        "Podcast generation failed and no untried language model "
+                        "is available. Check the models selected in the episode "
+                        "profile and ensure their provider is running."
+                    ) from e
 
                 
                 logger.info(f"Auto-Fallback: Switching to model {fallback_model.name} ({fallback_model.provider})")
@@ -350,17 +488,20 @@ async def generate_podcast_command(
                 
                 try:
                     prov, model_name, conf = await _resolve_model_config(str(fallback_model.id), max_tokens=episode_profile.max_tokens)
-                    ep_dict = episode_profiles_dict.get(episode_profile.name)
-                    if ep_dict:
-                        ep_dict["outline_provider"] = prov
-                        ep_dict["outline_model"] = model_name
-                        ep_dict["outline_config"] = conf
-                        ep_dict["transcript_provider"] = prov
-                        ep_dict["transcript_model"] = model_name
-                        ep_dict["transcript_config"] = conf
+                    fallback_profile = episode_profiles_dict.get(episode_profile.name)
+                    if fallback_profile:
+                        fallback_profile["outline_provider"] = prov
+                        fallback_profile["outline_model"] = model_name
+                        fallback_profile["outline_config"] = conf
+                        fallback_profile["transcript_provider"] = prov
+                        fallback_profile["transcript_model"] = model_name
+                        fallback_profile["transcript_config"] = conf
                         configure("episode_config", {"profiles": episode_profiles_dict})
                 except Exception as resolve_err:
-                    logger.warning(f"Failed to resolve fallback model config: {resolve_err}")
+                    raise RuntimeError(
+                        f"Failed to configure fallback model '{fallback_model.name}': "
+                        f"{resolve_err}"
+                    ) from resolve_err
                 
                 attempt += 1
 
@@ -370,7 +511,10 @@ async def generate_podcast_command(
         # before path conversion so the real error surfaces (below, after
         # the transcript/outline are persisted) instead of a misleading
         # "outside the podcasts folder" ValueError.
-        raw_audio_path = result.get("final_output_file_path") if result else None
+        if result is None:
+            raise RuntimeError("Podcast generator returned no result")
+
+        raw_audio_path = result.get("final_output_file_path")
 
         # Store the audio path RELATIVE to PODCASTS_FOLDER (#1030). The
         # validation inside to_relative_audio_path guarantees the DB never
@@ -381,9 +525,13 @@ async def generate_podcast_command(
         )
         episode.audio_file = audio_file_rel
         episode.transcript = {
-            "transcript": full_model_dump(result.get("transcript")) if result and result.get("transcript") else None
+            "transcript": full_model_dump(result.get("transcript"))
+            if result.get("transcript")
+            else None
         }
-        episode.outline = full_model_dump(result.get("outline")) if result and result.get("outline") else None
+        episode.outline = (
+            full_model_dump(result.get("outline")) if result.get("outline") else None
+        )
         await episode.save()
 
         if audio_error:

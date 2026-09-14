@@ -99,6 +99,7 @@ export function ChatColumn({ notebookId, contextSelections, sources, sourcesLoad
       isStreaming={chat.isSending}
       contextIndicators={null}
       onSendMessage={(message, modelOverride) => chat.sendMessage(message, modelOverride)}
+      onCancelStreaming={chat.cancelStreaming}
       modelOverride={chat.currentSession?.model_override ?? chat.pendingModelOverride ?? undefined}
       onModelChange={(model) => chat.setModelOverride(model ?? null)}
       sessions={chat.sessions}

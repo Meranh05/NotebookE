@@ -6,9 +6,8 @@ import { sourcesApi, type SourceSortField } from '@/lib/api/sources'
 import { SourceListResponse } from '@/lib/types/api'
 import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { EmptyState } from '@/components/common/EmptyState'
-import { AppShell } from '@/components/layout/AppShell'
 import { ConfirmDialog } from '@/components/common/ConfirmDialog'
-import { IconAlignLeft, IconArrowDown, IconArrowUp, IconArrowsVertical, IconFileSpreadsheet, IconFileText, IconFileZip, IconLink, IconMusic, IconPhoto, IconPlus, IconPresentation, IconTrash, IconUpload, IconVideo } from '@tabler/icons-react'
+import { IconAlignLeft, IconArrowDown, IconArrowUp, IconArrowsVertical, IconFileSpreadsheet, IconFileText, IconFileZip, IconLink, IconMusic, IconPhoto, IconPlus, IconPresentation, IconTrash, IconVideo } from '@tabler/icons-react'
 import { formatDistanceToNow } from 'date-fns'
 import { Button } from '@/components/ui/button'
 import { useTranslation } from '@/lib/hooks/use-translation'
@@ -254,8 +253,8 @@ export default function SourcesPage() {
     if (source.asset?.url) {
       return (
         <div className="flex-shrink-0 flex flex-col items-center justify-center w-9 h-9 rounded-lg mr-3 bg-muted">
-          <IconLink className="h-4 w-4 text-muted-foreground" />
-          <span className="text-[7px] font-bold leading-none text-muted-foreground mt-0.5">LINK</span>
+          <IconLink className="h-4 w-4 text-emerald-600 dark:text-emerald-300" />
+          <span className="mt-0.5 text-[7px] font-bold leading-none text-emerald-600 dark:text-emerald-300">LINK</span>
         </div>
       )
     }
@@ -264,25 +263,39 @@ export default function SourcesPage() {
       const ext = (source.title || '').split('.').pop()?.toLowerCase() ?? ''
       
       let Icon = IconFileText
-      let colorClass = 'text-slate-600 dark:text-slate-400'
-      let bgClass = 'bg-slate-100 dark:bg-slate-800'
+      let colorClass = 'text-slate-600 dark:text-slate-300'
+      let bgClass = 'border border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/40'
       
       if (['pdf'].includes(ext)) {
-        Icon = IconFileText; colorClass = 'text-red-600 dark:text-red-400'; bgClass = 'bg-red-100 dark:bg-red-900/30'
+        Icon = IconFileText
+        colorClass = 'text-red-600 dark:text-red-300'
+        bgClass = 'border border-red-100 bg-red-50 dark:border-red-900/50 dark:bg-red-950/30'
       } else if (['doc', 'docx'].includes(ext)) {
-        Icon = IconFileText; colorClass = 'text-blue-600 dark:text-blue-400'; bgClass = 'bg-blue-100 dark:bg-blue-900/30'
+        Icon = IconFileText
+        colorClass = 'text-blue-600 dark:text-blue-300'
+        bgClass = 'border border-blue-100 bg-blue-50 dark:border-blue-900/50 dark:bg-blue-950/30'
       } else if (['xls', 'xlsx'].includes(ext)) {
-        Icon = IconFileSpreadsheet; colorClass = 'text-emerald-600 dark:text-emerald-400'; bgClass = 'bg-emerald-100 dark:bg-emerald-900/30'
+        Icon = IconFileSpreadsheet
+        colorClass = 'text-emerald-600 dark:text-emerald-300'
+        bgClass = 'border border-emerald-100 bg-emerald-50 dark:border-emerald-900/50 dark:bg-emerald-950/30'
       } else if (['ppt', 'pptx'].includes(ext)) {
-        Icon = IconPresentation; colorClass = 'text-orange-600 dark:text-orange-400'; bgClass = 'bg-orange-100 dark:bg-orange-900/30'
+        Icon = IconPresentation
+        colorClass = 'text-orange-600 dark:text-orange-300'
+        bgClass = 'border border-orange-100 bg-orange-50 dark:border-orange-900/50 dark:bg-orange-950/30'
       } else if (['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(ext)) {
-        Icon = IconPhoto; colorClass = 'text-amber-600 dark:text-amber-400'; bgClass = 'bg-amber-100 dark:bg-amber-900/30'
+        Icon = IconPhoto
+        colorClass = 'text-violet-600 dark:text-violet-300'
+        bgClass = 'border border-violet-100 bg-violet-50 dark:border-violet-900/50 dark:bg-violet-950/30'
       } else if (['mp4', 'mov', 'avi', 'webm'].includes(ext)) {
-        Icon = IconVideo; colorClass = 'text-purple-600 dark:text-purple-400'; bgClass = 'bg-purple-100 dark:bg-purple-900/30'
+        Icon = IconVideo
+        colorClass = 'text-sky-600 dark:text-sky-300'
+        bgClass = 'border border-sky-100 bg-sky-50 dark:border-sky-900/50 dark:bg-sky-950/30'
       } else if (['mp3', 'wav', 'm4a'].includes(ext)) {
-        Icon = IconMusic; colorClass = 'text-pink-600 dark:text-pink-400'; bgClass = 'bg-pink-100 dark:bg-pink-900/30'
+        Icon = IconMusic
+        colorClass = 'text-fuchsia-600 dark:text-fuchsia-300'
+        bgClass = 'border border-fuchsia-100 bg-fuchsia-50 dark:border-fuchsia-900/50 dark:bg-fuchsia-950/30'
       } else if (['zip', 'rar', 'tar', 'gz'].includes(ext)) {
-        Icon = IconFileZip; colorClass = 'text-gray-600 dark:text-gray-400'; bgClass = 'bg-gray-100 dark:bg-gray-800'
+        Icon = IconFileZip
       }
       
       return (
@@ -296,9 +309,9 @@ export default function SourcesPage() {
     }
     
     return (
-      <div className="flex-shrink-0 flex flex-col items-center justify-center w-9 h-9 rounded-lg mr-3 bg-muted">
-        <IconAlignLeft className="h-4 w-4 text-muted-foreground" />
-        <span className="text-[7px] font-bold leading-none text-muted-foreground mt-0.5">TEXT</span>
+      <div className="mr-3 flex h-9 w-9 flex-shrink-0 flex-col items-center justify-center rounded-lg border border-amber-100 bg-amber-50 dark:border-amber-900/50 dark:bg-amber-950/30">
+        <IconAlignLeft className="h-4 w-4 text-amber-600 dark:text-amber-300" />
+        <span className="mt-0.5 text-[7px] font-bold leading-none text-amber-600 dark:text-amber-300">TEXT</span>
       </div>
     )
   }
@@ -529,7 +542,7 @@ export default function SourcesPage() {
   }
 
   return (
-    <AppShell>
+    <>
       {renderContent()}
       <AddSourceDialog
         open={sourceDialogOpen}
@@ -538,6 +551,6 @@ export default function SourcesPage() {
           if (!open) fetchSources(true)
         }}
       />
-    </AppShell>
+    </>
   )
 }

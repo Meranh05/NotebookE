@@ -35,6 +35,7 @@ export function useNotebookChat({ notebookId, sources, notes, contextSelections 
   const [pendingModelOverride, setPendingModelOverride] = useState<string | null>(null)
   
   const abortControllerRef = useRef<AbortController | null>(null)
+  const stoppedByUserRef = useRef(false)
 
   // Fetch sessions for this notebook
   const {
@@ -60,7 +61,7 @@ export function useNotebookChat({ notebookId, sources, notes, contextSelections 
   // Update messages when current session changes, but not while sending
   // to avoid wiping out optimistic user messages
   useEffect(() => {
-    if (currentSession?.messages && !isSending) {
+    if (currentSession?.messages && !isSending && !stoppedByUserRef.current) {
       setMessages(currentSession.messages)
     }
   }, [currentSession, isSending])
@@ -210,7 +211,9 @@ export function useNotebookChat({ notebookId, sources, notes, contextSelections 
       abortControllerRef.current.abort()
     }
     
-    abortControllerRef.current = new AbortController()
+    const requestController = new AbortController()
+    abortControllerRef.current = requestController
+    stoppedByUserRef.current = false
 
     // Add user message optimistically
     const userMessage: NotebookChatMessage = {
@@ -230,7 +233,7 @@ export function useNotebookChat({ notebookId, sources, notes, contextSelections 
         message,
         context,
         model_override: modelOverride ?? (currentSession?.model_override ?? undefined)
-      }, abortControllerRef.current.signal)
+      }, requestController.signal)
 
       // Handle the readable stream
       const reader = stream.getReader()
@@ -294,8 +297,10 @@ export function useNotebookChat({ notebookId, sources, notes, contextSelections 
       // Remove optimistic message on error if AI message hasn't been created
       setMessages(prev => prev.filter(msg => !msg.id.startsWith('temp-')))
     } finally {
-      setIsSending(false)
-      abortControllerRef.current = null
+      if (abortControllerRef.current === requestController) {
+        setIsSending(false)
+        abortControllerRef.current = null
+      }
     }
   }, [
     notebookId,
@@ -310,14 +315,27 @@ export function useNotebookChat({ notebookId, sources, notes, contextSelections 
 
   // Cancel streaming
   const cancelStreaming = useCallback(() => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort()
+    const controller = abortControllerRef.current
+    if (controller) {
+      stoppedByUserRef.current = true
+      abortControllerRef.current = null
+      controller.abort()
+      setMessages(prev => [
+        ...prev,
+        {
+          id: `stopped-${Date.now()}`,
+          type: 'ai',
+          content: t('chat.stoppedByUser'),
+          timestamp: new Date().toISOString()
+        }
+      ])
       setIsSending(false)
     }
-  }, [])
+  }, [t])
 
   // Switch session
   const switchSession = useCallback((sessionId: string) => {
+    stoppedByUserRef.current = false
     setCurrentSessionId(sessionId)
   }, [])
 

@@ -43,6 +43,8 @@ dependencies = [
     "surrealdb>=1.0.4",
     "podcast-creator>=0.12.0,<1",
     "surreal-commands>=1.3.1,<2",
+    "pixelle-video @ git+https://github.com/AIDC-AI/Pixelle-Video.git",
+    "edge-tts>=7.2.8",
     "numpy>=2.4.1",
     "pycountry>=26.2.16",
     "babel>=2.18.0",
@@ -92,8 +94,13 @@ ignore = [
 [tool.uv]
 # Pillow < 12.2.0 has open security advisories (PSD OOB write, FITS
 # decompression bomb, PDF trailer DoS). The only thing holding it back is
-# moviepy's `pillow<12` cap, pulled in via podcast-creator 0.12.0 — and
-# moviepy only touches PIL in its video modules, which the audio-only podcast
-# pipeline never imports. Drop this override once podcast-creator ships a
-# release without moviepy (already removed on its main branch).
-override-dependencies = ["pillow>=12.2.0"]
+# moviepy's `pillow<12` cap, pulled in via podcast-creator 0.12.0 and
+# pixelle-video — moviepy only touches PIL in its video modules, which the
+# audio-only podcast pipeline never imports. Pixelle also pins edge-tts 7.2.7;
+# 7.2.8 fixes long-form audio offset compensation and remains API-compatible.
+# Drop these overrides once the upstream packages relax their constraints.
+override-dependencies = [
+    "pillow>=12.2.0",
+    "moviepy>=2.2.1",
+    "edge-tts>=7.2.8",
+]

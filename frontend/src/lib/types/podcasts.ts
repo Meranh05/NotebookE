@@ -79,6 +79,7 @@ export interface Language {
 export interface PodcastEpisode {
   id: string
   name: string
+  notebook_id?: string | null
   episode_profile: EpisodeProfileSnapshot
   speaker_profile: SpeakerProfileSnapshot
   briefing: string
@@ -122,6 +123,33 @@ export const ACTIVE_EPISODE_STATUSES: EpisodeStatus[] = [
 ]
 
 export const FAILED_EPISODE_STATUSES: EpisodeStatus[] = ['failed', 'error', 'cancelled']
+
+/** Keep transient worker duplicates and accidental rapid double submissions out of the UI. */
+export function dedupePodcastEpisodes(episodes: PodcastEpisode[]): PodcastEpisode[] {
+  const seen = new Set<string>()
+
+  return episodes.filter((episode) => {
+    const createdMinute = episode.created?.slice(0, 16) ?? ''
+    const profileName = episode.episode_profile?.name ?? ''
+    const identity = episode.command_id
+      ? `command:${episode.command_id}`
+      : `episode:${episode.id}`
+    const rapidSubmitIdentity = [
+      episode.name.trim().toLocaleLowerCase(),
+      profileName.trim().toLocaleLowerCase(),
+      createdMinute,
+      episode.job_status ?? 'unknown',
+    ].join('|')
+
+    if (seen.has(identity) || (createdMinute && seen.has(`rapid:${rapidSubmitIdentity}`))) {
+      return false
+    }
+
+    seen.add(identity)
+    if (createdMinute) seen.add(`rapid:${rapidSubmitIdentity}`)
+    return true
+  })
+}
 
 export function groupEpisodesByStatus(episodes: PodcastEpisode[]): EpisodeStatusGroups {
   return episodes.reduce<EpisodeStatusGroups>(

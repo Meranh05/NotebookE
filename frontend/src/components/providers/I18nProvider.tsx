@@ -13,7 +13,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 
   // Avoid hydration mismatch by waiting for mount
   if (!mounted) {
-    return <div style={{ visibility: 'hidden' }}>{children}</div>
+    return <div style={{ visibility: 'hidden' }} suppressHydrationWarning>{children}</div>
   }
 
   return (

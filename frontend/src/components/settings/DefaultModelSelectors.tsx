@@ -22,6 +22,7 @@ interface DefaultConfig {
   required?: boolean
   /** When unset, this default falls back to the chat default (see notebooke/ai/models.py). */
   fallsBackToChat?: boolean
+  imageOnly?: boolean
   id: string
 }
 
@@ -76,7 +77,7 @@ function DefaultModelSelect({
         >
           <SelectTrigger
             id={config.id}
-            className={`h-8 text-xs ${config.required && !isValid && available.length > 0 ? 'border-destructive' : ''}`}
+            className={`h-8 min-w-0 text-xs [&>span]:truncate ${config.required && !isValid && available.length > 0 ? 'border-destructive' : ''}`}
           >
             <SelectValue placeholder={
               config.required && !isValid && available.length > 0
@@ -157,6 +158,8 @@ export function DefaultModelSelectors({
     { key: 'default_transformation_model', label: t('models.transformationModelLabel'), description: t('models.transformationModelDesc'), modelType: 'language', fallsBackToChat: true, id: `${generatedId}-transform` },
     { key: 'default_tools_model', label: t('models.toolsModelLabel'), description: t('models.toolsModelDesc'), modelType: 'language', fallsBackToChat: true, id: `${generatedId}-tools` },
     { key: 'large_context_model', label: t('models.largeContextModelLabel'), description: t('models.largeContextModelDesc'), modelType: 'language', fallsBackToChat: true, id: `${generatedId}-large` },
+    { key: 'default_video_model', label: t('models.videoModelLabel'), description: t('models.videoModelDesc'), modelType: 'language', fallsBackToChat: true, id: `${generatedId}-video` },
+    { key: 'default_image_model', label: 'Mô hình tạo hình ảnh', description: 'Model OpenAI dùng để tạo biểu đồ, infographic và ảnh minh họa cho Video.', modelType: 'language', imageOnly: true, id: `${generatedId}-image` },
   ]
 
   const defaultConfigs = [...primaryConfigs, ...advancedConfigs]
@@ -180,7 +183,10 @@ export function DefaultModelSelectors({
     }
   }
 
-  const getModelsForType = (type: ModelType) => models.filter(m => m.type === type)
+  const getModelsForConfig = (config: DefaultConfig) => models.filter(m =>
+    m.type === config.modelType &&
+    (!config.imageOnly || ['openai', 'openai_compatible', 'openai-compatible'].includes(m.provider.toLowerCase()) && /(?:gpt-image|dall-e|image-generation|image-gen)/i.test(m.name))
+  )
 
   const chatModelName = models.find(m => m.id === watch('default_chat_model'))?.name
 
@@ -194,12 +200,12 @@ export function DefaultModelSelectors({
     .map(c => c.label)
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="overflow-hidden border bg-card shadow-sm">
+      <CardHeader className="border-b bg-muted/10 p-4 pb-3">
         <CardTitle>{t('models.defaultAssignments')}</CardTitle>
         <CardDescription>{t('models.defaultAssignmentsDesc')}</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4 px-4 pb-4 pt-4">
         {missingRequired.length > 0 && (
           <Alert>
             <IconAlertCircle className="h-4 w-4" />
@@ -219,12 +225,12 @@ export function DefaultModelSelectors({
         )}
 
         {/* Primary models: Chat, Embedding, TTS, STT */}
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2">
           {primaryConfigs.map(config => (
             <DefaultModelSelect
               key={config.key}
               config={config}
-              available={getModelsForType(config.modelType)}
+              available={getModelsForConfig(config)}
               currentValue={watch(config.key) || undefined}
               onChange={handleChange}
               chatModelName={chatModelName}
@@ -235,12 +241,12 @@ export function DefaultModelSelectors({
         {/* Advanced models: Transformation, Tools, Large Context */}
         <div className="border-t pt-3">
           <p className="text-xs text-muted-foreground mb-3">{t('navigation.advanced')}</p>
-            <div className="grid gap-3 sm:grid-cols-3">
+            <div className="grid gap-3 sm:grid-cols-2">
               {advancedConfigs.map(config => (
                 <DefaultModelSelect
                   key={config.key}
                   config={config}
-                  available={getModelsForType(config.modelType)}
+                  available={getModelsForConfig(config)}
                   currentValue={watch(config.key) || undefined}
                   onChange={handleChange}
                   showDescription

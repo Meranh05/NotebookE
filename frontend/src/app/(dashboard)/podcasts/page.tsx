@@ -1,9 +1,8 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { IconAlertTriangle, IconMicrophone, IconLayout2 } from '@tabler/icons-react'
+import { IconAlertTriangle, IconHeadphones, IconMicrophone, IconLayout2 } from '@tabler/icons-react'
 
-import { AppShell } from '@/components/layout/AppShell'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { EpisodesTab } from '@/components/podcasts/EpisodesTab'
@@ -24,14 +23,26 @@ export default function PodcastsPage() {
   }, [episodeProfiles, speakerProfiles])
 
   return (
-    <AppShell>
-      <div className="flex-1 overflow-y-auto">
-        <div className="px-6 py-6 space-y-6">
-          <header className="space-y-1">
-            <h1 className="font-display text-2xl font-bold tracking-tight">{t('podcasts.listTitle')}</h1>
-            <p className="text-muted-foreground">
-              {t('podcasts.listDesc')}
-            </p>
+      <div className="flex-1 overflow-y-auto bg-muted/20">
+        <div className="mx-auto w-full max-w-[1480px] space-y-5 px-4 py-5 sm:px-6 lg:px-8">
+          <header className="flex flex-col gap-4 border-b pb-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-violet-200 bg-violet-50 text-violet-700 dark:border-violet-900/60 dark:bg-violet-950/30 dark:text-violet-300">
+                <IconHeadphones className="h-5 w-5" />
+              </div>
+              <div className="space-y-0.5">
+                <h1 className="font-display text-2xl font-bold tracking-tight sm:text-3xl">{t('podcasts.listTitle')}</h1>
+                <p className="max-w-2xl text-sm text-muted-foreground">
+                  {t('podcasts.listDesc')}
+                </p>
+              </div>
+            </div>
+            <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as 'episodes' | 'templates')} className="w-full lg:w-auto">
+              <TabsList aria-label={t('common.accessibility.podcastViews')} className="grid h-9 w-full grid-cols-2 bg-muted/70 lg:w-[300px]">
+                <TabsTrigger value="episodes" className="gap-2 rounded-md text-xs sm:text-sm"><IconMicrophone className="h-4 w-4 text-violet-600 dark:text-violet-300" />{t('podcasts.episodesTab')}</TabsTrigger>
+                <TabsTrigger value="templates" className="gap-2 rounded-md text-xs sm:text-sm"><IconLayout2 className="h-4 w-4 text-slate-600 dark:text-slate-300" />{t('podcasts.templatesTab')}</TabsTrigger>
+              </TabsList>
+            </Tabs>
           </header>
 
           {hasUnconfiguredProfiles ? (
@@ -47,22 +58,8 @@ export default function PodcastsPage() {
           <Tabs
             value={activeTab}
             onValueChange={(value) => setActiveTab(value as 'episodes' | 'templates')}
-            className="space-y-6"
+            className="space-y-5"
           >
-            <div className="space-y-2">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">{t('podcasts.chooseAView')}</p>
-              <TabsList aria-label={t('common.accessibility.podcastViews')} className="w-full max-w-md">
-                <TabsTrigger value="episodes">
-                  <IconMicrophone className="h-4 w-4" />
-                  {t('podcasts.episodesTab')}
-                </TabsTrigger>
-                <TabsTrigger value="templates">
-                  <IconLayout2 className="h-4 w-4" />
-                  {t('podcasts.templatesTab')}
-                </TabsTrigger>
-              </TabsList>
-            </div>
-
             <TabsContent value="episodes">
               <EpisodesTab />
             </TabsContent>
@@ -73,6 +70,5 @@ export default function PodcastsPage() {
           </Tabs>
         </div>
       </div>
-    </AppShell>
   )
 }

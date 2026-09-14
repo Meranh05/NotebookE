@@ -1,0 +1,15 @@
+-- Migration 29: Complete media metadata for existing installations.
+-- Migration 27 also contains these fields for fresh installations; IF NOT
+-- EXISTS makes this migration safe for databases that already ran it.
+
+DEFINE FIELD IF NOT EXISTS video_type ON video_episode TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS style ON video_episode TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS character_id ON video_episode TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS custom_prompt ON video_episode TYPE option<string>;
+DEFINE FIELD IF NOT EXISTS aspect_ratio ON video_episode TYPE option<string>;
+
+DEFINE INDEX IF NOT EXISTS idx_video_episode_notebook ON video_episode COLUMNS notebook_id;
+DEFINE INDEX IF NOT EXISTS idx_video_episode_command ON video_episode COLUMNS command;
+
+DEFINE FIELD IF NOT EXISTS notebook_id ON episode TYPE option<string>;
+DEFINE INDEX IF NOT EXISTS idx_episode_notebook ON episode COLUMNS notebook_id;

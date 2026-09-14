@@ -130,4 +130,11 @@ export const podcastsApi = {
     const response = await apiClient.get<Language[]>('/languages')
     return response.data
   },
+
+  getJobStatus: async (jobId: string) => {
+    const response = await apiClient.get<{ status: string; result?: unknown; error_message?: string }>(
+      `/podcasts/jobs/${jobId}`
+    )
+    return response.data
+  },
 }

@@ -1,0 +1,2 @@
+-- Migration 27 rollback: Drop video_episode table
+REMOVE TABLE video_episode;

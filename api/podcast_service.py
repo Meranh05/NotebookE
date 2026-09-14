@@ -2,7 +2,7 @@ from typing import Any, Dict, Optional
 
 from fastapi import HTTPException
 from loguru import logger
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from surreal_commands import get_command_status, submit_command
 
 from notebooke.domain.notebook import Notebook
@@ -12,12 +12,12 @@ from notebooke.podcasts.models import EpisodeProfile, PodcastEpisode, SpeakerPro
 class PodcastGenerationRequest(BaseModel):
     """Request model for podcast generation"""
 
-    episode_profile: str
-    speaker_profile: str
-    episode_name: str
-    content: Optional[str] = None
-    notebook_id: Optional[str] = None
-    briefing_suffix: Optional[str] = None
+    episode_profile: str = Field(min_length=1, max_length=200)
+    speaker_profile: str = Field(min_length=1, max_length=200)
+    episode_name: str = Field(min_length=1, max_length=240)
+    content: Optional[str] = Field(default=None, max_length=2_000_000)
+    notebook_id: Optional[str] = Field(default=None, max_length=200)
+    briefing_suffix: Optional[str] = Field(default=None, max_length=4_000)
 
 
 class PodcastGenerationResponse(BaseModel):
@@ -55,25 +55,25 @@ class PodcastService:
             if not speaker_profile:
                 raise ValueError(f"Speaker profile '{speaker_profile_name}' not found")
 
-            # Get content from notebook if not provided directly
+            episode_name = episode_name.strip()
+            if not episode_name:
+                raise ValueError("Episode name is required")
+
+            # Get content from notebook if not provided directly.
             if not content and notebook_id:
                 try:
                     notebook = await Notebook.get(notebook_id)
-                    # Get notebook context (this may need to be adjusted based on actual Notebook implementation)
-                    content = (
-                        await notebook.get_context()
-                        if hasattr(notebook, "get_context")
-                        else str(notebook)
-                    )
+                    content = await notebook.get_context()
                 except Exception as e:
-                    logger.warning(
-                        f"Failed to get notebook content, using notebook_id as content: {e}"
-                    )
-                    content = f"Notebook ID: {notebook_id}"
+                    logger.warning(f"Failed to build notebook context: {e}")
+                    raise ValueError(
+                        "Unable to read content from the selected notebook"
+                    ) from e
 
+            content = content.strip() if content else ""
             if not content:
                 raise ValueError(
-                    "Content is required - provide either content or notebook_id"
+                    "The selected notebook has no usable source or note content"
                 )
 
             # Prepare command arguments (speaker profile as record ID)
@@ -81,7 +81,8 @@ class PodcastService:
                 "episode_profile": episode_profile_name,
                 "speaker_profile": str(speaker_profile.id),
                 "episode_name": episode_name,
-                "content": str(content),
+                "content": content,
+                "notebook_id": notebook_id,
                 "briefing_suffix": briefing_suffix,
             }
 
@@ -105,12 +106,17 @@ class PodcastService:
             )
             return job_id_str
 
+        except HTTPException:
+            raise
+        except ValueError as e:
+            logger.warning(f"Podcast generation request rejected: {e}")
+            raise HTTPException(status_code=400, detail=str(e)) from e
         except Exception as e:
             logger.error(f"Failed to submit podcast generation job: {e}")
             raise HTTPException(
                 status_code=500,
                 detail="Failed to submit podcast generation job",
-            )
+            ) from e
 
     @staticmethod
     async def get_job_status(job_id: str) -> Dict[str, Any]:

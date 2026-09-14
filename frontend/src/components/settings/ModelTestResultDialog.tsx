@@ -29,8 +29,8 @@ export function ModelTestResultDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
+      <DialogContent className="gap-0 p-0 sm:max-w-md">
+        <DialogHeader className={`border-b px-6 py-5 pr-14 ${result.success ? 'bg-fern/5' : 'bg-destructive/5'}`}>
           <DialogTitle className="flex items-center gap-2">
             {result.success ? (
               <IconCheck className="h-5 w-5 text-fern" />
@@ -41,7 +41,7 @@ export function ModelTestResultDialog({
           </DialogTitle>
         </DialogHeader>
 
-        <div className="space-y-3">
+        <div className="space-y-3 px-6 py-5">
           <p className="text-sm text-muted-foreground">{modelName}</p>
           <p className="text-sm">{result.message}</p>
 
@@ -52,7 +52,7 @@ export function ModelTestResultDialog({
           )}
         </div>
 
-        <DialogFooter>
+        <DialogFooter className="border-t bg-muted/10 px-6 py-4">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             {t('common.done')}
           </Button>

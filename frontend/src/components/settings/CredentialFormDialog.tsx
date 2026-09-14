@@ -131,15 +131,15 @@ export function CredentialFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
+      <DialogContent className="gap-0 p-0 sm:max-w-lg">
+        <DialogHeader className="border-b bg-muted/20 px-6 py-5 pr-14">
           <DialogTitle>
             {isEditing
               ? t('apiKeys.editConfig', { provider: providerDisplayName })
               : t('apiKeys.addConfig', { provider: providerDisplayName })}
           </DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="max-h-[calc(100vh-10rem)] space-y-4 overflow-y-auto px-6 py-5">
           {/* Name */}
           <div className="space-y-2">
             <Label htmlFor="cred-name">{t('apiKeys.configName')}</Label>

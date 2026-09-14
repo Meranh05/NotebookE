@@ -21,6 +21,9 @@ import pytest
 
 from commands.podcast_commands import (
     PodcastGenerationInput,
+    _select_language_fallback,
+    apply_language_voice_preset,
+    apply_presenter_names,
     generate_podcast_command,
 )
 from notebooke.podcasts.models import EpisodeProfile, SpeakerProfile
@@ -40,6 +43,126 @@ def make_input(speaker_profile=None):
         episode_name="Test Episode",
         content="test content",
     )
+
+
+def test_vietnamese_voice_preset_avoids_hoai_my_and_slows_pacing():
+    profile = {
+        "tts_config": {"api_key": "key"},
+        "speakers": [
+            {"name": "Host", "voice_id": "legacy-voice-1"},
+            {"name": "Guest", "voice_id": "legacy-voice-2"},
+        ],
+    }
+
+    apply_language_voice_preset(profile, "Vietnamese")
+
+    assert [speaker["voice_id"] for speaker in profile["speakers"]] == [
+        "vi-VN-NamMinhNeural",
+        "vi-VN-HoaiMyNeural",
+    ]
+    assert profile["tts_config"] == {
+        "api_key": "key",
+        "language": "vietnamese",
+        "rate": "-8%",
+    }
+    assert all(
+        speaker["tts_config"] == {"language": "vietnamese", "rate": "-8%"}
+        for speaker in profile["speakers"]
+    )
+
+
+def test_vietnamese_display_name_selects_native_edge_voices():
+    profile = {"speakers": [{"name": "Host"}, {"name": "Guest"}]}
+
+    apply_language_voice_preset(profile, "Tiếng Việt")
+
+    assert [speaker["voice_id"] for speaker in profile["speakers"]] == [
+        "vi-VN-NamMinhNeural",
+        "vi-VN-HoaiMyNeural",
+    ]
+
+
+def test_english_voice_preset_uses_native_english_voices():
+    profile = {
+        "speakers": [
+            {"name": "Host", "voice_id": "old-1"},
+            {"name": "Guest", "voice_id": "old-2"},
+        ]
+    }
+
+    apply_language_voice_preset(profile, "en-US")
+
+    assert [speaker["voice_id"] for speaker in profile["speakers"]] == [
+        "en-US-GuyNeural",
+        "en-US-JennyNeural",
+    ]
+    assert profile["tts_config"]["rate"] == "-2%"
+    assert profile["tts_config"]["language"] == "en-us"
+
+
+def test_presenter_names_follow_voice_gender():
+    profile = {
+        "speakers": [
+            {"name": "Marcus", "voice_id": "vi-VN-NamMinhNeural"},
+            {"name": "Elena", "voice_id": "vi-VN-HoaiMyNeural"},
+        ]
+    }
+
+    apply_presenter_names(profile)
+
+    assert [speaker["name"] for speaker in profile["speakers"]] == ["Eric", "Luna"]
+
+
+@pytest.mark.asyncio
+async def test_language_fallback_prefers_other_configured_default():
+    preferred = Mock(id="model:qwen", type="language")
+    arbitrary = Mock(id="model:image-model", type="language")
+    defaults = Mock(
+        default_transformation_model="model:qwen",
+        default_tools_model=None,
+        large_context_model=None,
+        default_chat_model="model:failed",
+    )
+
+    with (
+        patch(
+            "notebooke.ai.models.DefaultModels.get_instance",
+            new=AsyncMock(return_value=defaults),
+        ),
+        patch(
+            "notebooke.ai.models.Model.get_models_by_type",
+            new=AsyncMock(return_value=[arbitrary, preferred]),
+        ),
+    ):
+        selected = await _select_language_fallback({"model:failed"})
+
+    assert selected is preferred
+
+
+@pytest.mark.asyncio
+async def test_language_fallback_never_uses_unconfigured_model():
+    configured = Mock(id="model:gemma", type="language")
+    unconfigured = Mock(id="model:qwen", type="language")
+    defaults = Mock(
+        default_transformation_model="model:gemma",
+        default_tools_model="model:gemma",
+        large_context_model="model:gemma",
+        default_chat_model="model:gemma",
+    )
+
+    with (
+        patch(
+            "notebooke.ai.models.DefaultModels.get_instance",
+            new=AsyncMock(return_value=defaults),
+        ),
+        patch(
+            "notebooke.ai.models.Model.get_models_by_type",
+            new=AsyncMock(return_value=[configured, unconfigured]),
+        ),
+    ):
+        selected = await _select_language_fallback({"model:gemma"})
+
+    assert selected is None
 
 
 class TestSpeakerProfileResolution:

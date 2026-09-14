@@ -318,6 +318,8 @@ async def get_default_models():
             default_speech_to_text_model=defaults.default_speech_to_text_model,  # type: ignore[attr-defined]
             default_embedding_model=defaults.default_embedding_model,  # type: ignore[attr-defined]
             default_tools_model=defaults.default_tools_model,  # type: ignore[attr-defined]
+            default_video_model=defaults.default_video_model,  # type: ignore[attr-defined]
+            default_image_model=(getattr(defaults, "default_image_model", None) if isinstance(getattr(defaults, "default_image_model", None), str) else None),
         )
     except HTTPException:
         raise
@@ -372,6 +374,8 @@ async def update_default_models(defaults_data: DefaultModelsResponse):
             default_speech_to_text_model=defaults.default_speech_to_text_model,  # type: ignore[attr-defined]
             default_embedding_model=defaults.default_embedding_model,  # type: ignore[attr-defined]
             default_tools_model=defaults.default_tools_model,  # type: ignore[attr-defined]
+            default_video_model=defaults.default_video_model,  # type: ignore[attr-defined]
+            default_image_model=(getattr(defaults, "default_image_model", None) if isinstance(getattr(defaults, "default_image_model", None), str) else None),
         )
     except HTTPException:
         raise
