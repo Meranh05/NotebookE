@@ -49,26 +49,48 @@
   <a href="https://zdoc.app/zh/lfnovo/notebooke">中文</a>
 </div>
 
-## Research, create, and keep control of your data
+## A private AI research and media workspace that runs on your PC
 
-![New Notebook](docs/assets/asset_list.png)
+![NotebookE notebook library](docs/assets/notebooke-notebooks.png)
 
-In a world dominated by Artificial Intelligence, having the ability to think 🧠 and acquire new knowledge 💡, is a skill that should not be a privilege for a few, nor restricted to a single provider.
+NotebookE turns your documents, links, audio, and video into a searchable knowledge base. Ask questions with source context, organize research in notebooks, and create narrated podcasts or videos from the same material.
 
-NotebookE combines document research, local and cloud AI models, contextual chat, and media generation in one self-hosted workspace.
+The system supports local AI through Ollama and OpenAI-compatible servers alongside cloud providers. Your frontend, API, database, background worker, Edge TTS narration, and video workflow can all run on your own computer.
 
 **NotebookE empowers you to:**
 
 - 🔒 **Control your data** - Keep your research private and secure
-- 🤖 **Choose your AI models** - Support for 18+ providers including OpenAI, Anthropic, Ollama, LM Studio, and more
+- 🤖 **Use local or cloud AI** - Connect Ollama, LM Studio, OpenAI-compatible endpoints, Google, OpenAI, Anthropic, and more
 - 📚 **Organize multi-modal content** - PDFs, videos, audio, web pages, and more
-- 🎙️ **Generate professional podcasts** - Advanced multi-speaker podcast generation
-- 🎬 **Create videos on your PC** - Turn notebook content into narrated videos with locally managed workflows
-- 🗣️ **Use natural Edge TTS voices** - Vietnamese and English-aware narration for podcasts and videos
+- 🎙️ **Generate multi-speaker podcasts** - Reusable episode profiles, Eric and Luna presenters, live progress, outline tracking, and downloadable audio
+- 🎬 **Create videos on your PC** - Build scripts, scenes, captions, visuals, narration, and final video from notebook content
+- 🗣️ **Use Edge TTS narration** - Vietnamese voices with improved English technical pronunciation for podcasts and videos
 - 🔍 **Search intelligently** - Full-text and vector search across all your content
-- 💬 **Chat with context** - AI conversations powered by your research
-- 🌐 **Multi-language UI** - English, Portuguese, Chinese (Simplified & Traditional), Japanese, Russian, and Bengali support
+- 💬 **Chat with context** - Stream answers from selected models, keep conversation history, and stop generation at any time
+- ⚡ **See updates without refreshing** - Podcast and video jobs update in real time while background workers process them
+- 🌐 **Use a multilingual UI** - Vietnamese, English, and other supported interface languages
 
+### See NotebookE in action
+
+| Notebook workspace | Ask and Search |
+| --- | --- |
+| ![Chat with a NotebookE notebook](docs/assets/notebooke-workspace.png) | ![Ask and Search across the knowledge base](docs/assets/notebooke-ask-search.png) |
+
+| Podcast production | Video production |
+| --- | --- |
+| ![Podcast generation and episode management](docs/assets/notebooke-podcasts.png) | ![Local AI video generation and management](docs/assets/notebooke-videos.png) |
+
+### How the system works
+
+```text
+Next.js web app :3000
+        ↓
+FastAPI service :5055
+        ↓
+SurrealDB :8000  +  background command worker
+        ↓
+Local/cloud LLMs  ·  Edge TTS  ·  Podcast pipeline  ·  Video pipeline
+```
 
 ---
 
@@ -77,9 +99,9 @@ NotebookE combines document research, local and cloud AI models, contextual chat
 | Feature | NotebookE | Google Notebook LM | Advantage |
 | --------- | --------------- | -------------------- | ----------- |
 | **Privacy & Control** | Self-hosted, your data | Google cloud only | Complete data sovereignty |
-| **AI Provider Choice** | 18+ providers (OpenAI, Anthropic, Ollama, LM Studio, etc.) | Google models only | Flexibility and cost optimization |
+| **AI Provider Choice** | Local and cloud models, including Ollama and OpenAI-compatible APIs | Google models only | Flexibility and local processing |
 | **Podcast Speakers** | 1-4 speakers with custom profiles | 2 speakers only | Extreme flexibility |
-| **Video Generation** | Create narrated videos from notebook content | Limited | Research-to-video workflow on your PC |
+| **Video Generation** | Script, scenes, visuals, captions, Edge TTS, and final rendering | Limited | A complete research-to-video workflow on your PC |
 | **Content Transformations** | Custom and built-in | Limited options | Unlimited processing power |
 | **API Access** | Full REST API | No API | Complete automation |
 | **Deployment** | Docker, cloud, or local | Google hosted only | Deploy anywhere |
@@ -90,8 +112,8 @@ NotebookE combines document research, local and cloud AI models, contextual chat
 **Why Choose NotebookE?**
 
 - 🔒 **Privacy First**: Your sensitive research stays completely private
-- 💰 **Cost Control**: Choose cheaper AI providers or run locally with Ollama
-- 🎙️ **Better Podcasts**: Full script control and multi-speaker flexibility vs limited 2-speaker deep-dive format
+- 💰 **Cost Control**: Choose a cloud provider or run compatible models locally
+- 🎙️ **Podcast and Video Creation**: Reuse your notebook context to produce scripts, speech, and rendered media
 - 🔧 **Unlimited Customization**: Modify, extend, and integrate as needed
 - 🌐 **No Vendor Lock-in**: Switch providers, deploy anywhere, own your data
 
@@ -99,102 +121,74 @@ NotebookE combines document research, local and cloud AI models, contextual chat
 
 [![Python][Python]][Python-url] [![Next.js][Next.js]][Next-url] [![React][React]][React-url] [![SurrealDB][SurrealDB]][SurrealDB-url] [![LangChain][LangChain]][LangChain-url]
 
-## 🚀 Quick Start (2 Minutes)
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed
-- That's it! (API keys configured later in the UI)
+- Python 3.11+
+- Node.js 20+
+- Docker Desktop for SurrealDB
+- FFmpeg for Podcast and Video rendering
+- An AI provider, or a local model server such as Ollama or LM Studio
 
-### Step 1: Get docker-compose.yml
+### Step 1: Clone and install
 
-**Option A:** Download directly
+```bash
+git clone https://github.com/Meranh05/NotebookE.git
+cd NotebookE
+uv sync
+cd frontend && npm install && cd ..
+```
+
+### Step 2: Configure the environment
+
+Copy `.env.example` to `.env`, set `OPEN_NOTEBOOK_ENCRYPTION_KEY`, and configure any provider credentials you need. Provider models can also be added later from **Models** in the web interface.
+
+### Step 3: Start NotebookE
+
+Start each service in dependency order:
+
+```bash
+make database
+make api
+make worker-start
+make frontend
+```
+
+Or start the complete local stack:
+
+```bash
+make start-all
+```
+
+Open **<http://localhost:3000>**. The API runs at `http://localhost:5055` and SurrealDB at `http://localhost:8000`.
+
+> The background worker is required for source processing, embeddings, Podcasts, and Videos. Jobs remain queued if the worker is not running.
+
+### Docker deployment
+
+For a container-based installation, download the project compose file:
 
 ```bash
 curl -o docker-compose.yml https://raw.githubusercontent.com/Meranh05/NotebookE/main/docker-compose.yml
 ```
 
-**Option B:** Create the file manually
-Copy this into a new file called `docker-compose.yml`:
-
-```yaml
-services:
-  surrealdb:
-    image: surrealdb/surrealdb:v2
-    # Credentials default to root:root for a zero-config local setup. Before
-    # exposing this instance to a network, set SURREAL_USER / SURREAL_PASSWORD
-    # in a .env file (see .env.example) — they are applied here and to the
-    # notebooke service below, so the two always stay in sync.
-    # List (exec) form so each interpolated value stays a single argument —
-    # a password containing spaces would otherwise be split into several.
-    command: ["start", "--log", "info", "--user", "${SURREAL_USER:-root}", "--pass", "${SURREAL_PASSWORD:-root}", "rocksdb:/mydata/mydatabase.db"]
-    user: root  # Required for bind mounts on Linux
-    ports:
-      # Bound to localhost only: the notebooke service reaches this over
-      # the internal compose network regardless, so the host port is purely
-      # for local debugging (e.g. Surrealist, `surreal sql`). Exposing this
-      # on 0.0.0.0 would let anyone who can reach the host connect with the
-      # default root:root credentials.
-      - "127.0.0.1:8000:8000"
-    volumes:
-      - ./surreal_data:/mydata
-    environment:
-      - SURREAL_EXPERIMENTAL_GRAPHQL=true
-    restart: always
-    pull_policy: always
-
-  notebooke:
-    image: lfnovo/notebooke:v1-latest
-    ports:
-      - "8502:8502"  # Web UI
-      - "5055:5055"  # REST API
-    environment:
-      # REQUIRED: Change this to your own secret string
-      # This encrypts your API keys in the database
-      - OPEN_NOTEBOOK_ENCRYPTION_KEY=change-me-to-a-secret-string
-
-      # Database connection. SURREAL_USER / SURREAL_PASSWORD default to root:root
-      # for local use; override them in a .env file before exposing the instance
-      # (the same values configure the surrealdb service above).
-      - SURREAL_URL=ws://surrealdb:8000/rpc
-      - SURREAL_USER=${SURREAL_USER:-root}
-      - SURREAL_PASSWORD=${SURREAL_PASSWORD:-root}
-      - SURREAL_NAMESPACE=notebooke
-      - SURREAL_DATABASE=notebooke
-    volumes:
-      - ./notebook_data:/app/data
-    depends_on:
-      - surrealdb
-    restart: always
-    pull_policy: always
-```
-
-### Step 2: Set Your Encryption Key
-
-Edit `docker-compose.yml` and change this line:
-
-```yaml
-- OPEN_NOTEBOOK_ENCRYPTION_KEY=change-me-to-a-secret-string
-```
-
-to any secret value (e.g., `my-super-secret-key-123`)
-
-### Step 3: Start Services
+Set `OPEN_NOTEBOOK_ENCRYPTION_KEY` in `.env`, then start the containers:
 
 ```bash
 docker compose up -d
 ```
 
-Wait 15-20 seconds, then open: **<http://localhost:8502>**
+Use `docker compose logs -f` to follow startup and migration progress. See the installation guide for local AI, storage, and production deployment options.
 
-### Step 4: Configure AI Provider
+### Configure an AI provider
 
 1. Go to **Models** and choose your provider (OpenAI, Anthropic, Google, etc.)
 2. Click **+ Add Configuration**
 3. Paste your API key and other info as needed and click **Add Configuration**
 4. Click **Test** to test connection
 5. Click **Sync Models** and check models to include
-6. Under **Default Model Assignments**, click **Auto-Assign Defaults** or manually specify which models to use for what
+6. Assign the chat, transformation, embedding, and optional media models you want to use
 
 Done! You're ready to create your first notebook.
 
@@ -218,7 +212,7 @@ Done! You're ready to create your first notebook.
 - **🤖 AI Installation Assistant**: [CustomGPT to help you install](https://chatgpt.com/g/g-68776e2765b48191bd1bae3f30212631-notebooke-installation-assistant)
 - **🆘 Troubleshooting**: [5-minute troubleshooting guide](docs/6-TROUBLESHOOTING/quick-fixes.md)
 - **💬 Community Support**: [Discord Server](https://discord.gg/37XJPXfz2w)
-- **🐛 Report Issues**: [GitHub Issues](https://github.com/lfnovo/notebooke/issues)
+- **🐛 Report Issues**: [GitHub Issues](https://github.com/Meranh05/NotebookE/issues)
 
 ---
 
@@ -265,9 +259,11 @@ Thanks to the [Esperanto](https://github.com/lfnovo/esperanto) library, we suppo
 - **📚 Universal Content Support**: PDFs, videos, audio, web pages, Office docs, and more
 - **🤖 Multi-Model AI Support**: 18+ providers including OpenAI, Anthropic, Ollama, Google, LM Studio, and more
 - **🎙️ Professional Podcast Generation**: Advanced multi-speaker podcasts with Episode Profiles
+- **🎬 Local Video Production**: Generate structured scenes, captions, visuals, Edge TTS narration, and rendered videos
 - **🔍 Intelligent Search**: Full-text and vector search across all your content
 - **💬 Context-Aware Chat**: AI conversations powered by your research materials
 - **📝 AI-Assisted Notes**: Generate insights or write notes manually
+- **⚡ Live Job Updates**: Follow Podcast and Video generation without reloading the page
 
 ### Advanced Features
 
@@ -278,9 +274,11 @@ Thanks to the [Esperanto](https://github.com/lfnovo/esperanto) library, we suppo
 - **📊 Fine-Grained Context Control**: Choose exactly what to share with AI models
 - **📎 Citations**: Get answers with proper source citations
 
-## Podcast Feature
+## Podcast and Video Creation
 
-[![Check out our podcast sample](https://img.youtube.com/vi/D-760MlGwaI/0.jpg)](https://www.youtube.com/watch?v=D-760MlGwaI)
+NotebookE uses the same notebook context for both media workflows. Podcast generation supports reusable speaker and episode profiles, while Video generation turns research into planned scenes with synchronized narration and captions. Both workflows run as background jobs and update the interface as progress changes.
+
+![NotebookE local video workspace](docs/assets/notebooke-videos.png)
 
 ## 📚 Documentation
 
@@ -318,10 +316,10 @@ Thanks to the [Esperanto](https://github.com/lfnovo/esperanto) library, we suppo
 
 ### Upcoming Features
 
-- **Live Front-End Updates**: Real-time UI updates for smoother experience
-- **Async Processing**: Faster UI through asynchronous content processing
 - **Cross-Notebook Sources**: Reuse research materials across projects
 - **Bookmark Integration**: Connect with your favorite bookmarking apps
+- **More Video Templates**: Expand reusable landscape and vertical storytelling styles
+- **Richer Citations**: Improve source-level evidence in chat, search, and generated media
 
 ### Recently Completed ✅
 
@@ -329,6 +327,9 @@ Thanks to the [Esperanto](https://github.com/lfnovo/esperanto) library, we suppo
 - **Comprehensive REST API**: Full programmatic access to all functionality
 - **Multi-Model Support**: 18+ AI providers including OpenAI, Anthropic, Ollama, LM Studio
 - **Advanced Podcast Generator**: Professional multi-speaker podcasts with Episode Profiles
+- **Local Video Workflow**: Script planning, visual generation, captions, Edge TTS, and rendering
+- **Live Front-End Updates**: Podcast and Video progress refreshes without a full page reload
+- **Async Processing**: Background workers keep long-running AI and media tasks responsive
 - **Content Transformations**: Powerful customizable actions for content processing
 - **Enhanced Citations**: Improved layout and finer control for source citations
 - **Multiple Chat Sessions**: Manage different conversations within notebooks
@@ -349,8 +350,8 @@ Thanks to the [Esperanto](https://github.com/lfnovo/esperanto) library, we suppo
 
 - 💬 **[Discord Server](https://discord.gg/37XJPXfz2w)** - Get help, share ideas, and connect with other users
 - 𝕏 **[Follow @lfnovo on X](https://x.com/lfnovo)** - Project updates and news from the maintainer
-- 💡 **[GitHub Discussions](https://github.com/lfnovo/notebooke/discussions)** - Ask questions and shape features, product direction, design, and architecture
-- 🐛 **[GitHub Issues](https://github.com/lfnovo/notebooke/issues)** - Report reproducible bugs and find approved work
+- 💡 **[GitHub Discussions](https://github.com/Meranh05/NotebookE/discussions)** - Ask questions and shape features, product direction, design, and architecture
+- 🐛 **[GitHub Issues](https://github.com/Meranh05/NotebookE/issues)** - Report reproducible bugs and find approved work
 - ⭐ **Star this repo** - Show your support and help others discover NotebookE
 
 ### Contributing
@@ -377,22 +378,22 @@ NotebookE is MIT licensed. See the [LICENSE](LICENSE) file for details.
 
 - 💬 [Discord Server](https://discord.gg/37XJPXfz2w) - Get help, share ideas, and connect with users
 - 𝕏 [Follow @lfnovo on X](https://x.com/lfnovo) - Project updates and news from the maintainer
-- 💡 [GitHub Discussions](https://github.com/lfnovo/notebooke/discussions) - Ask questions and shape ideas
-- 🐛 [GitHub Issues](https://github.com/lfnovo/notebooke/issues) - Report reproducible bugs and find approved work
+- 💡 [GitHub Discussions](https://github.com/Meranh05/NotebookE/discussions) - Ask questions and shape ideas
+- 🐛 [GitHub Issues](https://github.com/Meranh05/NotebookE/issues) - Report reproducible bugs and find approved work
 - 🌐 [Website](https://www.notebooke.ai) - Learn more about the project
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[forks-shield]: https://img.shields.io/github/forks/lfnovo/notebooke.svg?style=for-the-badge
-[forks-url]: https://github.com/lfnovo/notebooke/network/members
-[stars-shield]: https://img.shields.io/github/stars/lfnovo/notebooke.svg?style=for-the-badge
-[stars-url]: https://github.com/lfnovo/notebooke/stargazers
-[issues-shield]: https://img.shields.io/github/issues/lfnovo/notebooke.svg?style=for-the-badge
-[issues-url]: https://github.com/lfnovo/notebooke/issues
-[license-shield]: https://img.shields.io/github/license/lfnovo/notebooke.svg?style=for-the-badge
-[license-url]: https://github.com/lfnovo/notebooke/blob/master/LICENSE.txt
+[forks-shield]: https://img.shields.io/github/forks/Meranh05/NotebookE.svg?style=for-the-badge
+[forks-url]: https://github.com/Meranh05/NotebookE/network/members
+[stars-shield]: https://img.shields.io/github/stars/Meranh05/NotebookE.svg?style=for-the-badge
+[stars-url]: https://github.com/Meranh05/NotebookE/stargazers
+[issues-shield]: https://img.shields.io/github/issues/Meranh05/NotebookE.svg?style=for-the-badge
+[issues-url]: https://github.com/Meranh05/NotebookE/issues
+[license-shield]: https://img.shields.io/github/license/Meranh05/NotebookE.svg?style=for-the-badge
+[license-url]: https://github.com/Meranh05/NotebookE/blob/main/LICENSE
 [Next.js]: https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white
 [Next-url]: https://nextjs.org/
 [React]: https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black
