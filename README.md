@@ -11,7 +11,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/Meranh05/NotebookE">
-    <img src="docs/assets/hero.svg" alt="NotebookE logo" width="156">
+    <img src="frontend/public/logo.png" alt="NotebookE logo" width="96">
   </a>
 
   <h3 align="center">NotebookE</h3>
