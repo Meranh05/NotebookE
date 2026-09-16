@@ -65,7 +65,7 @@ const getNavigation = (t: TFunction): NavigationSection[] => [
 function AppLogo({ size = 32 }: { size?: number }) {
   return (
     <Image
-      src="/logo.svg"
+      src="/logo.png"
       alt="NotebookE"
       width={size}
       height={size}
