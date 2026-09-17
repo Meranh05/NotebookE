@@ -156,9 +156,9 @@ export default function SearchPage() {
   }, [searchParams])
 
   return (
-      <div className="flex-1 flex flex-col relative h-full">
+      <div className="flex h-full min-h-0 flex-1 flex-col overflow-hidden">
         {/* Scrollable Content Area */}
-        <div className="flex-1 overflow-y-auto p-4 md:p-6 pb-[250px] flex flex-col items-center">
+        <div className="flex min-h-0 flex-1 flex-col items-center overflow-y-auto p-4 pb-6 md:p-6 md:pb-8">
           <div className="w-full max-w-4xl mt-4 md:mt-8">
             <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'ask' | 'search')} className="w-full flex flex-col">
               <div className="mb-8 flex w-full flex-col gap-5 rounded-2xl border border-border/80 bg-card p-5 shadow-sm md:flex-row md:items-center md:justify-between">
@@ -373,12 +373,12 @@ export default function SearchPage() {
           </div>
         </div>
 
-        {/* Fixed Input Area at Bottom */}
-        <div className="pointer-events-none absolute bottom-0 left-0 right-0 z-10 flex flex-col items-center border-t border-border/80 bg-background/95 px-4 py-4 shadow-[0_-8px_24px_rgba(15,23,42,0.04)] backdrop-blur-sm md:px-6 dark:shadow-[0_-8px_24px_rgba(0,0,0,0.16)]">
+        {/* Compact input dock — participates in layout so it never covers results. */}
+        <div className="pointer-events-none z-10 flex shrink-0 flex-col items-center px-4 pb-3 pt-1 md:px-6">
           <div className="w-full max-w-4xl pointer-events-auto">
             
             {activeTab === 'ask' && (
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-1">
                 {!hasEmbeddingModel && (
                   <div className="mx-auto flex w-fit items-center gap-2 rounded-md border border-warn/30 bg-warn-tint px-3 py-2 text-xs text-warn">
                     <IconAlertCircle className="h-3.5 w-3.5" />
@@ -386,7 +386,7 @@ export default function SearchPage() {
                   </div>
                 )}
                 
-                <div className="relative flex items-center overflow-hidden rounded-2xl border border-border bg-card p-1.5 shadow-sm transition-[border-color,box-shadow] focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/20">
+                <div className="relative flex items-center overflow-hidden rounded-2xl border border-border bg-card/95 p-1 shadow-sm backdrop-blur-md transition-[border-color,box-shadow] focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/20">
                   <div className="flex items-center gap-1 pl-1 md:pl-2 shrink-0">
                     <Button variant="ghost" size="icon" onClick={() => setShowAdvancedModels(true)} className="h-9 w-9 rounded-md text-muted-foreground hover:text-foreground" title={t('searchPage.advanced')}>
                       <IconSettings className="h-5 w-5" />
@@ -398,7 +398,7 @@ export default function SearchPage() {
                     value={askQuestion}
                     onChange={(e) => setAskQuestion(e.target.value)}
                     placeholder={t('searchPage.enterQuestionPlaceholder')}
-                    className="flex-1 border-0 focus-visible:ring-0 resize-none shadow-none text-base bg-transparent min-h-[52px] max-h-[160px] py-4 px-3 md:px-4 placeholder:text-muted-foreground/60"
+                    className="min-h-[44px] max-h-[128px] flex-1 resize-none border-0 bg-transparent px-3 py-3 text-sm shadow-none placeholder:text-muted-foreground/60 focus-visible:ring-0 md:px-4"
                     rows={1}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter' && !e.shiftKey && !ask.isStreaming && askQuestion.trim()) {
@@ -420,7 +420,7 @@ export default function SearchPage() {
                       onClick={ask.isStreaming ? () => ask.cancel() : handleAsk}
                       disabled={!ask.isStreaming && !askQuestion.trim()}
                       size="icon"
-                      className="h-11 w-11 rounded-full bg-foreground text-background hover:bg-foreground/90 hover:scale-105 active:scale-95 transition-all shadow-md ml-1 disabled:opacity-40 disabled:hover:scale-100"
+                      className="ml-1 h-10 w-10 rounded-full bg-foreground text-background shadow-sm transition-all hover:scale-105 hover:bg-foreground/90 active:scale-95 disabled:opacity-40 disabled:hover:scale-100"
                     >
                       {ask.isStreaming ? <IconSquare className="h-4 w-4 fill-current" /> : <IconArrowUp className="h-5 w-5" />}
                     </Button>
@@ -428,7 +428,7 @@ export default function SearchPage() {
                 </div>
 
                 {hasEmbeddingModel && (
-                  <div className="flex gap-4 justify-center px-4 pt-3 opacity-60 hover:opacity-100 transition-opacity">
+                  <div className="flex flex-wrap justify-center gap-x-4 gap-y-1 px-4 pt-1 opacity-60 transition-opacity hover:opacity-100">
                     <div className="flex items-center gap-1.5 text-[10px] font-medium tracking-wide uppercase text-muted-foreground">
                       <span className="opacity-70">{t('searchPage.strategy')}</span>
                       <span className="text-foreground/80">{resolveModelName(customModels?.strategy || modelDefaults?.default_chat_model)}</span>
@@ -447,7 +447,7 @@ export default function SearchPage() {
             )}
 
             {activeTab === 'search' && (
-              <div className="relative flex items-center overflow-hidden rounded-2xl border border-border bg-card p-1.5 shadow-sm transition-[border-color,box-shadow] focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/20">
+              <div className="relative flex items-center overflow-hidden rounded-2xl border border-border bg-card/95 p-1 shadow-sm backdrop-blur-md transition-[border-color,box-shadow] focus-within:border-ring focus-within:ring-2 focus-within:ring-ring/20">
                 <div className="flex items-center pl-4 pr-2 shrink-0 text-muted-foreground">
                   <IconSearch className="h-5 w-5" />
                 </div>
@@ -457,7 +457,7 @@ export default function SearchPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder={t('searchPage.enterSearchPlaceholder')}
-                  className="flex-1 border-0 focus-visible:ring-0 shadow-none text-base bg-transparent h-[52px] px-2 md:px-3 placeholder:text-muted-foreground/60"
+                  className="h-11 flex-1 border-0 bg-transparent px-2 text-sm shadow-none placeholder:text-muted-foreground/60 focus-visible:ring-0 md:px-3"
                   onKeyPress={handleKeyPress}
                   disabled={searchMutation.isPending}
                   autoComplete="off"
@@ -468,7 +468,7 @@ export default function SearchPage() {
                     onClick={handleSearch}
                     disabled={searchMutation.isPending || !searchQuery.trim()}
                     size="icon"
-                    className="h-11 w-11 rounded-full bg-foreground text-background hover:bg-foreground/90 hover:scale-105 active:scale-95 transition-all shadow-md ml-1 disabled:opacity-40 disabled:hover:scale-100"
+                    className="ml-1 h-10 w-10 rounded-full bg-foreground text-background shadow-sm transition-all hover:scale-105 hover:bg-foreground/90 active:scale-95 disabled:opacity-40 disabled:hover:scale-100"
                   >
                     {searchMutation.isPending ? <LoadingSpinner size="sm" /> : <IconArrowUp className="h-5 w-5" />}
                   </Button>
