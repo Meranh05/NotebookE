@@ -25,8 +25,8 @@
     .veil {
       position: absolute; inset: 0;
       background:
-        linear-gradient(90deg, rgba(3,9,19,.96) 0%, rgba(3,9,19,.68) 37%, rgba(3,9,19,.14) 72%),
-        linear-gradient(0deg, rgba(3,9,19,.92) 0%, transparent 46%);
+        linear-gradient(90deg, color-mix(in srgb, var(--bg) 96%, transparent) 0%, color-mix(in srgb, var(--bg) 68%, transparent) 37%, color-mix(in srgb, var(--bg) 14%, transparent) 72%),
+        linear-gradient(0deg, color-mix(in srgb, var(--bg) 92%, transparent) 0%, transparent 46%);
     }
     .grain { position: absolute; inset: 0; opacity: .09; background-image: radial-gradient(rgba(255,255,255,.7) .7px, transparent .7px); background-size: 7px 7px; mix-blend-mode: soft-light; }
     .topbar { position: absolute; top: 58px; left: 72px; right: 72px; display: flex; align-items: center; justify-content: space-between; z-index: 4; }
@@ -56,46 +56,47 @@
     body.theme-light .title { text-shadow: 0 3px 24px rgba(255,255,255,.55); }
 
     body.layout-split .media { left: 49%; }
-    body.layout-split .veil { background: linear-gradient(90deg, #07111f 0 47%, rgba(7,17,31,.96) 52%, rgba(7,17,31,.08) 78%); }
+    body.layout-split .veil { background: linear-gradient(90deg, var(--bg) 0 47%, color-mix(in srgb, var(--bg) 96%, transparent) 52%, color-mix(in srgb, var(--bg) 8%, transparent) 78%); }
     body.layout-split .content { top: 240px; width: 720px; }
     body.layout-split .caption { max-width: 790px; }
 
     body.layout-diagram .media { inset: 155px 95px 225px 860px; border: 1px solid rgba(255,255,255,.16); border-radius: 26px; box-shadow: 0 30px 90px rgba(0,0,0,.42); }
-    body.layout-diagram .media img { object-fit: contain; background: #0b1727; }
-    body.layout-diagram .veil { background: radial-gradient(circle at 68% 45%, rgba(45,212,191,.13), transparent 36%), linear-gradient(90deg, #07111f 0 43%, rgba(7,17,31,.52)); }
+    body.layout-diagram .media img { object-fit: contain; background: var(--panel); }
+    body.layout-diagram .veil { background: radial-gradient(circle at 68% 45%, color-mix(in srgb, var(--accent) 13%, transparent), transparent 36%), linear-gradient(90deg, var(--bg) 0 43%, color-mix(in srgb, var(--bg) 52%, transparent)); }
     body.layout-diagram .content { top: 235px; width: 700px; }
     body.layout-diagram .caption { max-width: 760px; }
 
     body.layout-timeline .media { inset: 235px 80px 280px; border-radius: 28px; }
-    body.layout-timeline .veil { background: linear-gradient(180deg, #07111f 0 16%, rgba(7,17,31,.06) 42% 66%, #07111f 88%); }
+    body.layout-timeline .veil { background: linear-gradient(180deg, var(--bg) 0 16%, color-mix(in srgb, var(--bg) 6%, transparent) 42% 66%, var(--bg) 88%); }
     body.layout-timeline .content { top: 132px; left: 120px; width: 1500px; }
     body.layout-timeline .title { font-size: 60px; }
     body.layout-timeline .purpose { margin-bottom: 12px; }
     body.layout-timeline .caption { left: 280px; right: 280px; max-width: none; justify-content: center; text-align: center; }
 
     body.layout-comparison .media { inset: 145px 80px 245px 760px; border-radius: 28px; }
-    body.layout-comparison .veil { background: linear-gradient(90deg, #07111f 0 36%, rgba(7,17,31,.82) 50%, rgba(7,17,31,.15) 76%), linear-gradient(0deg, #07111f, transparent 45%); }
+    body.layout-comparison .veil { background: linear-gradient(90deg, var(--bg) 0 36%, color-mix(in srgb, var(--bg) 82%, transparent) 50%, color-mix(in srgb, var(--bg) 15%, transparent) 76%), linear-gradient(0deg, var(--bg), transparent 45%); }
     body.layout-comparison .content { top: 220px; width: 630px; }
     body.layout-comparison .title { font-size: 62px; }
     body.layout-comparison .caption { max-width: 760px; }
 
-    body.layout-focus .veil { background: radial-gradient(circle at 62% 42%, rgba(14,165,233,.05), rgba(3,9,19,.58) 54%, rgba(3,9,19,.95)); }
+    body.layout-focus .veil { background: radial-gradient(circle at 62% 42%, color-mix(in srgb, var(--accent) 5%, transparent), color-mix(in srgb, var(--bg) 58%, transparent) 54%, color-mix(in srgb, var(--bg) 95%, transparent)); }
     body.layout-focus .content { left: 250px; top: 260px; width: 1420px; text-align: center; }
     body.layout-focus .title { font-size: 88px; }
     body.layout-focus .keywords { font-size: 24px; }
     body.layout-focus .caption { left: 330px; right: 330px; max-width: none; justify-content: center; text-align: center; }
     body.layout-process .media { inset: 165px 80px 250px 820px; border-radius: 28px; }
     body.layout-process .media img { object-position: 62% center; }
-    body.layout-process .veil { background: linear-gradient(90deg, #07111f 0 40%, rgba(7,17,31,.6) 62%, rgba(7,17,31,.1)); }
+    body.layout-process .veil { background: linear-gradient(90deg, var(--bg) 0 40%, color-mix(in srgb, var(--bg) 60%, transparent) 62%, color-mix(in srgb, var(--bg) 10%, transparent)); }
     body.layout-process .content { top: 240px; width: 650px; }
     body.layout-process .title { font-size: 64px; }
     body.layout-process .caption { max-width: 780px; }
     body.layout-metrics .media { inset: 145px 90px 245px; border-radius: 28px; }
-    body.layout-metrics .veil { background: linear-gradient(180deg, #07111f 0 15%, rgba(7,17,31,.04) 43%, #07111f 87%); }
+    body.layout-metrics .veil { background: linear-gradient(180deg, var(--bg) 0 15%, color-mix(in srgb, var(--bg) 4%, transparent) 43%, var(--bg) 87%); }
     body.layout-metrics .content { left: 120px; top: 190px; width: 1420px; }
     body.layout-metrics .title { font-size: 72px; }
     body.layout-metrics .caption { left: 250px; right: 250px; max-width: none; }
     body.theme-light .veil { background: linear-gradient(90deg, rgba(255,255,255,.95) 0%, rgba(255,255,255,.7) 38%, rgba(255,255,255,.08) 75%), linear-gradient(0deg, rgba(255,255,255,.88), transparent 48%); }
+    body.theme-light.layout-split .veil,
     body.theme-light.layout-diagram .veil,
     body.theme-light.layout-comparison .veil,
     body.theme-light.layout-process .veil { background: linear-gradient(90deg, var(--bg) 0 42%, color-mix(in srgb, var(--bg) 72%, transparent) 60%, transparent 82%); }

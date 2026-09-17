@@ -11,7 +11,7 @@
     body { --accent:{{accent=#2dd4bf}}; --accent2:{{accent_2=#38bdf8}}; --ink:{{ink=#f8fafc}}; --muted:{{muted=#cbd5e1}}; --bg:{{background=#07111f}}; --panel:{{panel=#0f172a}}; position:relative; background:var(--bg); color:var(--ink); font-family:"Segoe UI","Be Vietnam Pro",Arial,sans-serif; }
     .media { position:absolute; inset:0; overflow:hidden; background:var(--panel); }
     .media img { width:100%; height:100%; object-fit:cover; transform:scale(1.02); }
-    .veil { position:absolute; inset:0; background:linear-gradient(180deg,rgba(3,9,19,.45),rgba(3,9,19,.08) 38%,rgba(3,9,19,.95) 78%); }
+    .veil { position:absolute; inset:0; background:linear-gradient(180deg,color-mix(in srgb,var(--bg) 45%,transparent),color-mix(in srgb,var(--bg) 8%,transparent) 38%,color-mix(in srgb,var(--bg) 95%,transparent) 78%); }
     .grain { position:absolute; inset:0; opacity:.08; background-image:radial-gradient(rgba(255,255,255,.7) .7px,transparent .7px); background-size:7px 7px; }
     .topbar { position:absolute; z-index:5; top:64px; left:58px; right:58px; display:flex; justify-content:space-between; align-items:center; }
     .brand { display:flex; align-items:center; gap:14px; font-size:24px; font-weight:750; letter-spacing:.08em; }
@@ -31,36 +31,37 @@
     body.theme-light .title { text-shadow:0 3px 24px rgba(255,255,255,.55); }
 
     body.layout-split .media { inset:0 0 760px; }
-    body.layout-split .veil { background:linear-gradient(180deg,rgba(3,9,19,.12) 0 43%,#07111f 63%); }
+    body.layout-split .veil { background:linear-gradient(180deg,color-mix(in srgb,var(--bg) 12%,transparent) 0 43%,var(--bg) 63%); }
     body.layout-split .content { top:1030px; }
 
     body.layout-diagram .media { inset:220px 54px 690px; border-radius:28px; border:1px solid rgba(255,255,255,.16); }
-    body.layout-diagram .media img { object-fit:contain; background:#0b1727; }
-    body.layout-diagram .veil { background:radial-gradient(circle at 50% 42%,rgba(45,212,191,.12),transparent 38%),linear-gradient(180deg,#07111f 0 9%,transparent 26% 55%,#07111f 69%); }
+    body.layout-diagram .media img { object-fit:contain; background:var(--panel); }
+    body.layout-diagram .veil { background:radial-gradient(circle at 50% 42%,color-mix(in srgb,var(--accent) 12%,transparent),transparent 38%),linear-gradient(180deg,var(--bg) 0 9%,transparent 26% 55%,var(--bg) 69%); }
     body.layout-diagram .content { top:1030px; }
 
     body.layout-timeline .media { inset:300px 54px 690px; border-radius:28px; }
-    body.layout-timeline .veil { background:linear-gradient(180deg,#07111f 0 12%,transparent 27% 56%,#07111f 70%); }
+    body.layout-timeline .veil { background:linear-gradient(180deg,var(--bg) 0 12%,transparent 27% 56%,var(--bg) 70%); }
     body.layout-timeline .content { top:150px; }
     body.layout-timeline .title { font-size:60px; }
 
     body.layout-comparison .media { inset:250px 54px 730px; border-radius:28px; }
-    body.layout-comparison .veil { background:linear-gradient(180deg,#07111f 0 10%,transparent 30% 54%,#07111f 68%); }
+    body.layout-comparison .veil { background:linear-gradient(180deg,var(--bg) 0 10%,transparent 30% 54%,var(--bg) 68%); }
     body.layout-comparison .content { top:1080px; }
 
-    body.layout-focus .veil { background:radial-gradient(circle at 50% 42%,rgba(14,165,233,.04),rgba(3,9,19,.58) 52%,rgba(3,9,19,.96)); }
+    body.layout-focus .veil { background:radial-gradient(circle at 50% 42%,color-mix(in srgb,var(--accent) 4%,transparent),color-mix(in srgb,var(--bg) 58%,transparent) 52%,color-mix(in srgb,var(--bg) 96%,transparent)); }
     body.layout-focus .content { top:590px; text-align:center; }
     body.layout-focus .title { font-size:84px; }
     body.layout-focus .purpose { margin-bottom:30px; }
     body.layout-process .media { inset: 260px 54px 720px; border-radius: 28px; }
-    body.layout-process .veil { background: linear-gradient(180deg, rgba(3,9,19,.08) 0 42%, #07111f 68%); }
+    body.layout-process .veil { background: linear-gradient(180deg, color-mix(in srgb,var(--bg) 8%,transparent) 0 42%, var(--bg) 68%); }
     body.layout-process .content { top: 1070px; }
     body.layout-process .title { font-size: 62px; }
     body.layout-metrics .media { inset: 280px 54px 690px; border-radius: 28px; }
-    body.layout-metrics .veil { background: linear-gradient(180deg, #07111f 0 13%, transparent 31% 58%, #07111f 72%); }
+    body.layout-metrics .veil { background: linear-gradient(180deg, var(--bg) 0 13%, transparent 31% 58%, var(--bg) 72%); }
     body.layout-metrics .content { top: 150px; text-align: center; }
     body.layout-metrics .title { font-size: 66px; }
     body.theme-light .veil { background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,.05) 38%,rgba(255,255,255,.94) 78%); }
+    body.theme-light.layout-split .veil,
     body.theme-light.layout-diagram .veil,
     body.theme-light.layout-comparison .veil,
     body.theme-light.layout-process .veil { background:linear-gradient(180deg,var(--bg) 0 10%,transparent 30% 55%,var(--bg) 70%); }
