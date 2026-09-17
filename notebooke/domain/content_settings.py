@@ -58,7 +58,7 @@ class ContentSettings(RecordModel):
         description="Default duration for video generation (minutes)",
     )
     default_video_style: Optional[str] = Field(
-        "AI Visual Director",
+        "auto",
         description="Default visual style for video generation",
     )
     default_video_character: Optional[str] = Field(

@@ -26,9 +26,7 @@ class VideoGenerationRequest(BaseModel):
     tts_voice: str = Field(default="vi-VN-HoaiMyNeural", min_length=1, max_length=100)
     language: Optional[str] = Field(default=None, max_length=80)
     video_type: str = Field(default="summary", min_length=1, max_length=100)
-    style: str = Field(
-        default="AI Visual Director", min_length=1, max_length=100
-    )
+    style: str = Field(default="auto", min_length=1, max_length=100)
     character_id: str = Field(default="AI", min_length=1, max_length=100)
     custom_prompt: Optional[str] = Field(default=None, max_length=4_000)
     aspect_ratio: str = Field(default="16:9", pattern=r"^(16:9|9:16)$")
@@ -55,7 +53,7 @@ class VideoService:
         tts_voice: str = "vi-VN-HoaiMyNeural",
         language: Optional[str] = None,
         video_type: str = "summary",
-        style: str = "AI Visual Director",
+        style: str = "auto",
         character_id: str = "AI",
         custom_prompt: Optional[str] = None,
         aspect_ratio: str = "16:9",

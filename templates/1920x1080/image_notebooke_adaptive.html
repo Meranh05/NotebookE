@@ -9,16 +9,18 @@
     * { box-sizing: border-box; }
     html, body { width: 1920px; height: 1080px; margin: 0; overflow: hidden; }
     body {
-      --accent: #2dd4bf;
-      --accent-2: #38bdf8;
-      --ink: #f8fafc;
-      --muted: rgba(226,232,240,.72);
+      --accent: {{accent=#2dd4bf}};
+      --accent-2: {{accent_2=#38bdf8}};
+      --ink: {{ink=#f8fafc}};
+      --muted: {{muted=#cbd5e1}};
+      --bg: {{background=#07111f}};
+      --panel: {{panel=#0f172a}};
       position: relative;
-      background: #07111f;
+      background: var(--bg);
       color: var(--ink);
       font-family: "Segoe UI", "Be Vietnam Pro", Arial, sans-serif;
     }
-    .media { position: absolute; inset: 0; overflow: hidden; background: #0f172a; }
+    .media { position: absolute; inset: 0; overflow: hidden; background: var(--panel); }
     .media img { width: 100%; height: 100%; object-fit: cover; transform: scale(1.015); }
     .veil {
       position: absolute; inset: 0;
@@ -46,6 +48,12 @@
     .caption::before { content: ""; width: 6px; align-self: stretch; margin-right: 20px; border-radius: 9px; background: linear-gradient(var(--accent), var(--accent-2)); }
     .progress { position: absolute; z-index: 5; left: 80px; right: 80px; bottom: 49px; height: 3px; background: rgba(255,255,255,.16); }
     .progress span { display: block; width: 34%; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); }
+
+    body.theme-light .veil { background: linear-gradient(90deg, rgba(255,255,255,.95) 0%, rgba(255,255,255,.7) 38%, rgba(255,255,255,.08) 75%), linear-gradient(0deg, rgba(255,255,255,.88), transparent 48%); }
+    body.theme-light .grain { opacity: .035; mix-blend-mode: multiply; }
+    body.theme-light .caption { color: var(--ink); background: color-mix(in srgb, var(--panel) 88%, transparent); border-color: color-mix(in srgb, var(--ink) 14%, transparent); box-shadow: 0 24px 70px rgba(40,48,56,.14); }
+    body.theme-light .counter { color: var(--muted); }
+    body.theme-light .title { text-shadow: 0 3px 24px rgba(255,255,255,.55); }
 
     body.layout-split .media { left: 49%; }
     body.layout-split .veil { background: linear-gradient(90deg, #07111f 0 47%, rgba(7,17,31,.96) 52%, rgba(7,17,31,.08) 78%); }
@@ -87,9 +95,16 @@
     body.layout-metrics .content { left: 120px; top: 190px; width: 1420px; }
     body.layout-metrics .title { font-size: 72px; }
     body.layout-metrics .caption { left: 250px; right: 250px; max-width: none; }
+    body.theme-light .veil { background: linear-gradient(90deg, rgba(255,255,255,.95) 0%, rgba(255,255,255,.7) 38%, rgba(255,255,255,.08) 75%), linear-gradient(0deg, rgba(255,255,255,.88), transparent 48%); }
+    body.theme-light.layout-diagram .veil,
+    body.theme-light.layout-comparison .veil,
+    body.theme-light.layout-process .veil { background: linear-gradient(90deg, var(--bg) 0 42%, color-mix(in srgb, var(--bg) 72%, transparent) 60%, transparent 82%); }
+    body.theme-light.layout-timeline .veil,
+    body.theme-light.layout-metrics .veil { background: linear-gradient(180deg, var(--bg) 0 15%, transparent 40% 66%, var(--bg) 89%); }
+    body.theme-light.layout-focus .veil { background: radial-gradient(circle at 62% 42%, transparent, color-mix(in srgb, var(--bg) 62%, transparent) 58%, var(--bg)); }
   </style>
 </head>
-<body class="layout-{{layout=cinematic}}">
+<body class="theme-{{tone=dark}} layout-{{layout=cinematic}}">
   <div class="media"><img src="{{image}}" alt=""></div>
   <div class="veil"></div><div class="grain"></div>
   <div class="topbar"><div class="brand"><span class="mark"></span>{{brand=NotebookE}}</div><div class="counter">{{scene_number=01}} / {{total_scenes=01}}</div></div>

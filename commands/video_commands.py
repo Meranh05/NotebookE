@@ -23,6 +23,7 @@ from notebooke.database.repository import ensure_record_id
 from notebooke.videos.models import VideoEpisode
 from notebooke.videos.pixelle_bridge import VIDEOS_FOLDER
 from notebooke.videos.storytelling import decode_scene_plan
+from notebooke.videos.templates import select_video_template
 from notebooke.videos.video_paths import to_relative_video_path
 
 # ---------------------------------------------------------------------------
@@ -40,7 +41,7 @@ class VideoGenerationInput(CommandInput):
     tts_voice: str = "vi-VN-HoaiMyNeural"
     language: Optional[str] = None
     video_type: str = "summary"
-    style: str = "AI Visual Director"
+    style: str = "auto"
     character_id: str = "AI"
     custom_prompt: Optional[str] = None
     aspect_ratio: str = Field(default="16:9", pattern=r"^(16:9|9:16)$")
@@ -75,7 +76,12 @@ async def generate_video_command(
     """
     start_time = time.time()
 
-    logger.info(f"[video-cmd] Starting video generation: {input_data.name} with {input_data.n_scenes} scenes")
+    template = select_video_template(input_data.style, input_data.content)
+
+    logger.info(
+        f"[video-cmd] Starting video generation: {input_data.name} with "
+        f"{input_data.n_scenes} scenes, template={template.id}"
+    )
 
     # ------------------------------------------------------------------
     # 1. Create the VideoEpisode record immediately so it's visible in UI
@@ -90,7 +96,7 @@ async def generate_video_command(
         tts_voice=input_data.tts_voice,
         language=input_data.language,
         video_type=input_data.video_type,
-        style=input_data.style,
+        style=template.id,
         character_id=input_data.character_id,
         custom_prompt=input_data.custom_prompt,
         aspect_ratio=input_data.aspect_ratio,
@@ -109,7 +115,8 @@ async def generate_video_command(
         from notebooke.videos.pixelle_bridge import build_pixelle_core
 
         core, llm_config = await build_pixelle_core(
-            language=input_data.language or "Vietnamese"
+            language=input_data.language or "Vietnamese",
+            template_preset=template.id,
         )
 
         # Store the model name on the episode
@@ -126,7 +133,8 @@ async def generate_video_command(
         director_prompt = f"""VIDEO BRIEF
 Loại video: {input_data.video_type}
 Ngôn ngữ: {input_data.language or 'Vietnamese'}
-Định hướng mỹ thuật: {input_data.style}
+Mẫu trình bày: {template.name} ({template.tone})
+Định hướng mỹ thuật: {template.direction}
 Nhân vật: {character}
 Định hướng hình ảnh: {input_data.visual_mode}
 Yêu cầu riêng: {custom_instruction}
@@ -200,6 +208,8 @@ SOURCE CONTENT
             ]
             storyboard_snapshot = {
                 "title": sb.title,
+                "template": template.id,
+                "template_name": template.name,
                 "n_frames": len(sb.frames),
                 "narrations": [scene.narration for scene in scenes],
                 "scenes": [

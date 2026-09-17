@@ -8,22 +8,27 @@
   <style>
     * { box-sizing: border-box; }
     html, body { width: 1080px; height: 1920px; margin: 0; overflow: hidden; }
-    body { --accent:#2dd4bf; --accent2:#38bdf8; position:relative; background:#07111f; color:#f8fafc; font-family:"Segoe UI","Be Vietnam Pro",Arial,sans-serif; }
-    .media { position:absolute; inset:0; overflow:hidden; background:#0f172a; }
+    body { --accent:{{accent=#2dd4bf}}; --accent2:{{accent_2=#38bdf8}}; --ink:{{ink=#f8fafc}}; --muted:{{muted=#cbd5e1}}; --bg:{{background=#07111f}}; --panel:{{panel=#0f172a}}; position:relative; background:var(--bg); color:var(--ink); font-family:"Segoe UI","Be Vietnam Pro",Arial,sans-serif; }
+    .media { position:absolute; inset:0; overflow:hidden; background:var(--panel); }
     .media img { width:100%; height:100%; object-fit:cover; transform:scale(1.02); }
     .veil { position:absolute; inset:0; background:linear-gradient(180deg,rgba(3,9,19,.45),rgba(3,9,19,.08) 38%,rgba(3,9,19,.95) 78%); }
     .grain { position:absolute; inset:0; opacity:.08; background-image:radial-gradient(rgba(255,255,255,.7) .7px,transparent .7px); background-size:7px 7px; }
     .topbar { position:absolute; z-index:5; top:64px; left:58px; right:58px; display:flex; justify-content:space-between; align-items:center; }
     .brand { display:flex; align-items:center; gap:14px; font-size:24px; font-weight:750; letter-spacing:.08em; }
     .mark { width:28px; height:28px; border:6px solid var(--accent); border-left-color:transparent; transform:rotate(45deg); border-radius:7px; }
-    .counter { color:rgba(226,232,240,.72); font-size:21px; font-weight:650; letter-spacing:.14em; }
+    .counter { color:var(--muted); font-size:21px; font-weight:650; letter-spacing:.14em; }
     .content { position:absolute; z-index:4; left:64px; right:64px; top:1120px; }
     .purpose { color:var(--accent); font-size:20px; font-weight:760; letter-spacing:.14em; text-transform:uppercase; margin-bottom:22px; }
     .title { font-size:68px; line-height:1.08; letter-spacing:-.04em; font-weight:790; text-wrap:balance; text-shadow:0 4px 30px rgba(0,0,0,.4); }
-    .keywords { margin-top:24px; color:rgba(226,232,240,.72); font-size:22px; font-weight:560; }
+    .keywords { margin-top:24px; color:var(--muted); font-size:22px; font-weight:560; }
     .caption { position:absolute; z-index:6; left:58px; right:58px; bottom:112px; min-height:132px; display:flex; align-items:center; justify-content:center; padding:27px 34px; border:1px solid rgba(255,255,255,.18); border-radius:22px; background:rgba(4,12,24,.78); backdrop-filter:blur(18px); box-shadow:0 28px 80px rgba(0,0,0,.38); font-size:43px; line-height:1.24; font-weight:690; text-align:center; }
     .progress { position:absolute; z-index:6; left:58px; right:58px; bottom:62px; height:4px; background:rgba(255,255,255,.16); }
     .progress span { display:block; width:34%; height:100%; background:linear-gradient(90deg,var(--accent),var(--accent2)); }
+
+    body.theme-light .veil { background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,.05) 38%,rgba(255,255,255,.94) 78%); }
+    body.theme-light .grain { opacity:.035; mix-blend-mode:multiply; }
+    body.theme-light .caption { color:var(--ink); background:color-mix(in srgb,var(--panel) 90%,transparent); border-color:color-mix(in srgb,var(--ink) 14%,transparent); box-shadow:0 28px 80px rgba(40,48,56,.14); }
+    body.theme-light .title { text-shadow:0 3px 24px rgba(255,255,255,.55); }
 
     body.layout-split .media { inset:0 0 760px; }
     body.layout-split .veil { background:linear-gradient(180deg,rgba(3,9,19,.12) 0 43%,#07111f 63%); }
@@ -55,9 +60,16 @@
     body.layout-metrics .veil { background: linear-gradient(180deg, #07111f 0 13%, transparent 31% 58%, #07111f 72%); }
     body.layout-metrics .content { top: 150px; text-align: center; }
     body.layout-metrics .title { font-size: 66px; }
+    body.theme-light .veil { background:linear-gradient(180deg,rgba(255,255,255,.28),rgba(255,255,255,.05) 38%,rgba(255,255,255,.94) 78%); }
+    body.theme-light.layout-diagram .veil,
+    body.theme-light.layout-comparison .veil,
+    body.theme-light.layout-process .veil { background:linear-gradient(180deg,var(--bg) 0 10%,transparent 30% 55%,var(--bg) 70%); }
+    body.theme-light.layout-timeline .veil,
+    body.theme-light.layout-metrics .veil { background:linear-gradient(180deg,var(--bg) 0 13%,transparent 31% 58%,var(--bg) 72%); }
+    body.theme-light.layout-focus .veil { background:radial-gradient(circle at 50% 42%,transparent,color-mix(in srgb,var(--bg) 62%,transparent) 55%,var(--bg)); }
   </style>
 </head>
-<body class="layout-{{layout=cinematic}}">
+<body class="theme-{{tone=dark}} layout-{{layout=cinematic}}">
   <div class="media"><img src="{{image}}" alt=""></div>
   <div class="veil"></div><div class="grain"></div>
   <div class="topbar"><div class="brand"><span class="mark"></span>{{brand=NotebookE}}</div><div class="counter">{{scene_number=01}} / {{total_scenes=01}}</div></div>

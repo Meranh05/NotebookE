@@ -385,7 +385,9 @@ def split_into_display_sentences(text: str) -> list[str]:
     return final_slides if final_slides else [text]
 
 
-async def build_pixelle_core(language: str = "Vietnamese"):
+async def build_pixelle_core(
+    language: str = "Vietnamese", template_preset: str = "editorial-light"
+):
     """
     Build and initialise a PixelleVideoCore instance using NotebookE credentials.
 
@@ -403,6 +405,9 @@ async def build_pixelle_core(language: str = "Vietnamese"):
             "Run: uv sync  (it is declared in pyproject.toml)"
         ) from exc
 
+    from notebooke.videos.templates import get_video_template
+
+    visual_template = get_video_template(template_preset)
     llm_config = await resolve_llm_config()
     # Image generation has its own credential. The storyboard model may be a
     # compatible Gemma endpoint, so never assume its key can call OpenAI Images.
@@ -573,6 +578,7 @@ async def build_pixelle_core(language: str = "Vietnamese"):
             config.template_params.update({
                 "author": "@NotebookE",
                 "brand": "NotebookE",
+                **visual_template.template_params,
                 "layout": scene.layout,
                 "purpose": html.escape(scene.purpose),
                 "scene_number": f"{frame.index + 1:02d}",

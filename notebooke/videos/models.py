@@ -52,7 +52,7 @@ class VideoEpisode(ObjectModel):
     tts_voice: str = Field(default="vi-VN-HoaiMyNeural", description="TTS voice used")
     language: Optional[str] = Field(default=None, description="Video language")
     video_type: Optional[str] = Field(default="summary", description="Type of video")
-    style: Optional[str] = Field(default="AI Visual Director", description="Visual style")
+    style: Optional[str] = Field(default="auto", description="Visual template preset")
     character_id: Optional[str] = Field(default="AI", description="Character selection")
     custom_prompt: Optional[str] = Field(default=None, description="Additional custom instructions")
     aspect_ratio: Optional[str] = Field(

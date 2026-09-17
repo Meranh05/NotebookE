@@ -16,6 +16,7 @@ import { useCapabilities } from '@/lib/hooks/use-capabilities'
 import { useEffect, useState } from 'react'
 import { IconChevronDown } from '@tabler/icons-react'
 import { useTranslation } from '@/lib/hooks/use-translation'
+import { normalizeVideoTemplateId, VIDEO_TEMPLATE_CHOICES } from '@/lib/api/videos'
 
 const settingsSchema = z.object({
   default_content_processing_engine_doc: z.enum(['auto', 'docling', 'simple']).optional(),
@@ -97,7 +98,7 @@ export function SettingsForm() {
         default_video_voice: settings.default_video_voice || 'vi-VN-HoaiMyNeural',
         default_video_aspect_ratio: settings.default_video_aspect_ratio || '16:9',
         default_video_duration: settings.default_video_duration || '3',
-        default_video_style: settings.default_video_style || 'AI Visual Director',
+        default_video_style: normalizeVideoTemplateId(settings.default_video_style),
         default_video_character: settings.default_video_character || 'AI tự chọn',
       }
       reset(formData)
@@ -460,7 +461,7 @@ export function SettingsForm() {
                   <Select
                     key={field.value}
                     name={field.name}
-                    value={field.value || 'AI Visual Director'}
+                    value={field.value || 'auto'}
                     onValueChange={field.onChange}
                     disabled={field.disabled || isLoading}
                   >
@@ -468,10 +469,12 @@ export function SettingsForm() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="AI Visual Director">AI tự đạo diễn (Khuyên dùng)</SelectItem>
-                      <SelectItem value="Documentary Cinematic">Điện ảnh tài liệu</SelectItem>
-                      <SelectItem value="Editorial Presentation">Thuyết trình hiện đại</SelectItem>
-                      <SelectItem value="Technical Visualization">Trực quan kỹ thuật</SelectItem>
+                      <SelectItem value="auto">{t('common.videoTemplateAuto')} ({t('common.recommended')})</SelectItem>
+                      {VIDEO_TEMPLATE_CHOICES.map(template => (
+                        <SelectItem key={template.id} value={template.id}>
+                          {template.name} · {template.tone === 'light' ? t('common.light') : t('common.dark')}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 )}

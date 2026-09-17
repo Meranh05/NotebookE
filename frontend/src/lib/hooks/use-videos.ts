@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { videosApi, VideoGenerationRequest } from '../api/videos'
+import { videosApi, VideoGenerationRequest, VIDEO_TEMPLATE_CHOICES } from '../api/videos'
 
 export function useVideos() {
   return useQuery({
@@ -13,6 +13,15 @@ export function useVideos() {
       return hasActive ? 2_000 : 5_000
     },
     refetchOnWindowFocus: true,
+  })
+}
+
+export function useVideoTemplates() {
+  return useQuery({
+    queryKey: ['video-templates'],
+    queryFn: () => videosApi.listTemplates(),
+    initialData: { templates: [...VIDEO_TEMPLATE_CHOICES], default: 'auto' },
+    staleTime: Infinity,
   })
 }
 

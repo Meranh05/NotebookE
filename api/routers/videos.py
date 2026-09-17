@@ -18,9 +18,16 @@ from notebooke.exceptions import OpenNotebookError
 from notebooke.podcasts.audio_paths import to_relative_audio_path
 from notebooke.podcasts.models import PodcastEpisode
 from notebooke.videos.models import VideoEpisode
+from notebooke.videos.templates import list_video_templates
 from notebooke.videos.video_paths import resolve_contained_video_path
 
 router = APIRouter()
+
+
+@router.get("/videos/templates")
+async def get_video_templates():
+    """Return the visual presets available to the generation UI."""
+    return {"templates": list_video_templates(), "default": "auto"}
 
 
 class VideoEpisodeResponse(BaseModel):

@@ -14,13 +14,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { useGenerateVideo, useVideoJobStatus } from '@/lib/hooks/use-videos'
-import { resolveVideoAssetUrl, videosApi } from '@/lib/api/videos'
+import { useGenerateVideo, useVideoJobStatus, useVideoTemplates } from '@/lib/hooks/use-videos'
+import { normalizeVideoTemplateId, resolveVideoAssetUrl, videosApi } from '@/lib/api/videos'
 import { useGeneratePodcast, useEpisodeProfiles, usePodcastJobStatus } from '@/lib/hooks/use-podcasts'
 import { podcastsApi, resolvePodcastAssetUrl } from '@/lib/api/podcasts'
 import { useToast } from '@/lib/hooks/use-toast'
 import { useSettings } from '@/lib/hooks/use-settings'
 import { useModels } from '@/lib/hooks/use-models'
+import { useTranslation } from '@/lib/hooks/use-translation'
 
 interface NotebookMediaQuickActionsProps {
   notebookId: string
@@ -29,6 +30,7 @@ interface NotebookMediaQuickActionsProps {
 
 export function NotebookMediaQuickActions({ notebookId, notebookName }: NotebookMediaQuickActionsProps) {
   const { toast } = useToast()
+  const { t } = useTranslation()
 
   const [activeVideoJobId, setActiveVideoJobId] = useState<string | null>(null)
   const [activePodcastJobId, setActivePodcastJobId] = useState<string | null>(null)
@@ -44,7 +46,7 @@ export function NotebookMediaQuickActions({ notebookId, notebookName }: Notebook
   const [episodeProfileName, setEpisodeProfileName] = useState('')
   const [videoType, setVideoType] = useState('Tạo video tóm tắt')
   const [videoDuration, setVideoDuration] = useState('3')
-  const [videoStyle, setVideoStyle] = useState('AI Visual Director')
+  const [videoStyle, setVideoStyle] = useState('auto')
   const [videoCharacter, setVideoCharacter] = useState('AI tự chọn')
   const [videoVoice, setVideoVoice] = useState('vi-VN-HoaiMyNeural')
   const [videoAspectRatio, setVideoAspectRatio] = useState('16:9') // Ngang
@@ -53,6 +55,8 @@ export function NotebookMediaQuickActions({ notebookId, notebookName }: Notebook
   const [customInstruction, setCustomInstruction] = useState('')
   
   const { data: settings } = useSettings()
+  const { data: videoTemplatesData } = useVideoTemplates()
+  const videoTemplates = videoTemplatesData?.templates ?? []
   const { data: models = [], isLoading: modelsLoading } = useModels()
   const imageModels = useMemo(
     () => models.filter(model =>
@@ -65,7 +69,7 @@ export function NotebookMediaQuickActions({ notebookId, notebookName }: Notebook
   useEffect(() => {
     if (settings) {
       if (settings.default_video_duration) setVideoDuration(settings.default_video_duration)
-      if (settings.default_video_style) setVideoStyle(settings.default_video_style)
+      if (settings.default_video_style) setVideoStyle(normalizeVideoTemplateId(settings.default_video_style))
       if (settings.default_video_character) setVideoCharacter(settings.default_video_character)
       if (settings.default_video_voice) setVideoVoice(settings.default_video_voice)
       if (settings.default_video_aspect_ratio) setVideoAspectRatio(settings.default_video_aspect_ratio)
@@ -435,15 +439,49 @@ export function NotebookMediaQuickActions({ notebookId, notebookName }: Notebook
                 ))}
               </div>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="grid gap-2">
-              <label className="text-sm font-medium">3. Phong cách hình ảnh</label>
-              <select className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" value={videoStyle} onChange={e => setVideoStyle(e.target.value)}>
-                <option value="AI Visual Director">AI tự đạo diễn (Khuyên dùng)</option>
-                <option value="Documentary Cinematic">Điện ảnh tài liệu</option>
-                <option value="Editorial Presentation">Thuyết trình hiện đại</option>
-                <option value="Technical Visualization">Trực quan kỹ thuật</option>
-              </select>
+            <div className="grid gap-3 sm:col-span-2">
+              <div>
+                <label className="text-sm font-medium">3. {t('common.videoTemplateLabel')}</label>
+                <p className="mt-1 text-xs text-muted-foreground">{t('common.videoTemplateHint')}</p>
+              </div>
+              <div className="grid gap-2 sm:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={() => setVideoStyle('auto')}
+                  className={`rounded-xl border p-3 text-left transition-colors ${videoStyle === 'auto' ? 'border-primary bg-primary/5 ring-1 ring-primary/20' : 'border-input hover:bg-muted/50'}`}
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <span className="text-sm font-semibold">{t('common.videoTemplateAuto')}</span>
+                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold text-primary">{t('common.recommended')}</span>
+                  </div>
+                  <p className="mt-1 text-xs text-muted-foreground">{t('common.videoTemplateAutoDescription')}</p>
+                </button>
+                {videoTemplates.map(template => (
+                  <button
+                    key={template.id}
+                    type="button"
+                    onClick={() => setVideoStyle(template.id)}
+                    className={`overflow-hidden rounded-xl border text-left transition-colors ${videoStyle === template.id ? 'border-primary ring-1 ring-primary/20' : 'border-input hover:bg-muted/50'}`}
+                  >
+                    <div
+                      className="flex h-12 items-center justify-between px-3"
+                      style={{ backgroundColor: template.background, color: template.ink }}
+                    >
+                      <span className="text-xs font-bold">Aa</span>
+                      <span className="flex gap-1">
+                        <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: template.accent }} />
+                        <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: template.accent_2 }} />
+                      </span>
+                    </div>
+                    <div className="p-3">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="text-sm font-semibold">{template.name}</span>
+                        <span className="text-[10px] uppercase text-muted-foreground">{template.tone === 'light' ? t('common.light') : t('common.dark')}</span>
+                      </div>
+                      <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{template.description}</p>
+                    </div>
+                  </button>
+                ))}
               </div>
             </div>
             <div className="grid gap-2">
