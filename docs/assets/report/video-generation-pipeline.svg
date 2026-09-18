@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3000" height="1700" viewBox="0 0 3000 1700">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><path d="M0,0 L12,5 L0,10 Z" fill="#111"/></marker>
+    <style>
+      text { font-family: Arial, Helvetica, sans-serif; fill:#111; }
+      .title { font-size:39px; font-weight:700; text-anchor:middle; }
+      .step { fill:#f7f7f7; stroke:#111; stroke-width:2.5; }
+      .num { fill:#fff; stroke:#111; stroke-width:2.5; }
+      .num-text { font-size:25px; font-weight:700; text-anchor:middle; dominant-baseline:middle; }
+      .step-title { font-size:26px; font-weight:700; text-anchor:middle; }
+      .detail { font-size:19px; text-anchor:middle; }
+      .role { font-size:18px; font-style:italic; text-anchor:middle; }
+      .flow { fill:none; stroke:#111; stroke-width:3; marker-end:url(#arrow); }
+      .edge-label { font-size:18px; text-anchor:middle; }
+      .startup { fill:#fff; stroke:#555; stroke-width:2; stroke-dasharray:9 7; }
+      .caption { font-size:22px; font-style:italic; text-anchor:middle; }
+      .icon { fill:none; stroke:#111; stroke-width:3; stroke-linejoin:round; stroke-linecap:round; }
+    </style>
+  </defs>
+  <rect width="3000" height="1700" fill="#fff"/>
+  <text x="1500" y="62" class="title">QUY TRÌNH TẠO VIDEO TỪ NỘI DUNG NGHIÊN CỨU</text>
+
+  <!-- Job submission -->
+  <rect x="720" y="115" width="1560" height="95" class="startup"/>
+  <text x="1500" y="153" class="step-title">Khởi tạo tác vụ nền</text>
+  <text x="1500" y="188" class="detail">Frontend gửi yêu cầu → FastAPI tạo công việc → Worker tiếp nhận và xử lý</text>
+
+  <!-- Row 1 -->
+  <g transform="translate(100 310)">
+    <rect width="570" height="300" class="step"/><circle cx="50" cy="50" r="30" class="num"/><text x="50" y="51" class="num-text">1</text>
+    <rect x="245" y="45" width="78" height="98" class="icon"/><path d="M303,45 v25 h20" class="icon"/><line x1="260" y1="90" x2="308" y2="90" class="icon"/><line x1="260" y1="112" x2="300" y2="112" class="icon"/>
+    <text x="285" y="188" class="step-title">Chọn nội dung</text><text x="285" y="226" class="detail">Chọn sổ tay, nguồn hoặc chủ đề</text><text x="285" y="266" class="role">Người dùng · Frontend</text>
+  </g>
+  <g transform="translate(810 310)">
+    <rect width="570" height="300" class="step"/><circle cx="50" cy="50" r="30" class="num"/><text x="50" y="51" class="num-text">2</text>
+    <rect x="238" y="48" width="94" height="88" rx="8" class="icon"/><line x1="260" y1="35" x2="260" y2="48" class="icon"/><line x1="285" y1="35" x2="285" y2="48" class="icon"/><line x1="310" y1="35" x2="310" y2="48" class="icon"/><circle cx="266" cy="91" r="7" class="icon"/><circle cx="304" cy="91" r="7" class="icon"/><path d="M266,119 Q285,132 304,119" class="icon"/>
+    <text x="285" y="188" class="step-title">Tạo kịch bản</text><text x="285" y="226" class="detail">Sinh mạch kể và storyboard</text><text x="285" y="266" class="role">Worker · Language Model</text>
+  </g>
+  <g transform="translate(1520 310)">
+    <rect width="570" height="300" class="step"/><circle cx="50" cy="50" r="30" class="num"/><text x="50" y="51" class="num-text">3</text>
+    <rect x="205" y="55" width="65" height="78" class="icon"/><rect x="280" y="55" width="65" height="78" class="icon"/><rect x="355" y="55" width="65" height="78" class="icon"/>
+    <text x="285" y="188" class="step-title">Chia thành các cảnh</text><text x="285" y="226" class="detail">Lời dẫn · bố cục · visual prompt</text><text x="285" y="266" class="role">Worker · Storyboard planner</text>
+  </g>
+  <g transform="translate(2230 310)">
+    <rect width="570" height="300" class="step"/><circle cx="50" cy="50" r="30" class="num"/><text x="50" y="51" class="num-text">4</text>
+    <rect x="220" y="45" width="130" height="95" class="icon"/><circle cx="320" cy="68" r="10" class="icon"/><path d="M230,130 L265,92 L290,116 L312,96 L342,130" class="icon"/>
+    <text x="285" y="188" class="step-title">Tạo hình ảnh</text><text x="285" y="226" class="detail">Sinh hoặc dựng hình cho từng cảnh</text><text x="285" y="266" class="role">Image Model · Visual fallback</text>
+  </g>
+
+  <!-- Top arrows -->
+  <line x1="670" y1="460" x2="800" y2="460" class="flow"/><text x="735" y="440" class="edge-label">Nội dung</text>
+  <line x1="1380" y1="460" x2="1510" y2="460" class="flow"/><text x="1445" y="440" class="edge-label">Kịch bản</text>
+  <line x1="2090" y1="460" x2="2220" y2="460" class="flow"/><text x="2155" y="440" class="edge-label">Cảnh</text>
+
+  <!-- Turn down to row 2 -->
+  <path d="M2515,610 V795 H2515 V900" class="flow"/><text x="2550" y="770" class="edge-label" text-anchor="start">Xử lý từng cảnh</text>
+
+  <!-- Row 2, right to left -->
+  <g transform="translate(2230 910)">
+    <rect width="570" height="300" class="step"/><circle cx="50" cy="50" r="30" class="num"/><text x="50" y="51" class="num-text">5</text>
+    <path d="M225,92 h35 l45,-35 v105 l-45,-35 h-35 z" class="icon"/><path d="M330,78 Q365,92 330,106" class="icon"/><path d="M345,62 Q400,92 345,122" class="icon"/>
+    <text x="285" y="188" class="step-title">Tạo âm thanh</text><text x="285" y="226" class="detail">Tổng hợp giọng đọc cho từng cảnh</text><text x="285" y="266" class="role">TTS · Worker</text>
+  </g>
+  <g transform="translate(1520 910)">
+    <rect width="570" height="300" class="step"/><circle cx="50" cy="50" r="30" class="num"/><text x="50" y="51" class="num-text">6</text>
+    <rect x="218" y="52" width="135" height="82" rx="10" class="icon"/><text x="285" y="105" class="step-title">CC</text>
+    <text x="285" y="188" class="step-title">Tạo phụ đề</text><text x="285" y="226" class="detail">Chia câu và tính thời lượng hiển thị</text><text x="285" y="266" class="role">Caption processor</text>
+  </g>
+  <g transform="translate(810 910)">
+    <rect width="570" height="300" class="step"/><circle cx="50" cy="50" r="30" class="num"/><text x="50" y="51" class="num-text">7</text>
+    <circle cx="285" cy="92" r="52" class="icon"/><path d="M250,92 h70" class="icon"/><path d="M285,57 v70" class="icon"/><circle cx="285" cy="92" r="12" class="icon"/>
+    <text x="285" y="188" class="step-title">Đồng bộ và ghép cảnh</text><text x="285" y="226" class="detail">Hình ảnh · giọng đọc · phụ đề</text><text x="285" y="266" class="role">Frame composer · FFmpeg</text>
+  </g>
+  <g transform="translate(100 910)">
+    <rect width="570" height="300" class="step"/><circle cx="50" cy="50" r="30" class="num"/><text x="50" y="51" class="num-text">8</text>
+    <rect x="215" y="48" width="140" height="92" class="icon"/><polygon points="270,68 270,120 320,94" class="icon"/><line x1="230" y1="48" x2="245" y2="25" class="icon"/><line x1="270" y1="48" x2="285" y2="25" class="icon"/><line x1="310" y1="48" x2="325" y2="25" class="icon"/>
+    <text x="285" y="188" class="step-title">Kết xuất và lưu video</text><text x="285" y="226" class="detail">Ghép phân đoạn, tạo MP4 và metadata</text><text x="285" y="266" class="role">FFmpeg · File storage · SurrealDB</text>
+  </g>
+
+  <!-- Bottom arrows, right to left -->
+  <line x1="2230" y1="1060" x2="2100" y2="1060" class="flow"/><text x="2165" y="1040" class="edge-label">Âm thanh</text>
+  <line x1="1520" y1="1060" x2="1390" y2="1060" class="flow"/><text x="1455" y="1040" class="edge-label">Phụ đề</text>
+  <line x1="810" y1="1060" x2="680" y2="1060" class="flow"/><text x="745" y="1040" class="edge-label">Phân cảnh</text>
+
+  <!-- Result -->
+  <path d="M385,1210 V1370 H1500" class="flow"/><text x="940" y="1405" class="step-title">Video hoàn chỉnh (.mp4) được hiển thị trên Frontend</text>
+  <rect x="1140" y="1460" width="720" height="90" fill="#fff" stroke="#111" stroke-width="2.5"/>
+  <text x="1500" y="1518" class="step-title">Cập nhật trạng thái hoàn thành và đường dẫn tệp</text>
+  <text x="1500" y="1655" class="caption">Hình 3.14. Quy trình tạo video từ nội dung nghiên cứu</text>
+</svg>

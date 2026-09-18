@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2800" height="1850" viewBox="0 0 2800 1850">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#111"/></marker>
+    <style>
+      text { font-family: Arial, Helvetica, sans-serif; fill:#111; }
+      .title { font-size:38px; font-weight:700; text-anchor:middle; }
+      .box { fill:#f5f5f5; stroke:#111; stroke-width:2.3; }
+      .name { font-size:22px; font-weight:700; text-anchor:middle; dominant-baseline:middle; }
+      .life { stroke:#777; stroke-width:2; stroke-dasharray:10 8; }
+      .act { fill:#fff; stroke:#555; stroke-width:2; }
+      .call { stroke:#111; stroke-width:2.4; fill:none; marker-end:url(#arrow); }
+      .reply { stroke:#555; stroke-width:2; stroke-dasharray:9 7; fill:none; marker-end:url(#arrow); }
+      .msg { font-size:19px; text-anchor:middle; }
+      .frame { fill:none; stroke:#333; stroke-width:2; }
+      .frame-label { font-size:20px; font-weight:700; }
+      .caption { font-size:22px; font-style:italic; text-anchor:middle; }
+    </style>
+  </defs>
+  <rect width="2800" height="1850" fill="#fff"/>
+  <text x="1400" y="58" class="title">QUY TRÌNH TẠO PODCAST TỪ NỘI DUNG NGHIÊN CỨU</text>
+
+  <!-- Participants -->
+  <circle cx="155" cy="125" r="27" fill="#fff" stroke="#111" stroke-width="3"/><line x1="155" y1="152" x2="155" y2="215" stroke="#111" stroke-width="3"/><line x1="108" y1="175" x2="202" y2="175" stroke="#111" stroke-width="3"/><line x1="155" y1="215" x2="118" y2="252" stroke="#111" stroke-width="3"/><line x1="155" y1="215" x2="192" y2="252" stroke="#111" stroke-width="3"/><text x="155" y="292" class="name">Người dùng</text>
+  <rect x="360" y="112" width="300" height="82" class="box"/><text x="510" y="153" class="name">Frontend</text>
+  <rect x="720" y="112" width="300" height="82" class="box"/><text x="870" y="153" class="name">FastAPI</text>
+  <rect x="1080" y="112" width="320" height="82" class="box"/><text x="1240" y="153" class="name">Worker</text>
+  <rect x="1460" y="112" width="320" height="82" class="box"/><text x="1620" y="153" class="name">Language Model</text>
+  <rect x="1840" y="112" width="300" height="82" class="box"/><text x="1990" y="153" class="name">TTS</text>
+  <rect x="2220" y="112" width="430" height="82" class="box"/><text x="2435" y="153" class="name">Nơi lưu tệp podcast</text>
+
+  <!-- Lifelines -->
+  <line x1="155" y1="300" x2="155" y2="1690" class="life"/><line x1="510" y1="194" x2="510" y2="1690" class="life"/><line x1="870" y1="194" x2="870" y2="1690" class="life"/><line x1="1240" y1="194" x2="1240" y2="1690" class="life"/><line x1="1620" y1="194" x2="1620" y2="1690" class="life"/><line x1="1990" y1="194" x2="1990" y2="1690" class="life"/><line x1="2435" y1="194" x2="2435" y2="1690" class="life"/>
+  <rect x="498" y="335" width="24" height="1280" class="act"/><rect x="858" y="420" width="24" height="1120" class="act"/><rect x="1228" y="500" width="24" height="895" class="act"/><rect x="1608" y="650" width="24" height="100" class="act"/><rect x="1608" y="815" width="24" height="100" class="act"/><rect x="1978" y="1045" width="24" height="105" class="act"/><rect x="2423" y="1285" width="24" height="105" class="act"/>
+
+  <!-- Sequence -->
+  <line x1="155" y1="355" x2="490" y2="355" class="call"/><text x="323" y="337" class="msg">1. Chọn nội dung và cấu hình podcast</text>
+  <line x1="522" y1="440" x2="850" y2="440" class="call"/><text x="686" y="422" class="msg">2. Gửi yêu cầu tạo podcast</text>
+  <line x1="882" y1="520" x2="1220" y2="520" class="call"/><text x="1051" y="502" class="msg">3. Tạo công việc nền</text>
+  <line x1="858" y1="580" x2="530" y2="580" class="reply"/><text x="694" y="562" class="msg">Trả về mã công việc</text>
+
+  <line x1="1252" y1="670" x2="1600" y2="670" class="call"/><text x="1426" y="652" class="msg">4. Tạo dàn ý chương trình</text>
+  <line x1="1608" y1="730" x2="1260" y2="730" class="reply"/><text x="1434" y="712" class="msg">Dàn ý và các phân đoạn</text>
+  <line x1="1252" y1="835" x2="1600" y2="835" class="call"/><text x="1426" y="817" class="msg">5. Viết kịch bản hội thoại</text>
+  <line x1="1608" y1="895" x2="1260" y2="895" class="reply"/><text x="1434" y="877" class="msg">Lời thoại theo từng người nói</text>
+
+  <rect x="1050" y="970" width="1060" height="250" class="frame"/><rect x="1050" y="970" width="420" height="45" fill="#fff" stroke="#333" stroke-width="2"/><text x="1072" y="1000" class="frame-label">loop [mỗi câu thoại / phân đoạn]</text>
+  <line x1="1252" y1="1065" x2="1970" y2="1065" class="call"/><text x="1611" y="1047" class="msg">6. Tổng hợp giọng nói</text>
+  <line x1="1978" y1="1125" x2="1260" y2="1125" class="reply"/><text x="1619" y="1107" class="msg">Tệp âm thanh của phân đoạn</text>
+
+  <path d="M1252,1260 h130 v65 h-130" class="call"/><text x="1460" y="1293" class="msg">7. Ghép và chuẩn hóa âm thanh</text>
+  <line x1="1252" y1="1305" x2="2415" y2="1305" class="call"/><text x="1834" y="1287" class="msg">8. Lưu tệp podcast hoàn chỉnh (.mp3)</text>
+  <line x1="2423" y1="1365" x2="1260" y2="1365" class="reply"/><text x="1842" y="1347" class="msg">Đường dẫn tệp âm thanh</text>
+  <line x1="1228" y1="1435" x2="890" y2="1435" class="reply"/><text x="1059" y="1417" class="msg">9. Cập nhật trạng thái và metadata</text>
+  <line x1="522" y1="1515" x2="850" y2="1515" class="call"/><text x="686" y="1497" class="msg">10. Kiểm tra trạng thái công việc</text>
+  <line x1="858" y1="1575" x2="530" y2="1575" class="reply"/><text x="694" y="1557" class="msg">Hoàn thành và URL phát podcast</text>
+  <line x1="498" y1="1645" x2="175" y2="1645" class="reply"/><text x="337" y="1627" class="msg">11. Hiển thị và phát podcast</text>
+
+  <text x="1400" y="1810" class="caption">Hình 3.13. Quy trình tạo podcast từ nội dung nghiên cứu</text>
+</svg>

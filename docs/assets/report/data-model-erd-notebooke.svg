@@ -1,0 +1,196 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3200" height="2100" viewBox="0 0 3200 2100">
+  <defs>
+    <style>
+      text { font-family: Arial, Helvetica, sans-serif; fill: #111; }
+      .title { font-size: 40px; font-weight: 700; text-anchor: middle; }
+      .entity { fill: #fff; stroke: #111; stroke-width: 2.4; }
+      .header { fill: #e9e9e9; stroke: #111; stroke-width: 2.4; }
+      .entity-name { font-size: 24px; font-weight: 700; text-anchor: middle; dominant-baseline: middle; }
+      .field { font-size: 18px; }
+      .key { font-size: 17px; font-weight: 700; }
+      .row { stroke: #b4b4b4; stroke-width: 1.2; }
+      .rel { fill: none; stroke: #222; stroke-width: 2.4; }
+      .logical { fill: none; stroke: #555; stroke-width: 2.2; stroke-dasharray: 9 7; }
+      .card { font-size: 18px; font-weight: 700; }
+      .rel-label { font-size: 18px; font-style: italic; text-anchor: middle; }
+      .caption { font-size: 23px; font-style: italic; text-anchor: middle; }
+      .note { font-size: 17px; }
+    </style>
+  </defs>
+  <rect width="3200" height="2100" fill="#fff"/>
+  <text x="1600" y="58" class="title">SƠ ĐỒ DỮ LIỆU CỦA HỆ THỐNG NOTEBOOKE</text>
+
+  <!-- CREDENTIAL -->
+  <g transform="translate(2630 110)">
+    <rect width="430" height="250" class="entity"/><rect width="430" height="55" class="header"/>
+    <text x="215" y="28" class="entity-name">CREDENTIAL</text>
+    <text x="18" y="88" class="key">PK</text><text x="72" y="88" class="field">id</text><line x1="0" y1="104" x2="430" y2="104" class="row"/>
+    <text x="72" y="135" class="field">name</text><line x1="0" y1="151" x2="430" y2="151" class="row"/>
+    <text x="72" y="182" class="field">provider</text><line x1="0" y1="198" x2="430" y2="198" class="row"/>
+    <text x="72" y="229" class="field">modalities, encrypted api_key</text>
+  </g>
+
+  <!-- MODEL -->
+  <g transform="translate(2040 110)">
+    <rect width="430" height="250" class="entity"/><rect width="430" height="55" class="header"/>
+    <text x="215" y="28" class="entity-name">MODEL</text>
+    <text x="18" y="88" class="key">PK</text><text x="72" y="88" class="field">id</text><line x1="0" y1="104" x2="430" y2="104" class="row"/>
+    <text x="18" y="135" class="key">FK</text><text x="72" y="135" class="field">credential</text><line x1="0" y1="151" x2="430" y2="151" class="row"/>
+    <text x="72" y="182" class="field">name, provider</text><line x1="0" y1="198" x2="430" y2="198" class="row"/>
+    <text x="72" y="229" class="field">type</text>
+  </g>
+
+  <!-- TRANSFORMATION -->
+  <g transform="translate(1370 110)">
+    <rect width="490" height="300" class="entity"/><rect width="490" height="55" class="header"/>
+    <text x="245" y="28" class="entity-name">TRANSFORMATION</text>
+    <text x="18" y="88" class="key">PK</text><text x="72" y="88" class="field">id</text><line x1="0" y1="104" x2="490" y2="104" class="row"/>
+    <text x="18" y="135" class="key">FK</text><text x="72" y="135" class="field">model_id</text><line x1="0" y1="151" x2="490" y2="151" class="row"/>
+    <text x="72" y="182" class="field">name, title</text><line x1="0" y1="198" x2="490" y2="198" class="row"/>
+    <text x="72" y="229" class="field">description</text><line x1="0" y1="245" x2="490" y2="245" class="row"/>
+    <text x="72" y="276" class="field">prompt, apply_default</text>
+  </g>
+
+  <!-- SOURCE EMBEDDING -->
+  <g transform="translate(90 430)">
+    <rect width="440" height="300" class="entity"/><rect width="440" height="55" class="header"/>
+    <text x="220" y="28" class="entity-name">SOURCE_EMBEDDING</text>
+    <text x="18" y="88" class="key">PK</text><text x="72" y="88" class="field">id</text><line x1="0" y1="104" x2="440" y2="104" class="row"/>
+    <text x="18" y="135" class="key">FK</text><text x="72" y="135" class="field">source</text><line x1="0" y1="151" x2="440" y2="151" class="row"/>
+    <text x="72" y="182" class="field">order</text><line x1="0" y1="198" x2="440" y2="198" class="row"/>
+    <text x="72" y="229" class="field">content</text><line x1="0" y1="245" x2="440" y2="245" class="row"/>
+    <text x="72" y="276" class="field">embedding</text>
+  </g>
+
+  <!-- SOURCE -->
+  <g transform="translate(650 500)">
+    <rect width="450" height="350" class="entity"/><rect width="450" height="55" class="header"/>
+    <text x="225" y="28" class="entity-name">SOURCE</text>
+    <text x="18" y="88" class="key">PK</text><text x="72" y="88" class="field">id</text><line x1="0" y1="104" x2="450" y2="104" class="row"/>
+    <text x="18" y="135" class="key">FK</text><text x="72" y="135" class="field">command</text><line x1="0" y1="151" x2="450" y2="151" class="row"/>
+    <text x="72" y="182" class="field">title</text><line x1="0" y1="198" x2="450" y2="198" class="row"/>
+    <text x="72" y="229" class="field">asset</text><line x1="0" y1="245" x2="450" y2="245" class="row"/>
+    <text x="72" y="276" class="field">topics</text><line x1="0" y1="292" x2="450" y2="292" class="row"/>
+    <text x="72" y="323" class="field">full_text</text>
+  </g>
+
+  <!-- NOTEBOOK (central) -->
+  <g transform="translate(1270 690)">
+    <rect width="470" height="300" class="entity"/><rect width="470" height="58" class="header"/>
+    <text x="235" y="30" class="entity-name">NOTEBOOK</text>
+    <text x="18" y="92" class="key">PK</text><text x="72" y="92" class="field">id</text><line x1="0" y1="108" x2="470" y2="108" class="row"/>
+    <text x="72" y="139" class="field">name</text><line x1="0" y1="155" x2="470" y2="155" class="row"/>
+    <text x="72" y="186" class="field">description</text><line x1="0" y1="202" x2="470" y2="202" class="row"/>
+    <text x="72" y="233" class="field">archived</text><line x1="0" y1="249" x2="470" y2="249" class="row"/>
+    <text x="72" y="280" class="field">created, updated</text>
+  </g>
+
+  <!-- SOURCE INSIGHT -->
+  <g transform="translate(90 900)">
+    <rect width="440" height="300" class="entity"/><rect width="440" height="55" class="header"/>
+    <text x="220" y="28" class="entity-name">SOURCE_INSIGHT</text>
+    <text x="18" y="88" class="key">PK</text><text x="72" y="88" class="field">id</text><line x1="0" y1="104" x2="440" y2="104" class="row"/>
+    <text x="18" y="135" class="key">FK</text><text x="72" y="135" class="field">source</text><line x1="0" y1="151" x2="440" y2="151" class="row"/>
+    <text x="72" y="182" class="field">insight_type</text><line x1="0" y1="198" x2="440" y2="198" class="row"/>
+    <text x="72" y="229" class="field">content</text><line x1="0" y1="245" x2="440" y2="245" class="row"/>
+    <text x="72" y="276" class="field">embedding</text>
+  </g>
+
+  <!-- NOTE -->
+  <g transform="translate(650 1260)">
+    <rect width="450" height="300" class="entity"/><rect width="450" height="55" class="header"/>
+    <text x="225" y="28" class="entity-name">NOTE</text>
+    <text x="18" y="88" class="key">PK</text><text x="72" y="88" class="field">id</text><line x1="0" y1="104" x2="450" y2="104" class="row"/>
+    <text x="72" y="135" class="field">title</text><line x1="0" y1="151" x2="450" y2="151" class="row"/>
+    <text x="72" y="182" class="field">note_type</text><line x1="0" y1="198" x2="450" y2="198" class="row"/>
+    <text x="72" y="229" class="field">content</text><line x1="0" y1="245" x2="450" y2="245" class="row"/>
+    <text x="72" y="276" class="field">embedding</text>
+  </g>
+
+  <!-- CHAT SESSION -->
+  <g transform="translate(1270 1330)">
+    <rect width="470" height="300" class="entity"/><rect width="470" height="55" class="header"/>
+    <text x="235" y="28" class="entity-name">CHAT_SESSION</text>
+    <text x="18" y="88" class="key">PK</text><text x="72" y="88" class="field">id</text><line x1="0" y1="104" x2="470" y2="104" class="row"/>
+    <text x="18" y="135" class="key">REL</text><text x="72" y="135" class="field">refers_to notebook/source</text><line x1="0" y1="151" x2="470" y2="151" class="row"/>
+    <text x="72" y="182" class="field">title</text><line x1="0" y1="198" x2="470" y2="198" class="row"/>
+    <text x="72" y="229" class="field">model_override</text><line x1="0" y1="245" x2="470" y2="245" class="row"/>
+    <text x="72" y="276" class="field">messages</text>
+  </g>
+
+  <!-- PODCAST EPISODE -->
+  <g transform="translate(1910 490)">
+    <rect width="500" height="350" class="entity"/><rect width="500" height="55" class="header"/>
+    <text x="250" y="28" class="entity-name">PODCAST_EPISODE</text>
+    <text x="18" y="88" class="key">PK</text><text x="72" y="88" class="field">id</text><line x1="0" y1="104" x2="500" y2="104" class="row"/>
+    <text x="18" y="135" class="key">FK</text><text x="72" y="135" class="field">notebook_id</text><line x1="0" y1="151" x2="500" y2="151" class="row"/>
+    <text x="18" y="182" class="key">FK</text><text x="72" y="182" class="field">command</text><line x1="0" y1="198" x2="500" y2="198" class="row"/>
+    <text x="72" y="229" class="field">name, briefing</text><line x1="0" y1="245" x2="500" y2="245" class="row"/>
+    <text x="72" y="276" class="field">audio_file</text><line x1="0" y1="292" x2="500" y2="292" class="row"/>
+    <text x="72" y="323" class="field">outline, transcript</text>
+  </g>
+
+  <!-- COMMAND -->
+  <g transform="translate(2590 520)">
+    <rect width="470" height="330" class="entity"/><rect width="470" height="55" class="header"/>
+    <text x="235" y="28" class="entity-name">COMMAND</text>
+    <text x="18" y="88" class="key">PK</text><text x="72" y="88" class="field">id</text><line x1="0" y1="104" x2="470" y2="104" class="row"/>
+    <text x="72" y="135" class="field">command</text><line x1="0" y1="151" x2="470" y2="151" class="row"/>
+    <text x="72" y="182" class="field">status, progress</text><line x1="0" y1="198" x2="470" y2="198" class="row"/>
+    <text x="72" y="229" class="field">input_data, output_data</text><line x1="0" y1="245" x2="470" y2="245" class="row"/>
+    <text x="72" y="276" class="field">error_message</text><line x1="0" y1="292" x2="470" y2="292" class="row"/>
+    <text x="72" y="317" class="field">created, updated</text>
+  </g>
+
+  <!-- VIDEO EPISODE -->
+  <g transform="translate(1910 1120)">
+    <rect width="500" height="365" class="entity"/><rect width="500" height="55" class="header"/>
+    <text x="250" y="28" class="entity-name">VIDEO_EPISODE</text>
+    <text x="18" y="88" class="key">PK</text><text x="72" y="88" class="field">id</text><line x1="0" y1="104" x2="500" y2="104" class="row"/>
+    <text x="18" y="135" class="key">FK</text><text x="72" y="135" class="field">notebook_id</text><line x1="0" y1="151" x2="500" y2="151" class="row"/>
+    <text x="18" y="182" class="key">FK</text><text x="72" y="182" class="field">command</text><line x1="0" y1="198" x2="500" y2="198" class="row"/>
+    <text x="72" y="229" class="field">name, prompt</text><line x1="0" y1="245" x2="500" y2="245" class="row"/>
+    <text x="72" y="276" class="field">n_scenes, style</text><line x1="0" y1="292" x2="500" y2="292" class="row"/>
+    <text x="72" y="323" class="field">video_file, duration</text><line x1="0" y1="339" x2="500" y2="339" class="row"/>
+    <text x="72" y="358" class="field">storyboard</text>
+  </g>
+
+  <!-- VIDEO SCENE (logical) -->
+  <g transform="translate(2600 1160)">
+    <rect width="470" height="345" class="entity" stroke-dasharray="8 6"/><rect width="470" height="55" class="header"/>
+    <text x="235" y="28" class="entity-name">VIDEO_SCENE (LOGICAL)</text>
+    <text x="18" y="88" class="key">PK</text><text x="72" y="88" class="field">scene_index</text><line x1="0" y1="104" x2="470" y2="104" class="row"/>
+    <text x="18" y="135" class="key">FK</text><text x="72" y="135" class="field">video_episode_id</text><line x1="0" y1="151" x2="470" y2="151" class="row"/>
+    <text x="72" y="182" class="field">title</text><line x1="0" y1="198" x2="470" y2="198" class="row"/>
+    <text x="72" y="229" class="field">narration</text><line x1="0" y1="245" x2="470" y2="245" class="row"/>
+    <text x="72" y="276" class="field">layout, visual_prompt</text><line x1="0" y1="292" x2="470" y2="292" class="row"/>
+    <text x="72" y="323" class="field">embedded in storyboard</text>
+  </g>
+
+  <!-- Relationships -->
+  <path d="M2630,235 H2470" class="rel"/><text x="2580" y="222" class="card">1</text><text x="2485" y="222" class="card">0..*</text><text x="2550" y="265" class="rel-label">xác thực</text>
+  <path d="M2040,235 H1860" class="rel"/><text x="2025" y="222" class="card">0..*</text><text x="1875" y="222" class="card">0..1</text><text x="1950" y="265" class="rel-label">model_id</text>
+  <path d="M530,585 H650" class="rel"/><text x="545" y="570" class="card">0..*</text><text x="625" y="570" class="card">1</text><text x="590" y="620" class="rel-label">thuộc</text>
+  <path d="M530,1035 H585 V790 H650" class="rel"/><text x="545" y="1020" class="card">0..*</text><text x="625" y="775" class="card">1</text><text x="575" y="920" class="rel-label">thuộc</text>
+  <path d="M1100,675 H1180 V840 H1270" class="rel"/><text x="1115" y="662" class="card">0..*</text><text x="1240" y="825" class="card">0..*</text><text x="1180" y="805" class="rel-label">reference</text>
+  <path d="M1100,1410 H1180 V930 H1270" class="rel"/><text x="1115" y="1395" class="card">0..*</text><text x="1240" y="915" class="card">0..*</text><text x="1170" y="1190" class="rel-label">artifact</text>
+  <path d="M1505,990 V1330" class="rel"/><text x="1525" y="1020" class="card">1</text><text x="1525" y="1315" class="card">0..*</text><text x="1560" y="1170" class="rel-label">refers_to</text>
+  <path d="M1740,780 H1820 V670 H1910" class="rel"/><text x="1755" y="765" class="card">1</text><text x="1880" y="655" class="card">0..*</text><text x="1835" y="730" class="rel-label">tạo podcast</text>
+  <path d="M1740,920 H1810 V1260 H1910" class="rel"/><text x="1755" y="905" class="card">1</text><text x="1880" y="1245" class="card">0..*</text><text x="1815" y="1090" class="rel-label">tạo video</text>
+  <path d="M2410,1300 H2600" class="logical"/><text x="2425" y="1285" class="card">1</text><text x="2555" y="1285" class="card">1..*</text><text x="2505" y="1335" class="rel-label">storyboard</text>
+  <path d="M1370,335 H1210 V1045 H530" class="logical"/><text x="1350" y="320" class="card">1</text><text x="545" y="1030" class="card">0..*</text><text x="880" y="1075" class="rel-label">tạo insight</text>
+  <path d="M875,500 V440 H2825 V520" class="rel"/><text x="895" y="485" class="card">0..1</text><text x="2800" y="505" class="card">1</text><text x="1890" y="425" class="rel-label">theo dõi xử lý nguồn</text>
+  <path d="M2410,665 H2590" class="rel"/><text x="2425" y="650" class="card">0..1</text><text x="2555" y="650" class="card">1</text><text x="2500" y="700" class="rel-label">job</text>
+  <path d="M2410,1370 H2500 V800 H2590" class="rel"/><text x="2425" y="1355" class="card">0..1</text><text x="2555" y="785" class="card">1</text><text x="2480" y="1100" class="rel-label">job</text>
+
+  <!-- Legend and note -->
+  <g transform="translate(150 1770)">
+    <text x="0" y="0" class="entity-name" text-anchor="start">Chú thích</text>
+    <text x="0" y="52" class="key">PK</text><text x="55" y="52" class="note">Khóa chính</text>
+    <text x="250" y="52" class="key">FK</text><text x="305" y="52" class="note">Khóa ngoại hoặc tham chiếu bản ghi</text>
+    <line x1="760" y1="42" x2="900" y2="42" class="rel"/><text x="925" y="49" class="note">Quan hệ lưu trong cơ sở dữ liệu</text>
+    <line x1="1420" y1="42" x2="1560" y2="42" class="logical"/><text x="1585" y="49" class="note">Quan hệ logic hoặc dữ liệu nhúng</text>
+    <text x="0" y="105" class="note">Lưu ý: VIDEO_SCENE không phải bảng độc lập; các cảnh được lưu bên trong trường storyboard của VIDEO_EPISODE.</text>
+  </g>
+  <text x="1600" y="2050" class="caption">Hình 3.12. Sơ đồ dữ liệu của hệ thống NotebookE</text>
+</svg>

@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2800" height="1700" viewBox="0 0 2800 1700">
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="10" refX="11" refY="5" orient="auto"><path d="M0,0 L12,5 L0,10 Z" fill="#111"/></marker>
+    <style>
+      text { font-family: Arial, Helvetica, sans-serif; fill: #111; }
+      .title { font-size: 39px; font-weight: 700; text-anchor: middle; }
+      .boundary { fill: none; stroke: #333; stroke-width: 2.5; stroke-dasharray: 13 8; }
+      .boundary-label { font-size: 25px; font-weight: 700; }
+      .box { fill: #f7f7f7; stroke: #111; stroke-width: 2.5; }
+      .tab { fill: #fff; stroke: #111; stroke-width: 2; }
+      .stereo { font-size: 19px; font-style: italic; text-anchor: middle; }
+      .box-title { font-size: 26px; font-weight: 700; text-anchor: middle; }
+      .detail { font-size: 20px; text-anchor: middle; }
+      .actor-text { font-size: 24px; font-weight: 600; text-anchor: middle; }
+      .flow { fill: none; stroke: #111; stroke-width: 3; marker-end: url(#arrow); }
+      .job { fill: none; stroke: #111; stroke-width: 3; stroke-dasharray: 12 8; marker-end: url(#arrow); }
+      .ai { fill: none; stroke: #111; stroke-width: 3; stroke-dasharray: 3 8; marker-end: url(#arrow); }
+      .edge-label { font-size: 20px; text-anchor: middle; }
+      .caption { font-size: 23px; font-style: italic; text-anchor: middle; }
+      .legend { font-size: 19px; }
+    </style>
+  </defs>
+  <rect width="2800" height="1700" fill="#fff"/>
+  <text x="1400" y="62" class="title">KIẾN TRÚC TỔNG THỂ CỦA HỆ THỐNG NOTEBOOKE</text>
+
+  <!-- System boundary -->
+  <rect x="420" y="175" width="1740" height="1120" class="boundary"/>
+  <rect x="420" y="175" width="330" height="55" fill="#fff" stroke="#333" stroke-width="2.5"/>
+  <text x="447" y="212" class="boundary-label">Hệ thống NotebookE</text>
+
+  <!-- User -->
+  <circle cx="175" cy="390" r="32" fill="#fff" stroke="#111" stroke-width="3"/>
+  <line x1="175" y1="422" x2="175" y2="500" stroke="#111" stroke-width="3"/>
+  <line x1="115" y1="450" x2="235" y2="450" stroke="#111" stroke-width="3"/>
+  <line x1="175" y1="500" x2="125" y2="550" stroke="#111" stroke-width="3"/>
+  <line x1="175" y1="500" x2="225" y2="550" stroke="#111" stroke-width="3"/>
+  <text x="175" y="595" class="actor-text">Người dùng</text>
+  <rect x="70" y="660" width="210" height="145" class="box"/>
+  <rect x="70" y="660" width="210" height="28" fill="#e9e9e9" stroke="#111" stroke-width="2.5"/>
+  <circle cx="92" cy="674" r="5" fill="#fff" stroke="#111"/><circle cx="110" cy="674" r="5" fill="#fff" stroke="#111"/><circle cx="128" cy="674" r="5" fill="#fff" stroke="#111"/>
+  <text x="175" y="730" class="box-title">Trình duyệt</text>
+  <text x="175" y="768" class="detail">Giao diện web</text>
+
+  <!-- Frontend -->
+  <g>
+    <rect x="500" y="600" width="350" height="245" class="box"/>
+    <rect x="515" y="625" width="26" height="52" class="tab"/><rect x="526" y="638" width="26" height="52" class="tab"/>
+    <text x="675" y="650" class="stereo">&lt;&lt;Presentation&gt;&gt;</text>
+    <text x="675" y="700" class="box-title">Next.js Frontend</text>
+    <line x1="535" y1="725" x2="815" y2="725" stroke="#999" stroke-width="1.5"/>
+    <text x="675" y="765" class="detail">React · TypeScript</text>
+    <text x="675" y="800" class="detail">Trang web và API proxy</text>
+  </g>
+
+  <!-- API -->
+  <g>
+    <rect x="940" y="600" width="350" height="245" class="box"/>
+    <rect x="955" y="625" width="26" height="52" class="tab"/><rect x="966" y="638" width="26" height="52" class="tab"/>
+    <text x="1115" y="650" class="stereo">&lt;&lt;Application API&gt;&gt;</text>
+    <text x="1115" y="700" class="box-title">FastAPI Backend</text>
+    <line x1="975" y1="725" x2="1255" y2="725" stroke="#999" stroke-width="1.5"/>
+    <text x="1115" y="765" class="detail">REST · SSE · LangGraph</text>
+    <text x="1115" y="800" class="detail">Nghiệp vụ và điều phối AI</text>
+  </g>
+
+  <!-- Worker -->
+  <g>
+    <rect x="1380" y="600" width="350" height="245" class="box"/>
+    <rect x="1395" y="625" width="26" height="52" class="tab"/><rect x="1406" y="638" width="26" height="52" class="tab"/>
+    <text x="1555" y="650" class="stereo">&lt;&lt;Background Service&gt;&gt;</text>
+    <text x="1555" y="700" class="box-title">Background Worker</text>
+    <line x1="1415" y1="725" x2="1695" y2="725" stroke="#999" stroke-width="1.5"/>
+    <text x="1555" y="765" class="detail">surreal-commands</text>
+    <text x="1555" y="800" class="detail">Xử lý tác vụ bất đồng bộ</text>
+  </g>
+
+  <!-- Database -->
+  <g>
+    <ellipse cx="1970" cy="620" rx="170" ry="42" fill="#f7f7f7" stroke="#111" stroke-width="2.5"/>
+    <path d="M1800,620 V810 C1800,865 2140,865 2140,810 V620" fill="#f7f7f7" stroke="#111" stroke-width="2.5"/>
+    <path d="M1800,705 C1800,760 2140,760 2140,705" fill="none" stroke="#777" stroke-width="1.7"/>
+    <text x="1970" y="690" class="box-title">SurrealDB</text>
+    <text x="1970" y="735" class="detail">Dữ liệu · Vector</text>
+    <text x="1970" y="770" class="detail">Hàng đợi tác vụ</text>
+    <text x="1970" y="805" class="detail">Quan hệ đồ thị</text>
+  </g>
+
+  <!-- Media processing -->
+  <g>
+    <rect x="1380" y="990" width="760" height="205" class="box"/>
+    <rect x="1400" y="1015" width="26" height="52" class="tab"/><rect x="1411" y="1028" width="26" height="52" class="tab"/>
+    <text x="1760" y="1038" class="stereo">&lt;&lt;Media Processing&gt;&gt;</text>
+    <text x="1760" y="1083" class="box-title">Xử lý Podcast và Video</text>
+    <line x1="1445" y1="1105" x2="2075" y2="1105" stroke="#999" stroke-width="1.5"/>
+    <text x="1760" y="1145" class="detail">Tổng hợp kịch bản · TTS · âm thanh · hình ảnh · kết xuất video</text>
+  </g>
+
+  <!-- AI provider -->
+  <g>
+    <rect x="2290" y="500" width="410" height="345" class="box"/>
+    <path d="M2320,545 h55 l20,-20 h80 l20,20 h55 v62 h-230 z" fill="#fff" stroke="#111" stroke-width="2"/>
+    <circle cx="2350" cy="576" r="9" fill="#fff" stroke="#111" stroke-width="2"/>
+    <circle cx="2384" cy="576" r="9" fill="#fff" stroke="#111" stroke-width="2"/>
+    <circle cx="2418" cy="576" r="9" fill="#fff" stroke="#111" stroke-width="2"/>
+    <text x="2495" y="650" class="stereo">&lt;&lt;External / Local&gt;&gt;</text>
+    <text x="2495" y="700" class="box-title">Nhà cung cấp AI</text>
+    <text x="2495" y="738" class="box-title">hoặc mô hình cục bộ</text>
+    <line x1="2330" y1="765" x2="2660" y2="765" stroke="#999" stroke-width="1.5"/>
+    <text x="2495" y="805" class="detail">LLM · Embedding · TTS · STT</text>
+  </g>
+
+  <!-- Main request path -->
+  <line x1="280" y1="730" x2="490" y2="730" class="flow"/><text x="385" y="708" class="edge-label">HTTPS</text>
+  <line x1="850" y1="730" x2="930" y2="730" class="flow"/><text x="890" y="708" class="edge-label">REST/SSE</text>
+  <path d="M1115,600 V430 H1970 V568" class="flow"/>
+  <text x="1540" y="405" class="edge-label">Truy vấn và lưu dữ liệu</text>
+
+  <!-- Background job path -->
+  <line x1="1290" y1="760" x2="1370" y2="760" class="job"/><text x="1330" y="740" class="edge-label">Tác vụ nền</text>
+  <line x1="1730" y1="760" x2="1790" y2="760" class="job"/><text x="1760" y="740" class="edge-label">Kết quả</text>
+
+  <!-- AI connections -->
+  <path d="M1115,600 V300 H2495 V490" class="ai"/>
+  <text x="1810" y="275" class="edge-label">Chat · RAG · tạo nội dung</text>
+  <path d="M1730,900 H2200 V800 H2280" class="ai"/>
+
+  <!-- Media connection -->
+  <line x1="1555" y1="845" x2="1555" y2="980" class="job"/>
+  <text x="1580" y="925" class="edge-label" text-anchor="start">Điều phối</text>
+  <path d="M2140,1090 H2210 V825 H2280" class="ai"/>
+  <text x="2228" y="1045" class="edge-label" transform="rotate(-90 2228 1045)">Mô hình tạo sinh</text>
+  <path d="M1970,990 V875" class="job"/>
+  <text x="1995" y="940" class="edge-label" text-anchor="start">Lưu kết quả</text>
+
+  <!-- Legend -->
+  <g transform="translate(540 1390)">
+    <text x="0" y="0" class="boundary-label">Chú thích</text>
+    <line x1="0" y1="55" x2="150" y2="55" class="flow"/><text x="175" y="62" class="legend">Luồng yêu cầu và dữ liệu chính</text>
+    <line x1="650" y1="55" x2="800" y2="55" class="job"/><text x="825" y="62" class="legend">Tác vụ xử lý nền</text>
+    <line x1="1190" y1="55" x2="1340" y2="55" class="ai"/><text x="1365" y="62" class="legend">Kết nối mô hình AI</text>
+  </g>
+
+  <text x="1400" y="1645" class="caption">Hình 3.11. Kiến trúc tổng thể của hệ thống NotebookE</text>
+</svg>

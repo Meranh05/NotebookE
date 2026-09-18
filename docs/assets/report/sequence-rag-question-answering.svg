@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2800" height="1950" viewBox="0 0 2800 1950">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="8" refX="9" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8 Z" fill="#111111"/></marker>
+    <style>
+      text { font-family: Arial, Helvetica, sans-serif; fill: #111; }
+      .title { font-size: 38px; font-weight: 700; }
+      .actor-label { font-size: 24px; font-weight: 600; text-anchor: middle; }
+      .participant { fill: #f5f5f5; stroke: #111; stroke-width: 2.5; }
+      .participant-text { font-size: 24px; font-weight: 600; text-anchor: middle; dominant-baseline: middle; }
+      .life { stroke: #777; stroke-width: 2; stroke-dasharray: 10 8; }
+      .activation { fill: #fff; stroke: #555; stroke-width: 2; }
+      .call { stroke: #111; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+      .reply { stroke: #555; stroke-width: 2; stroke-dasharray: 9 7; fill: none; marker-end: url(#arrow); }
+      .message { font-size: 21px; text-anchor: middle; }
+      .frame { fill: none; stroke: #333; stroke-width: 2.2; }
+      .frame-tab { fill: #fff; stroke: #333; stroke-width: 2.2; }
+      .frame-text { font-size: 22px; font-weight: 700; }
+      .caption { font-size: 22px; font-style: italic; text-anchor: middle; }
+    </style>
+  </defs>
+  <rect width="2800" height="1950" fill="#fff"/>
+  <text x="1400" y="55" class="title" text-anchor="middle">SƠ ĐỒ TUẦN TỰ QUÁ TRÌNH HỎI ĐÁP BẰNG KỸ THUẬT RAG</text>
+
+  <!-- Người dùng (actor) -->
+  <circle cx="185" cy="125" r="28" fill="#fff" stroke="#111" stroke-width="3"/>
+  <line x1="185" y1="153" x2="185" y2="220" stroke="#111" stroke-width="3"/>
+  <line x1="135" y1="175" x2="235" y2="175" stroke="#111" stroke-width="3"/>
+  <line x1="185" y1="220" x2="145" y2="260" stroke="#111" stroke-width="3"/>
+  <line x1="185" y1="220" x2="225" y2="260" stroke="#111" stroke-width="3"/>
+  <text x="185" y="300" class="actor-label">Người dùng</text>
+
+  <!-- Participants -->
+  <rect x="420" y="112" width="340" height="82" class="participant"/><text x="590" y="153" class="participant-text">Frontend</text>
+  <rect x="860" y="112" width="340" height="82" class="participant"/><text x="1030" y="153" class="participant-text">FastAPI</text>
+  <rect x="1300" y="112" width="340" height="82" class="participant"/><text x="1470" y="153" class="participant-text">SurrealDB</text>
+  <rect x="1740" y="112" width="340" height="82" class="participant"/><text x="1910" y="153" class="participant-text">Embedding Model</text>
+  <rect x="2200" y="112" width="390" height="82" class="participant"/><text x="2395" y="153" class="participant-text">Language Model</text>
+
+  <!-- Lifelines -->
+  <line x1="185" y1="305" x2="185" y2="1805" class="life"/>
+  <line x1="590" y1="194" x2="590" y2="1805" class="life"/>
+  <line x1="1030" y1="194" x2="1030" y2="1805" class="life"/>
+  <line x1="1470" y1="194" x2="1470" y2="1805" class="life"/>
+  <line x1="1910" y1="194" x2="1910" y2="1805" class="life"/>
+  <line x1="2395" y1="194" x2="2395" y2="1805" class="life"/>
+
+  <!-- Activations -->
+  <rect x="578" y="340" width="24" height="1395" class="activation"/>
+  <rect x="1018" y="425" width="24" height="1230" class="activation"/>
+  <rect x="1458" y="485" width="24" height="105" class="activation"/>
+  <rect x="2383" y="625" width="24" height="105" class="activation"/>
+  <rect x="1898" y="900" width="24" height="105" class="activation"/>
+  <rect x="1458" y="1040" width="24" height="105" class="activation"/>
+  <rect x="2383" y="1185" width="24" height="105" class="activation"/>
+  <rect x="2383" y="1450" width="24" height="105" class="activation"/>
+
+  <!-- Messages -->
+  <line x1="185" y1="360" x2="570" y2="360" class="call"/><text x="378" y="342" class="message">1. Nhập câu hỏi và chọn mô hình AI</text>
+  <line x1="602" y1="445" x2="1010" y2="445" class="call"/><text x="806" y="427" class="message">2. POST /api/search/ask</text>
+  <line x1="1042" y1="505" x2="1450" y2="505" class="call"/><text x="1246" y="487" class="message">3. Kiểm tra cấu hình mô hình</text>
+  <line x1="1458" y1="565" x2="1050" y2="565" class="reply"/><text x="1254" y="547" class="message">Thông tin mô hình hợp lệ</text>
+  <line x1="1042" y1="645" x2="2375" y2="645" class="call"/><text x="1709" y="627" class="message">4. Lập chiến lược tìm kiếm từ câu hỏi</text>
+  <line x1="2383" y1="705" x2="1050" y2="705" class="reply"/><text x="1717" y="687" class="message">Danh sách truy vấn con và chỉ dẫn xử lý</text>
+  <line x1="1018" y1="765" x2="610" y2="765" class="reply"/><text x="814" y="747" class="message">SSE: strategy</text>
+
+  <!-- Khung par: tab chữ nhật riêng để không bị cắt chữ khi chèn vào Word -->
+  <rect x="815" y="815" width="1690" height="535" class="frame"/>
+  <rect x="815" y="815" width="470" height="48" class="frame-tab"/>
+  <text x="838" y="847" class="frame-text">par [mỗi truy vấn con, tối đa 5]</text>
+
+  <line x1="1042" y1="920" x2="1890" y2="920" class="call"/><text x="1466" y="902" class="message">5. Sinh embedding cho từ khóa tìm kiếm</text>
+  <line x1="1898" y1="980" x2="1050" y2="980" class="reply"/><text x="1474" y="962" class="message">Vector truy vấn</text>
+  <line x1="1042" y1="1060" x2="1450" y2="1060" class="call"/><text x="1246" y="1042" class="message">6. Tìm kiếm vector (top 10)</text>
+  <line x1="1458" y1="1120" x2="1050" y2="1120" class="reply"/><text x="1254" y="1102" class="message">Đoạn liên quan, điểm và metadata</text>
+  <line x1="1042" y1="1205" x2="2375" y2="1205" class="call"/><text x="1709" y="1187" class="message">7. Gửi câu hỏi, ngữ cảnh truy xuất và chỉ dẫn</text>
+  <line x1="2383" y1="1265" x2="1050" y2="1265" class="reply"/><text x="1717" y="1247" class="message">Câu trả lời theo từng truy vấn con</text>
+  <line x1="1018" y1="1325" x2="610" y2="1325" class="reply"/><text x="814" y="1307" class="message">SSE: answer</text>
+
+  <line x1="1042" y1="1470" x2="2375" y2="1470" class="call"/><text x="1709" y="1452" class="message">8. Tổng hợp các câu trả lời trung gian</text>
+  <line x1="2383" y1="1530" x2="1050" y2="1530" class="reply"/><text x="1717" y="1512" class="message">Câu trả lời cuối cùng có tham chiếu</text>
+  <line x1="1018" y1="1615" x2="610" y2="1615" class="reply"/><text x="814" y="1597" class="message">9. SSE: final_answer và complete</text>
+  <line x1="578" y1="1700" x2="205" y2="1700" class="reply"/><text x="392" y="1682" class="message">10. Hiển thị kết quả</text>
+
+  <!-- Bottom participants -->
+  <rect x="420" y="1805" width="340" height="72" class="participant"/><text x="590" y="1841" class="participant-text">Frontend</text>
+  <rect x="860" y="1805" width="340" height="72" class="participant"/><text x="1030" y="1841" class="participant-text">FastAPI</text>
+  <rect x="1300" y="1805" width="340" height="72" class="participant"/><text x="1470" y="1841" class="participant-text">SurrealDB</text>
+  <rect x="1740" y="1805" width="340" height="72" class="participant"/><text x="1910" y="1841" class="participant-text">Embedding Model</text>
+  <rect x="2200" y="1805" width="390" height="72" class="participant"/><text x="2395" y="1841" class="participant-text">Language Model</text>
+  <text x="1400" y="1922" class="caption">Hình 3.10. Sơ đồ tuần tự quá trình hỏi đáp bằng kỹ thuật RAG</text>
+</svg>
